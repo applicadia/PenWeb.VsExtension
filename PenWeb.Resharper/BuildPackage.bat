@@ -1,1 +1,3 @@
-nuget pack 
+lib\nuget.exe pack 
+
+pause

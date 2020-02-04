@@ -12,10 +12,8 @@
     <releaseNotes>First Experimentation</releaseNotes>
     <copyright>Copyright 2020</copyright>
     <dependencies>
-      <group targetFramework=".NETFramework4.6.1">
-      </group>
-    </dependencies>
-  </metadata>
+        <dependency id="Wave" version="[8.0]" />
+    </dependencies>  </metadata>
   <files>
     <file src="ref\net461\PenWeb.Resharper.dll" target="DotFiles\" />
     <file src="ref\net461\PenWeb.Resharper.pdb" target="DotFiles\" />
