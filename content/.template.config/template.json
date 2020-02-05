@@ -2,14 +2,14 @@
     "author": "Matthias Koch",
     "classifications": [ "jetbrains", "resharper", "rider" ],
     "name": "ReSharper/Rider Plugin",
-    "identity": "PenwebPlugin",
+    "identity": "PenWeb.ASTPlugin",
     "shortName": "resharper-rider-plugin",
     "tags": {
         "type": "project",
         "language": "C#",
         "platform": ".NET"
     },
-    "sourceName": "PenwebPlugin",
+    "sourceName": "PenWeb.ASTPlugin",
     "preferNameDirectory": "true",
     "primaryOutputs": [
     ],
@@ -62,15 +62,15 @@
                 {
                     "condition": "(!include-samples)",
                     "exclude": [
-                        "src/dotnet/PenwebPlugin/SampleAction.cs",
-                        "src/dotnet/PenwebPlugin/SampleComponent.cs",
-                        "src/dotnet/PenwebPlugin/SampleFix.cs",
-                        "src/dotnet/PenwebPlugin/SampleHighlighting.cs",
-                        "src/dotnet/PenwebPlugin/SampleProblemAnalyzer.cs",
-                        "src/dotnet/PenwebPlugin/SampleSettings.cs",
-                        "src/dotnet/PenwebPlugin/Options/SampleOptionsPage.cs",
-                        "src/dotnet/PenwebPlugin/Options/ZoneMarker.cs",
-                        "src/dotnet/PenwebPlugin.Tests/SampleHighlightingTest.cs"
+                        "src/dotnet/PenWeb.ASTPlugin/SampleAction.cs",
+                        "src/dotnet/PenWeb.ASTPlugin/SampleComponent.cs",
+                        "src/dotnet/PenWeb.ASTPlugin/SampleFix.cs",
+                        "src/dotnet/PenWeb.ASTPlugin/SampleHighlighting.cs",
+                        "src/dotnet/PenWeb.ASTPlugin/SampleProblemAnalyzer.cs",
+                        "src/dotnet/PenWeb.ASTPlugin/SampleSettings.cs",
+                        "src/dotnet/PenWeb.ASTPlugin/Options/SampleOptionsPage.cs",
+                        "src/dotnet/PenWeb.ASTPlugin/Options/ZoneMarker.cs",
+                        "src/dotnet/PenWeb.ASTPlugin.Tests/SampleHighlightingTest.cs"
                     ]
                 }
             ]

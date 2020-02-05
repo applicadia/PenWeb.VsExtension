@@ -2,9 +2,9 @@
 using System.Windows.Input;
 using JetBrains.ProjectModel;
 
-namespace PenwebPlugin
+namespace PenWeb.ASTPlugin
 {
-    public class NavigateToParentMethod : ICommand
+    class NavigateByReference : ICommand
     {
         public bool CanExecute(object parameter)
         {
@@ -16,7 +16,7 @@ namespace PenwebPlugin
             var solutionStateTracker = SolutionStateTracker.Instance;
             var solution = solutionStateTracker.Solution;
             var detector = solution?.GetComponent<NodeUnderCaretDetector>();
-            detector?.NavigateToParentMethod();
+            detector?.NavigateToFirstReferencedElement();
         }
 
         public event EventHandler CanExecuteChanged;

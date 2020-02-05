@@ -2,7 +2,7 @@
 using JetBrains.DataFlow;
 using JetBrains.ProjectModel;
 
-namespace PenwebPlugin
+namespace PenWeb.ASTPlugin
 {
     public interface ISolutionStateTracker
     {

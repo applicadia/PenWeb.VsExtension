@@ -6,7 +6,7 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.Util;
 
-namespace PenwebPlugin
+namespace PenWeb.ASTPlugin
 {
 
     [ContextNavigationProvider]

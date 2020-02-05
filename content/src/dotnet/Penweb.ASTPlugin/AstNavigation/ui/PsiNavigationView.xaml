@@ -1,9 +1,9 @@
-﻿<UserControl x:Class="PenwebPlugin.PsiNavigationView"
+﻿<UserControl x:Class="PenWeb.ASTPlugin.PsiNavigationView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:viewModels="clr-namespace:PenwebPlugin"
+             xmlns:viewModels="clr-namespace:PenWeb.ASTPlugin"
              mc:Ignorable="d"
              d:DesignHeight="600" d:DesignWidth="300"
              d:DataContext="{d:DesignInstance Type={x:Type viewModels:PsiNavigationViewModel}, IsDesignTimeCreatable=False}">

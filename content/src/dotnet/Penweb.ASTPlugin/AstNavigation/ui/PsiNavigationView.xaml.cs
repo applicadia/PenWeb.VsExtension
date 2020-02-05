@@ -1,6 +1,6 @@
 ﻿using JetBrains.Application.UI.Automation;
 
-namespace PenwebPlugin
+namespace PenWeb.ASTPlugin
 {
     public partial class PsiNavigationView : IView<PsiNavigationViewModel>
     {

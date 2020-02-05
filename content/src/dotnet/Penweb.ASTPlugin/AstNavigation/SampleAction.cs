@@ -5,7 +5,7 @@ using JetBrains.Application.UI.ActionSystem.ActionsRevised.Menu;
 using JetBrains.ReSharper.Psi.Files;
 using JetBrains.Util;
 
-namespace PenwebPlugin
+namespace PenWeb.ASTPlugin
 {
     [Action("SampleAction", "Do Something")]
     public class SampleAction : IActionWithExecuteRequirement, IExecutableAction

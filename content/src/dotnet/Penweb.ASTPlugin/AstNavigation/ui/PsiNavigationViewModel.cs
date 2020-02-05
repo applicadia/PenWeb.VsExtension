@@ -6,7 +6,7 @@ using JetBrains.DataFlow;
 using JetBrains.ProjectModel;
 using JetBrains.Lifetimes;
 
-namespace PenwebPlugin
+namespace PenWeb.ASTPlugin
 {
     public class PsiNavigationViewModel : AAutomation
     {

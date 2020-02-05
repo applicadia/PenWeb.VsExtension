@@ -17,7 +17,7 @@ using JetBrains.TextControl;
 using JetBrains.Util;
 using JetBrains.Lifetimes;
 
-namespace PenwebPlugin
+namespace PenWeb.ASTPlugin
 {
     [SolutionComponent]
     public class NodeUnderCaretDetector

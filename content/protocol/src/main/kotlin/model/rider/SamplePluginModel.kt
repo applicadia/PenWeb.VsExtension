@@ -18,7 +18,7 @@ object SamplePluginModel : Ext(SolutionModel.Solution) {
     }
 
     init {
-        //setting(CSharp50Generator.Namespace, "PenwebPlugin.Rider.Model")
+        //setting(CSharp50Generator.Namespace, "PenWeb.ASTPlugin.Rider.Model")
         //setting(Kotlin11Generator.Namespace, "com.jetbrains.rider.sampleplugin.model")
 
         property("myString", string)

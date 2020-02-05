@@ -8,7 +8,7 @@ using JetBrains.DataFlow;
 using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.Lifetimes;
 
-namespace PenwebPlugin
+namespace PenWeb.ASTPlugin
 {
     public class RunActionCommand : ICommand
     {

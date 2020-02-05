@@ -2,7 +2,7 @@
   <PropertyGroup>
     <SdkVersion>2019.3.0</SdkVersion>
 
-    <Title>PenWebPlugin</Title>
+    <Title>PenWeb.ASTPlugin</Title>
     <Description>Description</Description>
 
     <Authors>Richard Esmond</Authors>

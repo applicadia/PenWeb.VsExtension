@@ -1,5 +1,5 @@
 Param(
-    $RootSuffix = "PenwebPlugin",
+    $RootSuffix = "PenWeb.ASTPlugin",
     $Version = "1.0.0"
 )
 

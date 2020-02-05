@@ -1,6 +1,6 @@
 $PSScriptRoot = Split-Path $MyInvocation.MyCommand.Path -Parent
-$PluginId = "PenwebPlugin"
-$SolutionPath = "$PSScriptRoot\PenwebPlugin.sln"
+$PluginId = "PenWeb.ASTPlugin"
+$SolutionPath = "$PSScriptRoot\PenWeb.ASTPlugin.sln"
 $SourceBasePath = "$PSScriptRoot\src\dotnet"
 
 $VsWhereOutput = [xml] (& "$PSScriptRoot\tools\vswhere.exe" -format xml)

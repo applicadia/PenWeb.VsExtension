@@ -9,7 +9,7 @@ using JetBrains.Application.UI.ToolWindowManagement;
 using JetBrains.DataFlow;
 using JetBrains.Lifetimes;
 
-namespace PenwebPlugin
+namespace PenWeb.ASTPlugin
 {
     [Action("ActionOpenToolWindow", "Show sample tool window...", Id = 543211)]
     public class OpenToolWindowAction : SampleAction, IInsertLast<MainMenuFeaturesGroup>

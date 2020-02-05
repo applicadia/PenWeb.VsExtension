@@ -11,7 +11,7 @@ using JetBrains.Lifetimes;
 using JetBrains.ReSharper.Feature.Services.Daemon.OptionPages;
 using JetBrains.Rider.Model.UIAutomation;
 
-namespace PenwebPlugin.Options
+namespace PenWeb.ASTPlugin.Options
 {
     [OptionsPage(Id, PageTitle, typeof(OptionsThemedIcons.EnvironmentGeneral),
         ParentId = CodeInspectionPage.PID

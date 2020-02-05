@@ -13,7 +13,7 @@ using JetBrains.ReSharper.Psi.Paths;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.Util;
 
-namespace PenwebPlugin
+namespace PenWeb.ASTPlugin
 {
     public static class PsiExtensionMethods
     {
