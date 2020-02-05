@@ -2,33 +2,33 @@
     "author": "Matthias Koch",
     "classifications": [ "jetbrains", "resharper", "rider" ],
     "name": "ReSharper/Rider Plugin",
-    "identity": "JetBrains.ReSharper.SamplePlugin",
+    "identity": "PenwebPlugin",
     "shortName": "resharper-rider-plugin",
     "tags": {
         "type": "project",
         "language": "C#",
         "platform": ".NET"
     },
-    "sourceName": "SamplePlugin",
-    "preferNameDirectory" : "true",
+    "sourceName": "PenwebPlugin",
+    "preferNameDirectory": "true",
     "primaryOutputs": [
     ],
     "symbols": {
-        "include-samples":{
+        "include-samples": {
             "type": "parameter",
-            "dataType":"bool",
+            "dataType": "bool",
             "defaultValue": "false"
         },
-        "resharper-only":{
+        "resharper-only": {
             "type": "parameter",
-            "dataType":"bool",
+            "dataType": "bool",
             "defaultValue": "false"
         },
-        "version":{
+        "version": {
             "type": "parameter",
-            "dataType":"string",
+            "dataType": "string",
             "defaultValue": "2019.3",
-            "replaces":"2019.3"
+            "replaces": "2019.3"
         }
     },
     "sources": [
@@ -62,15 +62,15 @@
                 {
                     "condition": "(!include-samples)",
                     "exclude": [
-                        "src/dotnet/ReSharperPlugin.SamplePlugin/SampleAction.cs",
+                        "src/dotnet/PenwebPlugin/SampleAction.cs",
                         "src/dotnet/ReSharperPlugin.SamplePlugin/SampleComponent.cs",
-                        "src/dotnet/ReSharperPlugin.SamplePlugin/SampleFix.cs",
-                        "src/dotnet/ReSharperPlugin.SamplePlugin/SampleHighlighting.cs",
-                        "src/dotnet/ReSharperPlugin.SamplePlugin/SampleProblemAnalyzer.cs",
-                        "src/dotnet/ReSharperPlugin.SamplePlugin/SampleSettings.cs",
-                        "src/dotnet/ReSharperPlugin.SamplePlugin/Options/SampleOptionsPage.cs",
-                        "src/dotnet/ReSharperPlugin.SamplePlugin/Options/ZoneMarker.cs",
-                        "src/dotnet/ReSharperPlugin.SamplePlugin.Tests/SampleHighlightingTest.cs"
+                        "src/dotnet/PenwebPlugin/SampleFix.cs",
+                        "src/dotnet/PenwebPlugin/SampleHighlighting.cs",
+                        "src/dotnet/PenwebPlugin/SampleProblemAnalyzer.cs",
+                        "src/dotnet/PenwebPlugin/SampleSettings.cs",
+                        "src/dotnet/PenwebPlugin/Options/SampleOptionsPage.cs",
+                        "src/dotnet/PenwebPlugin/Options/ZoneMarker.cs",
+                        "src/dotnet/PenwebPlugin.Tests/SampleHighlightingTest.cs"
                     ]
                 }
             ]
@@ -80,7 +80,7 @@
         {
             "condition": "(OS != \"Windows_NT\")",
             "description": "Make gradlew executable",
-            "manualInstructions": [ { "text": "Make gradlew executable" }  ],
+            "manualInstructions": [ { "text": "Make gradlew executable" } ],
             "actionId": "cb9a6cf3-4f5c-4860-b9d2-03a574959774",
             "args": {
                 "+x": "gradlew"

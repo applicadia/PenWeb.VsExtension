@@ -1,6 +1,6 @@
 $PSScriptRoot = Split-Path $MyInvocation.MyCommand.Path -Parent
-$PluginId = "ReSharperPlugin.SamplePlugin"
-$SolutionPath = "$PSScriptRoot\SamplePlugin.sln"
+$PluginId = "PenwebPlugin"
+$SolutionPath = "$PSScriptRoot\PenwebPlugin.sln"
 $SourceBasePath = "$PSScriptRoot\src\dotnet"
 
 $VsWhereOutput = [xml] (& "$PSScriptRoot\tools\vswhere.exe" -format xml)

@@ -1,5 +1,5 @@
 Param(
-    $RootSuffix = "SamplePlugin",
+    $RootSuffix = "PenwebPlugin",
     $Version = "1.0.0"
 )
 
