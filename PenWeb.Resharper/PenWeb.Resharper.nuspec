@@ -12,7 +12,7 @@
     <releaseNotes>First Experimentation</releaseNotes>
     <copyright>Copyright 2020</copyright>
     <dependencies>
-        <dependency id="Wave" version="[8.0]" />
+        <dependency id="Wave" version="[193.0.0]" />
     </dependencies>  </metadata>
   <files>
     <file src="ref\net461\PenWeb.Resharper.dll" target="DotFiles\" />

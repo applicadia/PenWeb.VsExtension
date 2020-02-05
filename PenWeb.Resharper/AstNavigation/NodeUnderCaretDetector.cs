@@ -51,7 +51,7 @@ namespace SampleReSharperPlugin
                 _shellLocks.QueueReadLock("NodeUnderCaretDetector.CaretMoved", Refresh);
             };
 
-            lifetime.AddBracket(
+            lifetime.Bracket(
                 () => _textControlManager.Legacy.CaretMoved += caretMoved,
                 () => _textControlManager.Legacy.CaretMoved -= caretMoved);
         }

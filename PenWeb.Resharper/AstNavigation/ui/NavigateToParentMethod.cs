@@ -20,5 +20,10 @@ namespace SampleReSharperPlugin
         }
 
         public event EventHandler CanExecuteChanged;
+
+        protected virtual void OnCanExecuteChanged()
+        {
+            this.CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+        }
     }
 }

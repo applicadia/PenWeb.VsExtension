@@ -65,7 +65,7 @@ namespace SampleReSharperPlugin
                 scheduler.EnqueueTask(new SolutionLoadTask("SolutionStateTracker",
                     SolutionLoadTaskKinds.Done, () => solutionStateTracker.HandleSolutionOpened(solution)));
 
-                lifetime.AddAction(solutionStateTracker.HandleSolutionClosed);
+                lifetime.OnTermination(solutionStateTracker.HandleSolutionClosed);
             }
         }
     }

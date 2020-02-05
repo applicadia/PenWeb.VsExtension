@@ -50,5 +50,10 @@ namespace SampleReSharperPlugin
             var genMethod = method.MakeGenericMethod(_actionType);
             genMethod.Invoke(this, null);
         }
+
+        protected virtual void OnCanExecuteChanged()
+        {
+            this.CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+        }
     }
 }

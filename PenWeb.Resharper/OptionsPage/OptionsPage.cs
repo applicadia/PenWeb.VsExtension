@@ -7,18 +7,20 @@ using JetBrains.Application.UI.Options.OptionsDialog;
 using JetBrains.DataFlow;
 using JetBrains.ReSharper.Feature.Services.Resources;
 using JetBrains.Lifetimes;
+using JetBrains.IDE.UI.Options;
 
 namespace SampleReSharperPlugin
 {
     [OptionsPage(Pid, "Sample R# Plugin", typeof(FeaturesEnvironmentOptionsThemedIcons.CodeInspections),
         ParentId = ToolsPage.PID)]
-    public class OptionsPage : SimpleOptionsPage
+    public class OptionsPage : BeSimpleOptionsPage
     {
         private const string Pid = "MyPluginOptions";
 
         public OptionsPage([NotNull] Lifetime lifetime,
+            [NotNull] OptionsPageContext optionsPageContext,
             [NotNull] OptionsSettingsSmartContext optionsSettingsSmartContext)
-            : base(lifetime, optionsSettingsSmartContext)
+            : base(lifetime, optionsPageContext, optionsSettingsSmartContext)
         {
             IProperty<bool> checkMe = new Property<bool>(lifetime, "MyOptionsPage::SomeOption");
             checkMe.SetValue(
