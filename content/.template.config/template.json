@@ -1,0 +1,91 @@
+{
+    "author": "Matthias Koch",
+    "classifications": [ "jetbrains", "resharper", "rider" ],
+    "name": "ReSharper/Rider Plugin",
+    "identity": "JetBrains.ReSharper.SamplePlugin",
+    "shortName": "resharper-rider-plugin",
+    "tags": {
+        "type": "project",
+        "language": "C#",
+        "platform": ".NET"
+    },
+    "sourceName": "SamplePlugin",
+    "preferNameDirectory" : "true",
+    "primaryOutputs": [
+    ],
+    "symbols": {
+        "include-samples":{
+            "type": "parameter",
+            "dataType":"bool",
+            "defaultValue": "false"
+        },
+        "resharper-only":{
+            "type": "parameter",
+            "dataType":"bool",
+            "defaultValue": "false"
+        },
+        "version":{
+            "type": "parameter",
+            "dataType":"string",
+            "defaultValue": "2019.3",
+            "replaces":"2019.3"
+        }
+    },
+    "sources": [
+        {
+            "modifiers": [
+                {
+                    "condition": "(resharper-only)",
+                    "exclude": [
+                        ".idea/**/rdgen__*.xml",
+                        ".idea/**/Rider__*.xml",
+                        ".idea/**/Generate_Protocol.xml",
+                        ".idea/**/Rider.xml",
+                        "gradle/**/*",
+                        "protocol/**/*",
+                        "src/rider/**/*",
+                        "build.gradle",
+                        "gradle.properties",
+                        "gradlew",
+                        "gradlew.bat",
+                        "settings.gradle"
+                    ]
+                },
+                {
+                    "condition": "(!include-samples || resharper-only)",
+                    "exclude": [
+                        "protocol/src/main/kotlin/model/rider/SamplePluginModel.kt",
+                        "src/rider/main/kotlin/com/jetbrains/rider/plugins/sampleplugin/SampleAction.kt",
+                        "src/rider/main/kotlin/com/jetbrains/rider/plugins/sampleplugin/SampleOptionsPage.kt"
+                    ]
+                },
+                {
+                    "condition": "(!include-samples)",
+                    "exclude": [
+                        "src/dotnet/ReSharperPlugin.SamplePlugin/SampleAction.cs",
+                        "src/dotnet/ReSharperPlugin.SamplePlugin/SampleComponent.cs",
+                        "src/dotnet/ReSharperPlugin.SamplePlugin/SampleFix.cs",
+                        "src/dotnet/ReSharperPlugin.SamplePlugin/SampleHighlighting.cs",
+                        "src/dotnet/ReSharperPlugin.SamplePlugin/SampleProblemAnalyzer.cs",
+                        "src/dotnet/ReSharperPlugin.SamplePlugin/SampleSettings.cs",
+                        "src/dotnet/ReSharperPlugin.SamplePlugin/Options/SampleOptionsPage.cs",
+                        "src/dotnet/ReSharperPlugin.SamplePlugin/Options/ZoneMarker.cs",
+                        "src/dotnet/ReSharperPlugin.SamplePlugin.Tests/SampleHighlightingTest.cs"
+                    ]
+                }
+            ]
+        }
+    ],
+    "postActions": [
+        {
+            "condition": "(OS != \"Windows_NT\")",
+            "description": "Make gradlew executable",
+            "manualInstructions": [ { "text": "Make gradlew executable" }  ],
+            "actionId": "cb9a6cf3-4f5c-4860-b9d2-03a574959774",
+            "args": {
+                "+x": "gradlew"
+            },
+            "continueOnError": true
+        }
+    ]
+}
