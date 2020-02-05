@@ -3,7 +3,7 @@ using JetBrains.Application.UI.Actions;
 using JetBrains.Application.UI.ActionsRevised.Menu;
 using JetBrains.Util;
 
-namespace SampleReSharperPlugin
+namespace PenWebVSPlugin
 {
     [Action("ActionShowMessageBox", "Show message box", Id = 543210)]
     public class ShowMessageBoxAction : SampleAction, IExecutableAction

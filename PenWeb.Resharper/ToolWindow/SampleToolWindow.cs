@@ -7,7 +7,7 @@ using JetBrains.Application.UI.UIAutomation;
 using JetBrains.DataFlow;
 using JetBrains.Lifetimes;
 
-namespace SampleReSharperPlugin
+namespace PenWebVSPlugin
 {
     public class SampleToolWindow
     {

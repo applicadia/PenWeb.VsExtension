@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace SampleReSharperPlugin
+namespace PenWebVSPlugin
 {    
     public partial class ToolPanel : UserControl
     {

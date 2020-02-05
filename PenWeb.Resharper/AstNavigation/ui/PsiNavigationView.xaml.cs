@@ -1,6 +1,6 @@
 ﻿using JetBrains.Application.UI.Automation;
 
-namespace SampleReSharperPlugin
+namespace PenWebVSPlugin
 {
     public partial class PsiNavigationView : IView<PsiNavigationViewModel>
     {

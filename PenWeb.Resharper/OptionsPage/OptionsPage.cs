@@ -9,7 +9,7 @@ using JetBrains.ReSharper.Feature.Services.Resources;
 using JetBrains.Lifetimes;
 using JetBrains.IDE.UI.Options;
 
-namespace SampleReSharperPlugin
+namespace PenWebVSPlugin
 {
     [OptionsPage(Pid, "Sample R# Plugin", typeof(FeaturesEnvironmentOptionsThemedIcons.CodeInspections),
         ParentId = ToolsPage.PID)]

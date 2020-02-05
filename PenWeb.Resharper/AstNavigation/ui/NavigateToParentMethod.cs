@@ -2,7 +2,7 @@
 using System.Windows.Input;
 using JetBrains.ProjectModel;
 
-namespace SampleReSharperPlugin
+namespace PenWebVSPlugin
 {
     public class NavigateToParentMethod : ICommand
     {

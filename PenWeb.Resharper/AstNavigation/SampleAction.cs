@@ -2,7 +2,7 @@
 using JetBrains.Application.UI.Actions;
 using JetBrains.Application.UI.ActionsRevised.Menu;
 
-namespace SampleReSharperPlugin
+namespace PenWebVSPlugin
 {
     public abstract class SampleAction : IExecutableAction
     {

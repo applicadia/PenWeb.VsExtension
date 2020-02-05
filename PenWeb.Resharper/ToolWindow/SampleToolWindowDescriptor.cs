@@ -1,7 +1,7 @@
 ﻿using JetBrains.Application;
 using JetBrains.Application.UI.ToolWindowManagement;
 
-namespace SampleReSharperPlugin
+namespace PenWebVSPlugin
 {    
     [ToolWindowDescriptor(
             ProductNeutralId = "MyToolWindow",

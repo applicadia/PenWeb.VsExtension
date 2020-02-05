@@ -17,7 +17,7 @@ using JetBrains.TextControl;
 using JetBrains.Util;
 using JetBrains.Lifetimes;
 
-namespace SampleReSharperPlugin
+namespace PenWebVSPlugin
 {
     [SolutionComponent]
     public class NodeUnderCaretDetector

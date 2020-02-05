@@ -2,7 +2,7 @@
 using JetBrains.DataFlow;
 using JetBrains.ProjectModel;
 
-namespace SampleReSharperPlugin
+namespace PenWebVSPlugin
 {
     public interface ISolutionStateTracker
     {

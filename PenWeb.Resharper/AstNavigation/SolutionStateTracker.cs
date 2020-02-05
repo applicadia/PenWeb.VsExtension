@@ -7,7 +7,7 @@ using JetBrains.ProjectModel.Tasks;
 using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.Lifetimes;
 
-namespace SampleReSharperPlugin
+namespace PenWebVSPlugin
 {
     [ShellComponent]
     public class SolutionStateTracker : ISolutionStateTracker

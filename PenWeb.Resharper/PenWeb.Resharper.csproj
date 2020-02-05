@@ -42,8 +42,8 @@
     <ProjectGuid>{14B8BDD6-5497-40B5-B3AB-D8833FFEFE8E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>PenWeb.Resharper</RootNamespace>
-    <AssemblyName>PenWeb.Resharper</AssemblyName>
+    <RootNamespace>PenWebVSPlugin</RootNamespace>
+    <AssemblyName>PenWebVSPlugin</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>

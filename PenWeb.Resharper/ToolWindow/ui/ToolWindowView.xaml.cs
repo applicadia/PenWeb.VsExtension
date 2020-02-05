@@ -1,4 +1,4 @@
-﻿namespace SampleReSharperPlugin
+﻿namespace PenWebVSPlugin
 {
     
     public partial class ToolWindowView

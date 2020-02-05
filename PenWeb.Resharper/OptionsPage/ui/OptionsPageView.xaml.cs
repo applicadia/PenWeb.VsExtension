@@ -1,6 +1,6 @@
 ﻿using JetBrains.Application.UI.Automation;
 
-namespace SampleReSharperPlugin
+namespace PenWebVSPlugin
 {
     [View]
     public partial class OptionsPageView : IView<OptionsPageViewModel>
