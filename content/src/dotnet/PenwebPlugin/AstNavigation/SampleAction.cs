@@ -1,11 +1,11 @@
-using JetBrains.Application.DataContext;
+﻿using JetBrains.Application.DataContext;
 using JetBrains.Application.UI.Actions;
 using JetBrains.Application.UI.ActionsRevised.Menu;
 using JetBrains.Application.UI.ActionSystem.ActionsRevised.Menu;
 using JetBrains.ReSharper.Psi.Files;
 using JetBrains.Util;
 
-namespace ReSharperPlugin.SamplePlugin
+namespace PenwebPlugin
 {
     [Action("SampleAction", "Do Something")]
     public class SampleAction : IActionWithExecuteRequirement, IExecutableAction
@@ -20,7 +20,7 @@ namespace ReSharperPlugin.SamplePlugin
             return true;
         }
 
-        public void Execute(IDataContext context, DelegateExecute nextExecute)
+        public virtual void Execute(IDataContext context, DelegateExecute nextExecute)
         {
             MessageBox.ShowInfo("Info!");
         }

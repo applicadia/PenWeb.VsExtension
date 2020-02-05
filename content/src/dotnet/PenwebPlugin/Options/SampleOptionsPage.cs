@@ -11,7 +11,7 @@ using JetBrains.Lifetimes;
 using JetBrains.ReSharper.Feature.Services.Daemon.OptionPages;
 using JetBrains.Rider.Model.UIAutomation;
 
-namespace ReSharperPlugin.SamplePlugin.Options
+namespace PenwebPlugin.Options
 {
     [OptionsPage(Id, PageTitle, typeof(OptionsThemedIcons.EnvironmentGeneral),
         ParentId = CodeInspectionPage.PID
@@ -21,7 +21,7 @@ namespace ReSharperPlugin.SamplePlugin.Options
     )]
     public class SampleOptionsPage : BeSimpleOptionsPage
     {
-        private const string Id = nameof(SampleOptionsPage);
+        private new const string Id = nameof(SampleOptionsPage);
         private const string PageTitle = "Sample Options";
 
         private readonly Lifetime _lifetime;
@@ -35,7 +35,7 @@ namespace ReSharperPlugin.SamplePlugin.Options
             _lifetime = lifetime;
 
             AddHeader("Sample header");
-            AddTextBox((SampleSettings x) => x.SampleText, "Description");
+            //$AddTextBox((SampleSettings x) => x.SampleText, "Description");
         }
 
         private BeTextBox AddTextBox<TKeyClass>(Expression<Func<TKeyClass, string>> lambdaExpression, string description)

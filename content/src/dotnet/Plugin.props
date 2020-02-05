@@ -2,11 +2,11 @@
   <PropertyGroup>
     <SdkVersion>2019.3.0</SdkVersion>
 
-    <Title>SamplePlugin</Title>
+    <Title>PenWebPlugin</Title>
     <Description>Description</Description>
 
-    <Authors>Author</Authors>
-    <Copyright>Copyright $([System.DateTime]::Now.Year) Maintainers of SamplePlugin</Copyright>
+    <Authors>Richard Esmond</Authors>
+    <Copyright>Copyright $([System.DateTime]::Now.Year) PenRad Technologies, Inc.</Copyright>
     <PackageTags>resharper plugin</PackageTags>
 
     <PackageProjectUrl></PackageProjectUrl>
