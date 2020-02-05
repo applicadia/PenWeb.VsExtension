@@ -19,12 +19,9 @@ namespace PenWeb.ASTPlugin
 
         public PsiNavigationViewModel(Lifetime lifetime)
         {
-            NodeUnderCaretText =
-                new Property<string>(lifetime, "PsiNavigationViewModel.NodeUnderCaretProperty");
+            NodeUnderCaretText = new Property<string>(lifetime, "PsiNavigationViewModel.NodeUnderCaretProperty");
 
-            ReferencedElementsNamesList =
-                new Property<IEnumerable<string>>(lifetime, "PsiNavigationViewModel.ReferencedElementsNamesList")
-                    {Value = new List<string> {"No references"}};
+            ReferencedElementsNamesList = new Property<IEnumerable<string>>(lifetime, "PsiNavigationViewModel.ReferencedElementsNamesList"){Value = new List<string> {"No references"}};
 
 
             var solutionStateTracker = SolutionStateTracker.Instance;
@@ -46,9 +43,7 @@ namespace PenWeb.ASTPlugin
                 nodeUnderCaretDetector.NodeReferencedElements.FlowChangesInto(lifetime, ReferencedElementsNamesList,
                     elements =>
                     {
-                        return elements?.Select(
-                                       element => $"{element.GetElementType().PresentableName} : {element.ShortName}")
-                                   .ToList() ?? new List<string> {"No references"};
+                        return elements?.Select(element => $"{element.GetElementType().PresentableName} : {element.ShortName}").ToList() ?? new List<string> {"No references"};
                     });
             });
         }        

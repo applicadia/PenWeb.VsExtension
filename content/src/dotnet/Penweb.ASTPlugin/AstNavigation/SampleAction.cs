@@ -7,12 +7,14 @@ using JetBrains.Util;
 
 namespace PenWeb.ASTPlugin
 {
-    [Action("SampleAction", "Do Something")]
+    //[Action("SampleAction", "Do Something")]
     public class SampleAction : IActionWithExecuteRequirement, IExecutableAction
     {
         public IActionRequirement GetRequirement(IDataContext dataContext)
         {
-            return CommitAllDocumentsRequirement.TryGetInstance(dataContext);
+            IActionRequirement actionRequirement = CommitAllDocumentsRequirement.TryGetInstance(dataContext);
+
+            return actionRequirement;
         }
 
         public bool Update(IDataContext context, ActionPresentation presentation, DelegateUpdate nextUpdate)

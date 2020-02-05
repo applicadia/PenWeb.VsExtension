@@ -30,12 +30,7 @@ namespace PenWeb.ASTPlugin
         public IProperty<ITreeNode> NodeUnderCaret { get; set; }
         public IProperty<IEnumerable<IDeclaredElement>> NodeReferencedElements { get; set; }
 
-
-        public NodeUnderCaretDetector(Lifetime lifetime, ISolution solution,
-            DocumentManager documentManager,
-            ITextControlManager textControlManager, IShellLocks shellLocks)
-
-
+        public NodeUnderCaretDetector(Lifetime lifetime, ISolution solution, DocumentManager documentManager, ITextControlManager textControlManager, IShellLocks shellLocks)
         {
             Solution = solution;
             _lifetime = lifetime;
@@ -43,17 +38,18 @@ namespace PenWeb.ASTPlugin
             _textControlManager = textControlManager;
             _shellLocks = shellLocks;
             NodeUnderCaret = new Property<ITreeNode>("NodeUnderCaretDetector.NodeUnderCaret");
-            NodeReferencedElements =
-                new Property<IEnumerable<IDeclaredElement>>("NodeUnderCaretDetector.NodeReferencedElements");
+            NodeReferencedElements = new Property<IEnumerable<IDeclaredElement>>("NodeUnderCaretDetector.NodeReferencedElements");
 
             EventHandler caretMoved = (sender, args) =>
             {
                 _shellLocks.QueueReadLock("NodeUnderCaretDetector.CaretMoved", Refresh);
             };
 
-            lifetime.Bracket(
+            lifetime.Bracket
+            (
                 () => _textControlManager.Legacy.CaretMoved += caretMoved,
-                () => _textControlManager.Legacy.CaretMoved -= caretMoved);
+                () => _textControlManager.Legacy.CaretMoved -= caretMoved
+            );
         }
 
 

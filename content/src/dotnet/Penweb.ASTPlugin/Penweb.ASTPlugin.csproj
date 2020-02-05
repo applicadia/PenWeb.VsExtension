@@ -13,6 +13,11 @@
     <IncludeBuildOutput>false</IncludeBuildOutput>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <HostFullIdentifier>ReSharperPlatformVs16_899a2c7d</HostFullIdentifier>
+  </PropertyGroup>
+
+  
   <ItemGroup>
     <PackageReference Include="JetBrains.ReSharper.SDK" Version="2019.3.1">
       <PrivateAssets>all</PrivateAssets>
@@ -29,38 +34,47 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="AstNavigation\Hold\NavigateToCtorProvider.cs" />
+    <Compile Remove="AstNavigation\Hold\NodeUnderCaretDetector.cs" />
+    <Compile Remove="AstNavigation\Hold\PsiExtensionMethods.cs" />
+    <Compile Remove="AstNavigation\ui\NavigateByReference.cs" />
+    <Compile Remove="AstNavigation\ui\NavigateToParentMethod.cs" />
+    <Compile Remove="AstNavigation\ui\PsiNavigationView.xaml.cs" />
+    <Compile Remove="AstNavigation\ui\PsiNavigationViewModel.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="bin\$(AssemblyName)\$(Configuration)\$(AssemblyName).dll" PackagePath="dotFiles" Pack="true" />
     <Content Include="bin\$(AssemblyName)\$(Configuration)\$(AssemblyName).pdb" PackagePath="dotFiles" Pack="true" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="AstNavigation\Hold\NavigateToCtorProvider.cs" />
+    <None Include="AstNavigation\Hold\NodeUnderCaretDetector.cs" />
+    <None Include="AstNavigation\Hold\PsiExtensionMethods.cs" />
+    <None Include="AstNavigation\ui\NavigateByReference.cs" />
+    <None Include="AstNavigation\ui\NavigateToParentMethod.cs" />
+    <None Include="AstNavigation\ui\PsiNavigationView.xaml.cs" />
+    <None Include="AstNavigation\ui\PsiNavigationViewModel.cs" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Update="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" />
   </ItemGroup>
 
-  <!-- TODO: uncomment for xaml icons -->
-  <!--<ItemGroup>-->
-    <!--<Reference Include="System.Xaml" />-->
-    <!--<Reference Include="WindowsBase" />-->
-  <!--</ItemGroup>-->
-
-  <!--<ItemGroup Condition="'$(OS)' != 'Unix'">-->
-    <!--<Reference Include="PresentationCore" />-->
-    <!--<Reference Include="PresentationFramework" />-->
-
-    <!--<ThemedIconsXamlV3 Include="**\*-color.xaml">-->
-      <!--<ThemeColumns>Color</ThemeColumns>-->
-      <!--<RemoveBackgroundElement>True</RemoveBackgroundElement>-->
-      <!--<SubType>Designer</SubType>-->
-      <!--<Generator>MSBuild:Compile</Generator>-->
-    <!--</ThemedIconsXamlV3>-->
-    <!--<ThemedIconsXamlV3 Include="**\*-graydark.xaml">-->
-      <!--<ThemeColumns>GrayDark</ThemeColumns>-->
-      <!--<RemoveBackgroundElement>True</RemoveBackgroundElement>-->
-      <!--<SubType>Designer</SubType>-->
-      <!--<Generator>MSBuild:Compile</Generator>-->
-    <!--</ThemedIconsXamlV3>-->
-  <!--</ItemGroup>-->
-
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
+
+  <Target Name="CopyAllPluginFiles" AfterTargets="AfterBuild" Condition="'$(HostFullIdentifier)' != ''">
+    <InstalledProductsDiscoveryTask HostFullIdentifier="$(HostFullIdentifier)">
+      <Output TaskParameter="Directories" ItemName="InstallFolder" />
+    </InstalledProductsDiscoveryTask>
+
+    <!-- InstallFolder is now the location of the host -->
+    <Message Text="InstallFolder: @(InstallFolder)" Importance="High" />
+
+    <!-- Copy any files in the AllFilesToCopy property to the host installation folder.
+       The AllFilesToCopy property needs to be populated, based on your own criteria -->
+    <Copy SourceFiles="@(AllFilesToCopy)" DestinationFolder="@(InstallFolder)" Condition="Exists('@(InstallFolder)')" />
+  </Target>
 
 </Project>
