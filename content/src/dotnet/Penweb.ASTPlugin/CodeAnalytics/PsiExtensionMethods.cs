@@ -1,17 +1,21 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using JetBrains.Annotations;
 using JetBrains.Application.Threading;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.Navigation.NavigationExtensions;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.Cpp.Language;
+using JetBrains.ReSharper.Psi.Cpp.Symbols;
+using JetBrains.ReSharper.Psi.Cpp.Tree;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Files;
 using JetBrains.ReSharper.Psi.Paths;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.Util;
+using Penweb.CodeAnalytics;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace PenWeb.ASTPlugin
 {
@@ -30,6 +34,13 @@ namespace PenWeb.ASTPlugin
         {            
             var file = project.GetPsiSourceFileInProject(FileSystemPath.Parse(filename));
             return file?.GetPsiFiles<CSharpLanguage>().SafeOfType<ICSharpFile>().SingleOrDefault();
+        }
+
+        [CanBeNull]
+        public static CppFile GetCppFile(this IProject project, string filename)
+        {            
+            var file = project.GetPsiSourceFileInProject(FileSystemPath.Parse(filename));
+            return file?.GetPsiFiles<CppLanguage>().SafeOfType<CppFile>().SingleOrDefault();
         }
 
 
@@ -54,7 +65,6 @@ namespace PenWeb.ASTPlugin
             return resultList.FirstOrDefault();
         }
 
-
         public static void NavigateToTypeNodeByFqn(this ISolution solution, string projectName, string fileName, string typeName)
         {                        
             solution.Locks.TryExecuteWithReadLock(() =>
@@ -66,20 +76,17 @@ namespace PenWeb.ASTPlugin
             });            
         }
 
-
         private static string GetShortNameFromFqn(string fqn)
         {
             var pos = fqn.LastIndexOf(".", StringComparison.Ordinal) + 1;
             return pos > 0 ? fqn.Substring(pos) : fqn;
         }
 
-
         private static string GetLongNameFromFqn(string fqn)
         {
             var pos = fqn.LastIndexOf(".", StringComparison.Ordinal) + 1;
             return pos > 0 ? fqn.Substring(0, pos - 1) : fqn;
         }
-
 
         [CanBeNull]
         public static IEnumerable<IDeclaredElement> GetReferencedElements(this ITreeNode node)
@@ -113,6 +120,28 @@ namespace PenWeb.ASTPlugin
                 node = node.Parent;
             }
             return null;
+        }
+
+        [CanBeNull]
+        public static string GetNameStr(this CppQualifiedName cppQualifiedName)
+        {
+            if (cppQualifiedName.Name != null)
+            {
+                ICppQualifiedNamePart namePart = cppQualifiedName.Name;
+
+                CppQualifiedNamePartVisitor cppQualifiedNamePartVisitor = new CppQualifiedNamePartVisitor();
+
+                CppQualifiedNamePartVisitorData cppQualifiedNamePartVisitorData = new CppQualifiedNamePartVisitorData();
+
+                namePart.Accept<CppQualifiedNamePartVisitorResult, CppQualifiedNamePartVisitorData>(cppQualifiedNamePartVisitorData, cppQualifiedNamePartVisitor);
+
+                return cppQualifiedNamePartVisitor.StringBuilder.ToString();
+            }
+            else
+            {
+                Console.WriteLine("QualifiedName.Name is null");
+                return "QualifiedName Error";
+            }
         }
     }
 }

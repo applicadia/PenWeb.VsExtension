@@ -13,11 +13,6 @@
     <IncludeBuildOutput>false</IncludeBuildOutput>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <HostFullIdentifier>ReSharperPlatformVs16_899a2c7d</HostFullIdentifier>
-  </PropertyGroup>
-
-  
   <ItemGroup>
     <PackageReference Include="JetBrains.ReSharper.SDK" Version="2019.3.1">
       <PrivateAssets>all</PrivateAssets>
@@ -51,7 +46,7 @@
   <ItemGroup>
     <None Include="AstNavigation\Hold\NavigateToCtorProvider.cs" />
     <None Include="AstNavigation\Hold\NodeUnderCaretDetector.cs" />
-    <None Include="AstNavigation\Hold\PsiExtensionMethods.cs" />
+    <None Include="CodeAnalytics\PsiExtensionMethods.cs" />
     <None Include="AstNavigation\ui\NavigateByReference.cs" />
     <None Include="AstNavigation\ui\NavigateToParentMethod.cs" />
     <None Include="AstNavigation\ui\PsiNavigationView.xaml.cs" />
@@ -64,17 +59,8 @@
 
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 
-  <Target Name="CopyAllPluginFiles" AfterTargets="AfterBuild" Condition="'$(HostFullIdentifier)' != ''">
-    <InstalledProductsDiscoveryTask HostFullIdentifier="$(HostFullIdentifier)">
-      <Output TaskParameter="Directories" ItemName="InstallFolder" />
-    </InstalledProductsDiscoveryTask>
-
-    <!-- InstallFolder is now the location of the host -->
-    <Message Text="InstallFolder: @(InstallFolder)" Importance="High" />
-
-    <!-- Copy any files in the AllFilesToCopy property to the host installation folder.
-       The AllFilesToCopy property needs to be populated, based on your own criteria -->
-    <Copy SourceFiles="@(AllFilesToCopy)" DestinationFolder="@(InstallFolder)" Condition="Exists('@(InstallFolder)')" />
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="copy $(outdir)\$(SolutionName).dll   C:\Users\richard\AppData\Local\JetBrains\Installations\ReSharperPlatformVs16_899a2c7d_000\&#xD;&#xA;copy $(outdir)\$(SolutionName).pdb C:\Users\richard\AppData\Local\JetBrains\Installations\ReSharperPlatformVs16_899a2c7d_000\" />
   </Target>
 
 </Project>

@@ -8,6 +8,7 @@ using JetBrains.Application.UI.Components.Theming;
 using JetBrains.Application.UI.ToolWindowManagement;
 using JetBrains.DataFlow;
 using JetBrains.Lifetimes;
+using Penweb.CodeAnalytics;
 
 namespace PenWeb.ASTPlugin
 {
@@ -19,6 +20,8 @@ namespace PenWeb.ASTPlugin
             var lifetime = context.GetComponent<Lifetime>();
             var settingsStore = context.GetComponent<SettingsStore>();
 
+
+            CppParseTreeNodeFactory.Start();
             CppCodeAnalysis.DoAnalytics(lifetime);
         }
     }
