@@ -16,28 +16,28 @@ namespace Penweb.CodeAnalytics
 {
     public class PenWebTypeId : CppParseTreeNodeBase
     {
-        public PenWebTypeId( JetBrains.ReSharper.Psi.Cpp.Tree.TypeId treeNode ) : base(treeNode)
+        public PenWebTypeId( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.TypeId treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebNestedDeclarator : CppParseTreeNodeBase
     {
-        public PenWebNestedDeclarator( JetBrains.ReSharper.Psi.Cpp.Tree.NestedDeclarator treeNode ) : base(treeNode)
+        public PenWebNestedDeclarator( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.NestedDeclarator treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebInitDeclarator : CppParseTreeNodeBase
     {
-        public PenWebInitDeclarator( JetBrains.ReSharper.Psi.Cpp.Tree.InitDeclarator treeNode ) : base(treeNode)
+        public PenWebInitDeclarator( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.InitDeclarator treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebDeclarationStatement : CppParseTreeNodeBase
     {
-        public PenWebDeclarationStatement( JetBrains.ReSharper.Psi.Cpp.Tree.DeclarationStatement treeNode ) : base(treeNode)
+        public PenWebDeclarationStatement( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.DeclarationStatement treeNode ) : base(parentNode, treeNode)
         {
         }
     }
@@ -45,56 +45,56 @@ namespace Penweb.CodeAnalytics
 
     public class PenWebDeclaratorQualifiedName : CppParseTreeNodeBase
     {
-        public PenWebDeclaratorQualifiedName( JetBrains.ReSharper.Psi.Cpp.Tree.DeclaratorQualifiedName treeNode ) : base(treeNode)
+        public PenWebDeclaratorQualifiedName( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.DeclaratorQualifiedName treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebCtorInitializer : CppParseTreeNodeBase
     {
-        public PenWebCtorInitializer( JetBrains.ReSharper.Psi.Cpp.Tree.CtorInitializer treeNode ) : base(treeNode)
+        public PenWebCtorInitializer( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.CtorInitializer treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebClassQualifiedName : CppParseTreeNodeBase
     {
-        public PenWebClassQualifiedName( JetBrains.ReSharper.Psi.Cpp.Tree.ClassQualifiedName treeNode ) : base(treeNode)
+        public PenWebClassQualifiedName( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.ClassQualifiedName treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebBaseClause : CppParseTreeNodeBase
     {
-        public PenWebBaseClause( JetBrains.ReSharper.Psi.Cpp.Tree.BaseClause treeNode ) : base(treeNode)
+        public PenWebBaseClause( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.BaseClause treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebBaseSpecifier : CppParseTreeNodeBase
     {
-        public PenWebBaseSpecifier( JetBrains.ReSharper.Psi.Cpp.Tree.BaseSpecifier treeNode ) : base(treeNode)
+        public PenWebBaseSpecifier( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.BaseSpecifier treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebAbstractDeclarator : CppParseTreeNodeBase
     {
-        public PenWebAbstractDeclarator( JetBrains.ReSharper.Psi.Cpp.Tree.AbstractDeclarator treeNode ) : base(treeNode)
+        public PenWebAbstractDeclarator( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.AbstractDeclarator treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebAbstractDeclaratorName : CppParseTreeNodeBase
     {
-        public PenWebAbstractDeclaratorName( JetBrains.ReSharper.Psi.Cpp.Tree.AbstractDeclaratorName treeNode ) : base(treeNode)
+        public PenWebAbstractDeclaratorName( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.AbstractDeclaratorName treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebDeclarator : CppParseTreeNodeBase
     {
-        public PenWebDeclarator( JetBrains.ReSharper.Psi.Cpp.Tree.Declarator treeNode ) : base(treeNode)
+        public PenWebDeclarator( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.Declarator treeNode ) : base(parentNode, treeNode)
         {
         }
 
@@ -111,7 +111,7 @@ namespace Penweb.CodeAnalytics
         [JsonProperty] public string ClassName  { get; set; }
         [JsonProperty] public string MethodName { get; set; }
 
-        public PenWebDeclaration( JetBrains.ReSharper.Psi.Cpp.Tree.Declaration treeNode ) : base(treeNode)
+        public PenWebDeclaration( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.Declaration treeNode ) : base(parentNode, treeNode)
         {
             this.Declaration = treeNode;
         }
@@ -156,7 +156,7 @@ namespace Penweb.CodeAnalytics
 
         public override string ToString()
         {
-            return $"[{this.Location.ToString()}]  {this.GetType().Name} ClassName: {this.ClassName} MethodName: {this.MethodName} |{SingleLineText}|";
+            return $"[{this.Location.ToString()}]  {this.GetType().Name} EnumName: {this.ClassName} MethodName: {this.MethodName} |{SingleLineText}|";
         }
     }
 
@@ -168,7 +168,7 @@ namespace Penweb.CodeAnalytics
         [JsonProperty] public string ClassName  { get; set; }
         [JsonProperty] public string MethodName { get; set; }
 
-        public PenWebSimpleDeclaration( JetBrains.ReSharper.Psi.Cpp.Tree.SimpleDeclaration treeNode ) : base(treeNode)
+        public PenWebSimpleDeclaration( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.SimpleDeclaration treeNode ) : base(parentNode, treeNode)
         {
             this.SimpleDeclaration = treeNode;
         }
@@ -211,7 +211,7 @@ namespace Penweb.CodeAnalytics
 
         public override string ToString()
         {
-            return $"[{this.Location.ToString()}]  {this.GetType().Name} ClassName: {this.ClassName} MethodName: {this.MethodName} |{SingleLineText}|";
+            return $"[{this.Location.ToString()}]  {this.GetType().Name} EnumName: {this.ClassName} MethodName: {this.MethodName} |{SingleLineText}|";
         }
     }
 

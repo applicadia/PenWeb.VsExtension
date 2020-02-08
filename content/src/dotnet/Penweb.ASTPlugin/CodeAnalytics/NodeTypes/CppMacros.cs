@@ -21,7 +21,7 @@ namespace Penweb.CodeAnalytics
         [JsonProperty] public string       MacroName       { get; set; }
         [JsonProperty] public List<string> MacroParameters { get; set; } = new List<string>();
 
-        public PenWebMacroCall( JetBrains.ReSharper.Psi.Cpp.Tree.MacroCall treeNode ) : base(treeNode)
+        public PenWebMacroCall( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.MacroCall treeNode ) : base(parentNode, treeNode)
         {
             this.MacroCall = treeNode;
         }
@@ -72,56 +72,56 @@ namespace Penweb.CodeAnalytics
 
     public class PenWebMacroReference : CppParseTreeNodeBase
     {
-        public PenWebMacroReference( JetBrains.ReSharper.Psi.Cpp.Tree.MacroReference treeNode ) : base(treeNode)
+        public PenWebMacroReference( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.MacroReference treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebMacroParameterList : CppParseTreeNodeBase
     {
-        public PenWebMacroParameterList( JetBrains.ReSharper.Psi.Cpp.Tree.MacroParameterList treeNode ) : base(treeNode)
+        public PenWebMacroParameterList( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.MacroParameterList treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebMacroParameter : CppParseTreeNodeBase
     {
-        public PenWebMacroParameter( JetBrains.ReSharper.Psi.Cpp.Tree.MacroParameter treeNode ) : base(treeNode)
+        public PenWebMacroParameter( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.MacroParameter treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebMacroArgument : CppParseTreeNodeBase
     {
-        public PenWebMacroArgument( JetBrains.ReSharper.Psi.Cpp.Tree.MacroArgument treeNode ) : base(treeNode)
+        public PenWebMacroArgument( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.MacroArgument treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebMacroArgumentList : CppParseTreeNodeBase
     {
-        public PenWebMacroArgumentList( JetBrains.ReSharper.Psi.Cpp.Tree.MacroArgumentList treeNode ) : base(treeNode)
+        public PenWebMacroArgumentList( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.MacroArgumentList treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebMacroBody : CppParseTreeNodeBase
     {
-        public PenWebMacroBody( JetBrains.ReSharper.Psi.Cpp.Tree.MacroBody treeNode ) : base(treeNode)
+        public PenWebMacroBody( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.MacroBody treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebMacroDefinition : CppParseTreeNodeBase
     {
-        public PenWebMacroDefinition( JetBrains.ReSharper.Psi.Cpp.Tree.MacroDefinition treeNode ) : base(treeNode)
+        public PenWebMacroDefinition( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.MacroDefinition treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebMacroUndefinition : CppParseTreeNodeBase
     {
-        public PenWebMacroUndefinition( JetBrains.ReSharper.Psi.Cpp.Tree.MacroUndefinition treeNode ) : base(treeNode)
+        public PenWebMacroUndefinition( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.MacroUndefinition treeNode ) : base(parentNode, treeNode)
         {
         }
     }

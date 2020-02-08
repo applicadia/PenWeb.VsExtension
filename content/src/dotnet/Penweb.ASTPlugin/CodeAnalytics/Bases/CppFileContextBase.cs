@@ -42,7 +42,7 @@ namespace Penweb.CodeAnalytics
 
             foreach ( ITreeNode childTreeNode in this.CppFile.Children() )
             {
-                CppParseTreeNodeBase childParseTreeNode = CppParseTreeNodeFactory.Self.CreateTypedNode(childTreeNode);
+                CppParseTreeNodeBase childParseTreeNode = CppParseTreeNodeFactory.Self.CreateTypedNode(null, childTreeNode);
 
                 if ( childParseTreeNode != null )
                 {

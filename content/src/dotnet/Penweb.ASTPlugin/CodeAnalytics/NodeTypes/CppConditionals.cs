@@ -16,28 +16,28 @@ namespace Penweb.CodeAnalytics
 {
     public class PenWebIfStatement : CppParseTreeNodeBase
     {
-        public PenWebIfStatement( JetBrains.ReSharper.Psi.Cpp.Tree.IfStatement treeNode ) : base(treeNode)
+        public PenWebIfStatement( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.IfStatement treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebSwitchStatement : CppParseTreeNodeBase
     {
-        public PenWebSwitchStatement( JetBrains.ReSharper.Psi.Cpp.Tree.SwitchStatement treeNode ) : base(treeNode)
+        public PenWebSwitchStatement( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.SwitchStatement treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebBreakStatement : CppParseTreeNodeBase
     {
-        public PenWebBreakStatement( JetBrains.ReSharper.Psi.Cpp.Tree.BreakStatement treeNode ) : base(treeNode)
+        public PenWebBreakStatement( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.BreakStatement treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebCaseStatement : CppParseTreeNodeBase
     {
-        public PenWebCaseStatement( JetBrains.ReSharper.Psi.Cpp.Tree.CaseStatement treeNode ) : base(treeNode)
+        public PenWebCaseStatement( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.CaseStatement treeNode ) : base(parentNode, treeNode)
         {
         }
     }

@@ -135,8 +135,12 @@ namespace Penweb.CodeAnalytics
 
         public List<CppParseTreeNodeBase> ChildNodes { get; } = new List<CppParseTreeNodeBase>();
 
-        public CppParseTreeNodeBase(ITreeNode treeNode)
+        public CppParseTreeNodeBase ParentNode { get; set; }
+
+        public CppParseTreeNodeBase(CppParseTreeNodeBase parentNode, ITreeNode treeNode)
         {
+            this.ParentNode = parentNode;
+
             //this.TreeNode = treeNode;
 
             this.NodeType = treeNode.NodeType.ToString();
@@ -150,7 +154,7 @@ namespace Penweb.CodeAnalytics
 
             foreach ( ITreeNode childTreeNode in treeNode.Children() )
             {
-                CppParseTreeNodeBase childParseTreeNode = CppParseTreeNodeFactory.Self.CreateTypedNode(childTreeNode);
+                CppParseTreeNodeBase childParseTreeNode = CppParseTreeNodeFactory.Self.CreateTypedNode(this, childTreeNode);
 
                 if ( childParseTreeNode != null )
                 {
@@ -202,6 +206,22 @@ namespace Penweb.CodeAnalytics
             return null;
         }
 
+        public TNodeType GetParentByType<TNodeType>() where TNodeType : CppParseTreeNodeBase
+        {
+            if (this.ParentNode == null)
+            {
+                return null;
+            }
+            else if (this.ParentNode is TNodeType)
+            {
+                return this.ParentNode as TNodeType;
+            }
+            else
+            {
+                return this.ParentNode.GetParentByType<TNodeType>();
+            }
+        }
+
         public override string ToString()
         {
             return $"[{this.Location.ToString()}]  {this.GetType().Name} |{SingleLineText}|";
@@ -220,35 +240,35 @@ namespace Penweb.CodeAnalytics
 
     public class PenWebAccessSpecifier : CppParseTreeNodeBase
     {
-        public PenWebAccessSpecifier( JetBrains.ReSharper.Psi.Cpp.Tree.AccessSpecifier treeNode ) : base(treeNode)
+        public PenWebAccessSpecifier( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.AccessSpecifier treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebArraySizeSpecifier : CppParseTreeNodeBase
     {
-        public PenWebArraySizeSpecifier( JetBrains.ReSharper.Psi.Cpp.Tree.ArraySizeSpecifier treeNode ) : base(treeNode)
+        public PenWebArraySizeSpecifier( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.ArraySizeSpecifier treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebBracedInitList : CppParseTreeNodeBase
     {
-        public PenWebBracedInitList( JetBrains.ReSharper.Psi.Cpp.Tree.BracedInitList treeNode ) : base(treeNode)
+        public PenWebBracedInitList( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.BracedInitList treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebCatchSection : CppParseTreeNodeBase
     {
-        public PenWebCatchSection( JetBrains.ReSharper.Psi.Cpp.Tree.CatchSection treeNode ) : base(treeNode)
+        public PenWebCatchSection( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.CatchSection treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebCompoundStatement : CppParseTreeNodeBase
     {
-        public PenWebCompoundStatement( JetBrains.ReSharper.Psi.Cpp.Tree.CompoundStatement treeNode ) : base(treeNode)
+        public PenWebCompoundStatement( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.CompoundStatement treeNode ) : base(parentNode, treeNode)
         {
         }
     }
@@ -256,42 +276,42 @@ namespace Penweb.CodeAnalytics
 
     public class PenWebContinueStatement : CppParseTreeNodeBase
     {
-        public PenWebContinueStatement( JetBrains.ReSharper.Psi.Cpp.Tree.ContinueStatement treeNode ) : base(treeNode)
+        public PenWebContinueStatement( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.ContinueStatement treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebCppChameleonCompoundStatement : CppParseTreeNodeBase
     {
-        public PenWebCppChameleonCompoundStatement( JetBrains.ReSharper.Psi.Cpp.Tree.CppChameleonCompoundStatement treeNode ) : base(treeNode)
+        public PenWebCppChameleonCompoundStatement( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.CppChameleonCompoundStatement treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebCppChameleonCtorBlock : CppParseTreeNodeBase
     {
-        public PenWebCppChameleonCtorBlock( JetBrains.ReSharper.Psi.Cpp.Tree.CppChameleonCtorBlock treeNode ) : base(treeNode)
+        public PenWebCppChameleonCtorBlock( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.CppChameleonCtorBlock treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebCxxCliPropertyDeclaration : CppParseTreeNodeBase
     {
-        public PenWebCxxCliPropertyDeclaration( JetBrains.ReSharper.Psi.Cpp.Tree.CxxCliPropertyDeclaration treeNode ) : base(treeNode)
+        public PenWebCxxCliPropertyDeclaration( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.CxxCliPropertyDeclaration treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebCxxCliPropertyOrEventDeclarator : CppParseTreeNodeBase
     {
-        public PenWebCxxCliPropertyOrEventDeclarator( JetBrains.ReSharper.Psi.Cpp.Tree.CxxCliPropertyOrEventDeclarator treeNode ) : base(treeNode)
+        public PenWebCxxCliPropertyOrEventDeclarator( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.CxxCliPropertyOrEventDeclarator treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebDefaultStatement : CppParseTreeNodeBase
     {
-        public PenWebDefaultStatement( JetBrains.ReSharper.Psi.Cpp.Tree.DefaultStatement treeNode ) : base(treeNode)
+        public PenWebDefaultStatement( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.DefaultStatement treeNode ) : base(parentNode, treeNode)
         {
         }
     }
@@ -299,168 +319,168 @@ namespace Penweb.CodeAnalytics
 
     public class PenWebDoStatement : CppParseTreeNodeBase
     {
-        public PenWebDoStatement( JetBrains.ReSharper.Psi.Cpp.Tree.DoStatement treeNode ) : base(treeNode)
+        public PenWebDoStatement( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.DoStatement treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebDoStatementBody : CppParseTreeNodeBase
     {
-        public PenWebDoStatementBody( JetBrains.ReSharper.Psi.Cpp.Tree.DoStatementBody treeNode ) : base(treeNode)
+        public PenWebDoStatementBody( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.DoStatementBody treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebEmptyDeclaration : CppParseTreeNodeBase
     {
-        public PenWebEmptyDeclaration( JetBrains.ReSharper.Psi.Cpp.Tree.EmptyDeclaration treeNode ) : base(treeNode)
+        public PenWebEmptyDeclaration( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.EmptyDeclaration treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebEmptyStatement : CppParseTreeNodeBase
     {
-        public PenWebEmptyStatement( JetBrains.ReSharper.Psi.Cpp.Tree.EmptyStatement treeNode ) : base(treeNode)
+        public PenWebEmptyStatement( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.EmptyStatement treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebEnumerator : CppParseTreeNodeBase
     {
-        public PenWebEnumerator( JetBrains.ReSharper.Psi.Cpp.Tree.Enumerator treeNode ) : base(treeNode)
+        public PenWebEnumerator( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.Enumerator treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebForStatement : CppParseTreeNodeBase
     {
-        public PenWebForStatement( JetBrains.ReSharper.Psi.Cpp.Tree.ForStatement treeNode ) : base(treeNode)
+        public PenWebForStatement( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.ForStatement treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebImportDirective : CppParseTreeNodeBase
     {
-        public PenWebImportDirective( JetBrains.ReSharper.Psi.Cpp.Tree.ImportDirective treeNode ) : base(treeNode)
+        public PenWebImportDirective( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.ImportDirective treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebLinkageSpecification : CppParseTreeNodeBase
     {
-        public PenWebLinkageSpecification( JetBrains.ReSharper.Psi.Cpp.Tree.LinkageSpecification treeNode ) : base(treeNode)
+        public PenWebLinkageSpecification( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.LinkageSpecification treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebMemInitializer : CppParseTreeNodeBase
     {
-        public PenWebMemInitializer( JetBrains.ReSharper.Psi.Cpp.Tree.MemInitializer treeNode ) : base(treeNode)
+        public PenWebMemInitializer( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.MemInitializer treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebMemInitializerName : CppParseTreeNodeBase
     {
-        public PenWebMemInitializerName( JetBrains.ReSharper.Psi.Cpp.Tree.MemInitializerName treeNode ) : base(treeNode)
+        public PenWebMemInitializerName( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.MemInitializerName treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebMSAttributes : CppParseTreeNodeBase
     {
-        public PenWebMSAttributes( JetBrains.ReSharper.Psi.Cpp.Tree.MSAttributes treeNode ) : base(treeNode)
+        public PenWebMSAttributes( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.MSAttributes treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebMSForeachStatement : CppParseTreeNodeBase
     {
-        public PenWebMSForeachStatement( JetBrains.ReSharper.Psi.Cpp.Tree.MSForeachStatement treeNode ) : base(treeNode)
+        public PenWebMSForeachStatement( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.MSForeachStatement treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebNamespaceAliasDefinition : CppParseTreeNodeBase
     {
-        public PenWebNamespaceAliasDefinition( JetBrains.ReSharper.Psi.Cpp.Tree.NamespaceAliasDefinition treeNode ) : base(treeNode)
+        public PenWebNamespaceAliasDefinition( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.NamespaceAliasDefinition treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebNamespaceDefinition : CppParseTreeNodeBase
     {
-        public PenWebNamespaceDefinition( JetBrains.ReSharper.Psi.Cpp.Tree.NamespaceDefinition treeNode ) : base(treeNode)
+        public PenWebNamespaceDefinition( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.NamespaceDefinition treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebNamespaceDefinitionName : CppParseTreeNodeBase
     {
-        public PenWebNamespaceDefinitionName( JetBrains.ReSharper.Psi.Cpp.Tree.NamespaceDefinitionName treeNode ) : base(treeNode)
+        public PenWebNamespaceDefinitionName( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.NamespaceDefinitionName treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebPPPragmaDirective : CppParseTreeNodeBase
     {
-        public PenWebPPPragmaDirective( JetBrains.ReSharper.Psi.Cpp.Tree.PPPragmaDirective treeNode ) : base(treeNode)
+        public PenWebPPPragmaDirective( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.PPPragmaDirective treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebPragmaDirective : CppParseTreeNodeBase
     {
-        public PenWebPragmaDirective( JetBrains.ReSharper.Psi.Cpp.Tree.PragmaDirective treeNode ) : base(treeNode)
+        public PenWebPragmaDirective( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.PragmaDirective treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebReturnStatement : CppParseTreeNodeBase
     {
-        public PenWebReturnStatement( JetBrains.ReSharper.Psi.Cpp.Tree.ReturnStatement treeNode ) : base(treeNode)
+        public PenWebReturnStatement( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.ReturnStatement treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebTemplateArgumentList : CppParseTreeNodeBase
     {
-        public PenWebTemplateArgumentList( JetBrains.ReSharper.Psi.Cpp.Tree.TemplateArgumentList treeNode ) : base(treeNode)
+        public PenWebTemplateArgumentList( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.TemplateArgumentList treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebTryStatement : CppParseTreeNodeBase
     {
-        public PenWebTryStatement( JetBrains.ReSharper.Psi.Cpp.Tree.TryStatement treeNode ) : base(treeNode)
+        public PenWebTryStatement( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.TryStatement treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebUsingDeclaration : CppParseTreeNodeBase
     {
-        public PenWebUsingDeclaration( JetBrains.ReSharper.Psi.Cpp.Tree.UsingDeclaration treeNode ) : base(treeNode)
+        public PenWebUsingDeclaration( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.UsingDeclaration treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebUsingDeclarator : CppParseTreeNodeBase
     {
-        public PenWebUsingDeclarator( JetBrains.ReSharper.Psi.Cpp.Tree.UsingDeclarator treeNode ) : base(treeNode)
+        public PenWebUsingDeclarator( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.UsingDeclarator treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebUsingDirective : CppParseTreeNodeBase
     {
-        public PenWebUsingDirective( JetBrains.ReSharper.Psi.Cpp.Tree.UsingDirective treeNode ) : base(treeNode)
+        public PenWebUsingDirective( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.UsingDirective treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebWhileStatement : CppParseTreeNodeBase
     {
-        public PenWebWhileStatement( JetBrains.ReSharper.Psi.Cpp.Tree.WhileStatement treeNode ) : base(treeNode)
+        public PenWebWhileStatement( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.WhileStatement treeNode ) : base(parentNode, treeNode)
         {
         }
     }

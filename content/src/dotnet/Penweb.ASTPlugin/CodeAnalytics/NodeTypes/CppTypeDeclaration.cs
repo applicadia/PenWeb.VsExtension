@@ -16,33 +16,62 @@ namespace Penweb.CodeAnalytics
 {
     public class PenWebDeclarationSpecifiers : CppParseTreeNodeBase
     {
-        public PenWebDeclarationSpecifiers( JetBrains.ReSharper.Psi.Cpp.Tree.DeclarationSpecifiers treeNode ) : base(treeNode)
+        public PenWebDeclarationSpecifiers( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.DeclarationSpecifiers treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebDeclarationSpecifierTypename : CppParseTreeNodeBase
     {
-        public PenWebDeclarationSpecifierTypename( JetBrains.ReSharper.Psi.Cpp.Tree.DeclarationSpecifierTypename treeNode ) : base(treeNode)
+        public PenWebDeclarationSpecifierTypename( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.DeclarationSpecifierTypename treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebEnumSpecifier : CppParseTreeNodeBase
     {
-        public PenWebEnumSpecifier( JetBrains.ReSharper.Psi.Cpp.Tree.EnumSpecifier treeNode ) : base(treeNode)
+        public JetBrains.ReSharper.Psi.Cpp.Tree.EnumSpecifier EnumSpecifier { get; set; }
+
+        [JsonProperty] public string EnumName { get; set; }
+
+        public PenWebEnumSpecifier( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.EnumSpecifier treeNode ) : base(parentNode, treeNode)
         {
+            this.EnumSpecifier = treeNode;
+        }
+
+        public override void Init()
+        {
+            try
+            {
+                base.Init();
+
+                this.SaveToJson = true;
+
+                this.EnumName = this.EnumSpecifier.DeclaredName;
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            this.EnumSpecifier = null;
+        }
+
+        public override string ToString()
+        {
+            return $"[{this.Location.ToString()}]  {this.GetType().Name} EnumName: {this.EnumName}  |{SingleLineText}|";
         }
     }
 
     public class PenWebClassSpecifier : CppParseTreeNodeBase
     {
-        private JetBrains.ReSharper.Psi.Cpp.Tree.ClassSpecifier ClassSpecifier { get; set;  }
+        public JetBrains.ReSharper.Psi.Cpp.Tree.ClassSpecifier ClassSpecifier { get; set;  }
 
         [JsonProperty] public string ClassName { get; set; }
         [JsonProperty] public string BaseClass { get; set; }
 
-        public PenWebClassSpecifier( JetBrains.ReSharper.Psi.Cpp.Tree.ClassSpecifier treeNode ) : base(treeNode)
+        public PenWebClassSpecifier( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.ClassSpecifier treeNode ) : base(parentNode, treeNode)
         {
             this.ClassSpecifier = treeNode;
         }
@@ -93,8 +122,7 @@ namespace Penweb.CodeAnalytics
 
         public override string ToString()
         {
-            return $"[{this.Location.ToString()}]  {this.GetType().Name} ClassName: {this.ClassName}  BaseClass: {this.BaseClass} |{SingleLineText}|";
+            return $"[{this.Location.ToString()}]  {this.GetType().Name} EnumName: {this.ClassName}  BaseClass: {this.BaseClass} |{SingleLineText}|";
         }
     }
-
 }

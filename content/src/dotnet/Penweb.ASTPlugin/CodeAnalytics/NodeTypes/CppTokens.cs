@@ -16,35 +16,35 @@ namespace Penweb.CodeAnalytics
 {
     public class CppGenericTreeNode : CppParseTreeNodeBase
     {
-        public CppGenericTreeNode( ITreeNode treeNode ) : base(treeNode)
+        public CppGenericTreeNode( CppParseTreeNodeBase parentNode, ITreeNode treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebCppCommentTokenNode : CppParseTreeNodeBase
     {
-        public PenWebCppCommentTokenNode( JetBrains.ReSharper.Psi.Cpp.Parsing.CppCommentTokenNode treeNode ) : base(treeNode)
+        public PenWebCppCommentTokenNode( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Parsing.CppCommentTokenNode treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebCppFromSubstitutionTokenNode : CppParseTreeNodeBase
     {
-        public PenWebCppFromSubstitutionTokenNode( JetBrains.ReSharper.Psi.Cpp.Parsing.CppFromSubstitutionTokenNode treeNode ) : base(treeNode)
+        public PenWebCppFromSubstitutionTokenNode( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Parsing.CppFromSubstitutionTokenNode treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebCppGenericTokenNode : CppParseTreeNodeBase
     {
-        public PenWebCppGenericTokenNode( JetBrains.ReSharper.Psi.Cpp.Parsing.CppGenericTokenNode treeNode ) : base(treeNode)
+        public PenWebCppGenericTokenNode( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Parsing.CppGenericTokenNode treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebCppIdentifierTokenNode : CppParseTreeNodeBase
     {
-        public PenWebCppIdentifierTokenNode( JetBrains.ReSharper.Psi.Cpp.Parsing.CppIdentifierTokenNode treeNode ) : base(treeNode)
+        public PenWebCppIdentifierTokenNode( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Parsing.CppIdentifierTokenNode treeNode ) : base(parentNode, treeNode)
         {
         }
     }

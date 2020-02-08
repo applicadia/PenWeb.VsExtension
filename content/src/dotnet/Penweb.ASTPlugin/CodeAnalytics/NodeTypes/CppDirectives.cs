@@ -16,7 +16,7 @@ namespace Penweb.CodeAnalytics
 {
     public class PenWebDirective : CppParseTreeNodeBase
     {
-        public PenWebDirective( JetBrains.ReSharper.Psi.Cpp.Tree.Directive treeNode ) : base(treeNode)
+        public PenWebDirective( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.Directive treeNode ) : base(parentNode, treeNode)
         {
         }
     }

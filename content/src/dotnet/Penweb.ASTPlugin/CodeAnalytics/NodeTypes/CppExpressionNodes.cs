@@ -18,7 +18,7 @@ namespace Penweb.CodeAnalytics
     {
         public JetBrains.ReSharper.Psi.Cpp.Tree.CppExpressionNode CppExpressionNode { get; set; }
 
-        public PenWebExpressionBase(JetBrains.ReSharper.Psi.Cpp.Tree.CppExpressionNode cppExpressionNode) : base(cppExpressionNode)
+        public PenWebExpressionBase(CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.CppExpressionNode cppExpressionNode) : base(parentNode, cppExpressionNode)
         {
             this.CppExpressionNode = cppExpressionNode;
         }
@@ -26,91 +26,91 @@ namespace Penweb.CodeAnalytics
 
     public class PenWebUnaryExpression : PenWebExpressionBase
     {
-        public PenWebUnaryExpression( JetBrains.ReSharper.Psi.Cpp.Tree.UnaryExpression treeNode ) : base(treeNode)
+        public PenWebUnaryExpression( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.UnaryExpression treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebCastExpression : PenWebExpressionBase
     {
-        public PenWebCastExpression( JetBrains.ReSharper.Psi.Cpp.Tree.CastExpression treeNode ) : base(treeNode)
+        public PenWebCastExpression( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.CastExpression treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebCliTypeIdExpression : PenWebExpressionBase
     {
-        public PenWebCliTypeIdExpression( JetBrains.ReSharper.Psi.Cpp.Tree.CliTypeIdExpression treeNode ) : base(treeNode)
+        public PenWebCliTypeIdExpression( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.CliTypeIdExpression treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebConditionalExpression : PenWebExpressionBase
     {
-        public PenWebConditionalExpression( JetBrains.ReSharper.Psi.Cpp.Tree.ConditionalExpression treeNode ) : base(treeNode)
+        public PenWebConditionalExpression( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.ConditionalExpression treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebDeleteExpression : PenWebExpressionBase
     {
-        public PenWebDeleteExpression( JetBrains.ReSharper.Psi.Cpp.Tree.DeleteExpression treeNode ) : base(treeNode)
+        public PenWebDeleteExpression( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.DeleteExpression treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebLiteralExpression : PenWebExpressionBase
     {
-        public PenWebLiteralExpression( JetBrains.ReSharper.Psi.Cpp.Tree.LiteralExpression treeNode ) : base(treeNode)
+        public PenWebLiteralExpression( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.LiteralExpression treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebNewExpression : PenWebExpressionBase
     {
-        public PenWebNewExpression( JetBrains.ReSharper.Psi.Cpp.Tree.NewExpression treeNode ) : base(treeNode)
+        public PenWebNewExpression( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.NewExpression treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebParenExpression : PenWebExpressionBase
     {
-        public PenWebParenExpression( JetBrains.ReSharper.Psi.Cpp.Tree.ParenExpression treeNode ) : base(treeNode)
+        public PenWebParenExpression( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.ParenExpression treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebPostfixExpression : PenWebExpressionBase
     {
-        public PenWebPostfixExpression( JetBrains.ReSharper.Psi.Cpp.Tree.PostfixExpression treeNode ) : base(treeNode)
+        public PenWebPostfixExpression( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.PostfixExpression treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebSizeOfExpression : PenWebExpressionBase
     {
-        public PenWebSizeOfExpression( JetBrains.ReSharper.Psi.Cpp.Tree.SizeOfExpression treeNode ) : base(treeNode)
+        public PenWebSizeOfExpression( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.SizeOfExpression treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebSubscriptExpression : PenWebExpressionBase
     {
-        public PenWebSubscriptExpression( JetBrains.ReSharper.Psi.Cpp.Tree.SubscriptExpression treeNode ) : base(treeNode)
+        public PenWebSubscriptExpression( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.SubscriptExpression treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebThisExpression : PenWebExpressionBase
     {
-        public PenWebThisExpression( JetBrains.ReSharper.Psi.Cpp.Tree.ThisExpression treeNode ) : base(treeNode)
+        public PenWebThisExpression( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.ThisExpression treeNode ) : base(parentNode, treeNode)
         {
         }
     }
 
     public class PenWebThrowExpression : PenWebExpressionBase
     {
-        public PenWebThrowExpression( JetBrains.ReSharper.Psi.Cpp.Tree.ThrowExpression treeNode ) : base(treeNode)
+        public PenWebThrowExpression( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.ThrowExpression treeNode ) : base(parentNode, treeNode)
         {
         }
     }
@@ -120,7 +120,7 @@ namespace Penweb.CodeAnalytics
         private JetBrains.ReSharper.Psi.Cpp.Tree.CallExpression CallExpression { get; set;  }
 
         [JsonProperty] public string CalledExpressionId { get; set; }
-        public PenWebCallExpression( JetBrains.ReSharper.Psi.Cpp.Tree.CallExpression treeNode ) : base(treeNode)
+        public PenWebCallExpression(CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.CallExpression treeNode ) : base(parentNode, treeNode)
         {
             this.CallExpression = treeNode;
         }
@@ -166,7 +166,7 @@ namespace Penweb.CodeAnalytics
         [JsonProperty] public string LeftArguement { get; set; }
         [JsonProperty] public string LeftOpperand { get; set; }
 
-        public PenWebBinaryExpression( JetBrains.ReSharper.Psi.Cpp.Tree.BinaryExpression treeNode ) : base(treeNode)
+        public PenWebBinaryExpression( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.BinaryExpression treeNode ) : base(parentNode, treeNode)
         {
             this.BinaryExpression = treeNode;
         }
@@ -225,7 +225,7 @@ namespace Penweb.CodeAnalytics
         [JsonProperty] public string ClassName     { get; set; }
         [JsonProperty] public string MethodName    { get; set; }
 
-        public PenWebMemberAccessExpression( JetBrains.ReSharper.Psi.Cpp.Tree.MemberAccessExpression treeNode ) : base(treeNode)
+        public PenWebMemberAccessExpression( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.MemberAccessExpression treeNode ) : base(parentNode, treeNode)
         {
             this.MemberAccessExpression = treeNode;
         }
@@ -278,7 +278,7 @@ namespace Penweb.CodeAnalytics
 
         public override string ToString()
         {
-            return $"[{this.Location.ToString()}]  {this.GetType().Name} LeftArguement: {this.LeftArguement}  ClassName: {this.ClassName}  MethodName: {this.MethodName}  Code: |{SingleLineText}|";
+            return $"[{this.Location.ToString()}]  {this.GetType().Name} LeftArguement: {this.LeftArguement}  EnumName: {this.ClassName}  MethodName: {this.MethodName}  Code: |{SingleLineText}|";
         }
     }
 
@@ -286,7 +286,7 @@ namespace Penweb.CodeAnalytics
     {
         public JetBrains.ReSharper.Psi.Cpp.Tree.ExpressionStatement ExpressionStatement { get; set; } 
 
-        public PenWebExpressionStatement( JetBrains.ReSharper.Psi.Cpp.Tree.ExpressionStatement treeNode ) : base(treeNode)
+        public PenWebExpressionStatement( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.ExpressionStatement treeNode ) : base(parentNode, treeNode)
         {
             this.ExpressionStatement = treeNode;
         }

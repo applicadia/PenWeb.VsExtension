@@ -23,7 +23,7 @@ namespace Penweb.CodeAnalytics
             Self = this;
         }
 
-        public CppParseTreeNodeBase CreateTypedNode(ITreeNode treeNode)
+        public CppParseTreeNodeBase CreateTypedNode(CppParseTreeNodeBase parentNode, ITreeNode treeNode)
         {
             string typeName = treeNode.GetType().ToString();
 
@@ -43,295 +43,295 @@ namespace Penweb.CodeAnalytics
             switch (treeNode)
             {
                 case JetBrains.ReSharper.Psi.Cpp.Parsing.CppCommentTokenNode penWebCppCommentTokenNode: 
-                    return new PenWebCppCommentTokenNode( penWebCppCommentTokenNode );
+                    return new PenWebCppCommentTokenNode( parentNode, penWebCppCommentTokenNode );
 
                 case JetBrains.ReSharper.Psi.Cpp.Parsing.CppFromSubstitutionTokenNode penWebCppFromSubstitutionTokenNode: 
-                    return new PenWebCppFromSubstitutionTokenNode( penWebCppFromSubstitutionTokenNode );
+                    return new PenWebCppFromSubstitutionTokenNode( parentNode, penWebCppFromSubstitutionTokenNode );
 
                 case JetBrains.ReSharper.Psi.Cpp.Parsing.CppGenericTokenNode penWebCppGenericTokenNode: 
-                    return new PenWebCppGenericTokenNode( penWebCppGenericTokenNode );
+                    return new PenWebCppGenericTokenNode( parentNode, penWebCppGenericTokenNode );
 
                 case JetBrains.ReSharper.Psi.Cpp.Parsing.CppIdentifierTokenNode penWebCppIdentifierTokenNode: 
-                    return new PenWebCppIdentifierTokenNode( penWebCppIdentifierTokenNode );
+                    return new PenWebCppIdentifierTokenNode( parentNode, penWebCppIdentifierTokenNode );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.AbstractDeclarator penWebAbstractDeclarator: 
-                    return new PenWebAbstractDeclarator( penWebAbstractDeclarator );
+                    return new PenWebAbstractDeclarator( parentNode, penWebAbstractDeclarator );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.AbstractDeclaratorName penWebAbstractDeclaratorName: 
-                    return new PenWebAbstractDeclaratorName( penWebAbstractDeclaratorName );
+                    return new PenWebAbstractDeclaratorName( parentNode, penWebAbstractDeclaratorName );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.AccessSpecifier penWebAccessSpecifier: 
-                    return new PenWebAccessSpecifier( penWebAccessSpecifier );
+                    return new PenWebAccessSpecifier( parentNode, penWebAccessSpecifier );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.ArraySizeSpecifier penWebArraySizeSpecifier: 
-                    return new PenWebArraySizeSpecifier( penWebArraySizeSpecifier );
+                    return new PenWebArraySizeSpecifier( parentNode, penWebArraySizeSpecifier );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.BaseClause penWebBaseClause: 
-                    return new PenWebBaseClause( penWebBaseClause );
+                    return new PenWebBaseClause( parentNode, penWebBaseClause );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.BaseSpecifier penWebBaseSpecifier: 
-                    return new PenWebBaseSpecifier( penWebBaseSpecifier );
+                    return new PenWebBaseSpecifier( parentNode, penWebBaseSpecifier );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.BinaryExpression penWebBinaryExpression: 
-                    return new PenWebBinaryExpression( penWebBinaryExpression );
+                    return new PenWebBinaryExpression( parentNode, penWebBinaryExpression );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.BracedInitList penWebBracedInitList: 
-                    return new PenWebBracedInitList( penWebBracedInitList );
+                    return new PenWebBracedInitList( parentNode, penWebBracedInitList );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.BreakStatement penWebBreakStatement: 
-                    return new PenWebBreakStatement( penWebBreakStatement );
+                    return new PenWebBreakStatement( parentNode, penWebBreakStatement );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.CallExpression penWebCallExpression: 
-                    return new PenWebCallExpression( penWebCallExpression );
+                    return new PenWebCallExpression( parentNode, penWebCallExpression );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.CaseStatement penWebCaseStatement: 
-                    return new PenWebCaseStatement( penWebCaseStatement );
+                    return new PenWebCaseStatement( parentNode, penWebCaseStatement );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.CastExpression penWebCastExpression: 
-                    return new PenWebCastExpression( penWebCastExpression );
+                    return new PenWebCastExpression( parentNode, penWebCastExpression );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.CatchSection penWebCatchSection: 
-                    return new PenWebCatchSection( penWebCatchSection );
+                    return new PenWebCatchSection( parentNode, penWebCatchSection );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.ClassQualifiedName penWebClassQualifiedName: 
-                    return new PenWebClassQualifiedName( penWebClassQualifiedName );
+                    return new PenWebClassQualifiedName( parentNode, penWebClassQualifiedName );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.ClassSpecifier penWebClassSpecifier: 
-                    return new PenWebClassSpecifier( penWebClassSpecifier );
+                    return new PenWebClassSpecifier( parentNode, penWebClassSpecifier );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.CliTypeIdExpression penWebCliTypeIdExpression: 
-                    return new PenWebCliTypeIdExpression( penWebCliTypeIdExpression );
+                    return new PenWebCliTypeIdExpression( parentNode, penWebCliTypeIdExpression );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.CompoundStatement penWebCompoundStatement: 
-                    return new PenWebCompoundStatement( penWebCompoundStatement );
+                    return new PenWebCompoundStatement( parentNode, penWebCompoundStatement );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.ConditionalExpression penWebConditionalExpression: 
-                    return new PenWebConditionalExpression( penWebConditionalExpression );
+                    return new PenWebConditionalExpression( parentNode, penWebConditionalExpression );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.ContinueStatement penWebContinueStatement: 
-                    return new PenWebContinueStatement( penWebContinueStatement );
+                    return new PenWebContinueStatement( parentNode, penWebContinueStatement );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.CppChameleonCtorBlock penWebCppChameleonCtorBlock: 
-                    return new PenWebCppChameleonCtorBlock( penWebCppChameleonCtorBlock );
+                    return new PenWebCppChameleonCtorBlock( parentNode, penWebCppChameleonCtorBlock );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.CtorInitializer penWebCtorInitializer: 
-                    return new PenWebCtorInitializer( penWebCtorInitializer );
+                    return new PenWebCtorInitializer( parentNode, penWebCtorInitializer );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.CxxCliPropertyDeclaration penWebCxxCliPropertyDeclaration: 
-                    return new PenWebCxxCliPropertyDeclaration( penWebCxxCliPropertyDeclaration );
+                    return new PenWebCxxCliPropertyDeclaration( parentNode, penWebCxxCliPropertyDeclaration );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.CxxCliPropertyOrEventDeclarator penWebCxxCliPropertyOrEventDeclarator: 
-                    return new PenWebCxxCliPropertyOrEventDeclarator( penWebCxxCliPropertyOrEventDeclarator );
+                    return new PenWebCxxCliPropertyOrEventDeclarator( parentNode, penWebCxxCliPropertyOrEventDeclarator );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.Declaration penWebDeclaration: 
-                    return new PenWebDeclaration( penWebDeclaration );
+                    return new PenWebDeclaration( parentNode, penWebDeclaration );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.DeclarationSpecifiers penWebDeclarationSpecifiers: 
-                    return new PenWebDeclarationSpecifiers( penWebDeclarationSpecifiers );
+                    return new PenWebDeclarationSpecifiers( parentNode, penWebDeclarationSpecifiers );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.DeclarationSpecifierTypename penWebDeclarationSpecifierTypename: 
-                    return new PenWebDeclarationSpecifierTypename( penWebDeclarationSpecifierTypename );
+                    return new PenWebDeclarationSpecifierTypename( parentNode, penWebDeclarationSpecifierTypename );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.DeclarationStatement penWebDeclarationStatement: 
-                    return new PenWebDeclarationStatement( penWebDeclarationStatement );
+                    return new PenWebDeclarationStatement( parentNode, penWebDeclarationStatement );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.Declarator penWebDeclarator: 
-                    return new PenWebDeclarator( penWebDeclarator );
+                    return new PenWebDeclarator( parentNode, penWebDeclarator );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.DeclaratorQualifiedName penWebDeclaratorQualifiedName: 
-                    return new PenWebDeclaratorQualifiedName( penWebDeclaratorQualifiedName );
+                    return new PenWebDeclaratorQualifiedName( parentNode, penWebDeclaratorQualifiedName );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.DefaultStatement penWebDefaultStatement: 
-                    return new PenWebDefaultStatement( penWebDefaultStatement );
+                    return new PenWebDefaultStatement( parentNode, penWebDefaultStatement );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.DeleteExpression penWebDeleteExpression: 
-                    return new PenWebDeleteExpression( penWebDeleteExpression );
+                    return new PenWebDeleteExpression( parentNode, penWebDeleteExpression );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.Directive penWebDirective: 
-                    return new PenWebDirective( penWebDirective );
+                    return new PenWebDirective( parentNode, penWebDirective );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.DoStatement penWebDoStatement: 
-                    return new PenWebDoStatement( penWebDoStatement );
+                    return new PenWebDoStatement( parentNode, penWebDoStatement );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.DoStatementBody penWebDoStatementBody: 
-                    return new PenWebDoStatementBody( penWebDoStatementBody );
+                    return new PenWebDoStatementBody( parentNode, penWebDoStatementBody );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.EmptyDeclaration penWebEmptyDeclaration: 
-                    return new PenWebEmptyDeclaration( penWebEmptyDeclaration );
+                    return new PenWebEmptyDeclaration( parentNode, penWebEmptyDeclaration );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.EmptyStatement penWebEmptyStatement: 
-                    return new PenWebEmptyStatement( penWebEmptyStatement );
+                    return new PenWebEmptyStatement( parentNode, penWebEmptyStatement );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.Enumerator penWebEnumerator: 
-                    return new PenWebEnumerator( penWebEnumerator );
+                    return new PenWebEnumerator( parentNode, penWebEnumerator );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.EnumSpecifier penWebEnumSpecifier: 
-                    return new PenWebEnumSpecifier( penWebEnumSpecifier );
+                    return new PenWebEnumSpecifier( parentNode, penWebEnumSpecifier );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.ExpressionStatement penWebExpressionStatement: 
-                    return new PenWebExpressionStatement( penWebExpressionStatement );
+                    return new PenWebExpressionStatement( parentNode, penWebExpressionStatement );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.ForStatement penWebForStatement: 
-                    return new PenWebForStatement( penWebForStatement );
+                    return new PenWebForStatement( parentNode, penWebForStatement );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.FunctionArgumentList penWebFunctionArgumentList: 
-                    return new PenWebFunctionArgumentList( penWebFunctionArgumentList );
+                    return new PenWebFunctionArgumentList( parentNode, penWebFunctionArgumentList );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.FwdClassSpecifier penWebFwdClassSpecifier: 
-                    return new PenWebFwdClassSpecifier( penWebFwdClassSpecifier );
+                    return new PenWebFwdClassSpecifier( parentNode, penWebFwdClassSpecifier );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.IfStatement penWebIfStatement: 
-                    return new PenWebIfStatement( penWebIfStatement );
+                    return new PenWebIfStatement( parentNode, penWebIfStatement );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.ImportDirective penWebImportDirective: 
-                    return new PenWebImportDirective( penWebImportDirective );
+                    return new PenWebImportDirective( parentNode, penWebImportDirective );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.InitDeclarator penWebInitDeclarator: 
-                    return new PenWebInitDeclarator( penWebInitDeclarator );
+                    return new PenWebInitDeclarator( parentNode, penWebInitDeclarator );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.LinkageSpecification penWebLinkageSpecification: 
-                    return new PenWebLinkageSpecification( penWebLinkageSpecification );
+                    return new PenWebLinkageSpecification( parentNode, penWebLinkageSpecification );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.LiteralExpression penWebLiteralExpression: 
-                    return new PenWebLiteralExpression( penWebLiteralExpression );
+                    return new PenWebLiteralExpression( parentNode, penWebLiteralExpression );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.MacroArgument penWebMacroArgument: 
-                    return new PenWebMacroArgument( penWebMacroArgument );
+                    return new PenWebMacroArgument( parentNode, penWebMacroArgument );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.MacroArgumentList penWebMacroArgumentList: 
-                    return new PenWebMacroArgumentList( penWebMacroArgumentList );
+                    return new PenWebMacroArgumentList( parentNode, penWebMacroArgumentList );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.MacroBody penWebMacroBody: 
-                    return new PenWebMacroBody( penWebMacroBody );
+                    return new PenWebMacroBody( parentNode, penWebMacroBody );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.MacroCall penWebMacroCall: 
-                    return new PenWebMacroCall( penWebMacroCall );
+                    return new PenWebMacroCall( parentNode, penWebMacroCall );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.MacroDefinition penWebMacroDefinition: 
-                    return new PenWebMacroDefinition( penWebMacroDefinition );
+                    return new PenWebMacroDefinition( parentNode, penWebMacroDefinition );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.MacroParameter penWebMacroParameter: 
-                    return new PenWebMacroParameter( penWebMacroParameter );
+                    return new PenWebMacroParameter( parentNode, penWebMacroParameter );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.MacroParameterList penWebMacroParameterList: 
-                    return new PenWebMacroParameterList( penWebMacroParameterList );
+                    return new PenWebMacroParameterList( parentNode, penWebMacroParameterList );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.MacroReference penWebMacroReference: 
-                    return new PenWebMacroReference( penWebMacroReference );
+                    return new PenWebMacroReference( parentNode, penWebMacroReference );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.MacroUndefinition penWebMacroUndefinition: 
-                    return new PenWebMacroUndefinition( penWebMacroUndefinition );
+                    return new PenWebMacroUndefinition( parentNode, penWebMacroUndefinition );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.MemberAccessExpression penWebMemberAccessExpression: 
-                    return new PenWebMemberAccessExpression( penWebMemberAccessExpression );
+                    return new PenWebMemberAccessExpression( parentNode, penWebMemberAccessExpression );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.MemInitializer penWebMemInitializer: 
-                    return new PenWebMemInitializer( penWebMemInitializer );
+                    return new PenWebMemInitializer( parentNode, penWebMemInitializer );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.MemInitializerName penWebMemInitializerName: 
-                    return new PenWebMemInitializerName( penWebMemInitializerName );
+                    return new PenWebMemInitializerName( parentNode, penWebMemInitializerName );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.MSAttributes penWebMSAttributes: 
-                    return new PenWebMSAttributes( penWebMSAttributes );
+                    return new PenWebMSAttributes( parentNode, penWebMSAttributes );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.MSDeclSpec penWebMSDeclSpec: 
-                    return new PenWebMSDeclSpec( penWebMSDeclSpec );
+                    return new PenWebMSDeclSpec( parentNode, penWebMSDeclSpec );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.MSForeachStatement penWebMSForeachStatement: 
-                    return new PenWebMSForeachStatement( penWebMSForeachStatement );
+                    return new PenWebMSForeachStatement( parentNode, penWebMSForeachStatement );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.NameQualifier penWebNameQualifier: 
-                    return new PenWebNameQualifier( penWebNameQualifier );
+                    return new PenWebNameQualifier( parentNode, penWebNameQualifier );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.NamespaceAliasDefinition penWebNamespaceAliasDefinition: 
-                    return new PenWebNamespaceAliasDefinition( penWebNamespaceAliasDefinition );
+                    return new PenWebNamespaceAliasDefinition( parentNode, penWebNamespaceAliasDefinition );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.NamespaceDefinition penWebNamespaceDefinition: 
-                    return new PenWebNamespaceDefinition( penWebNamespaceDefinition );
+                    return new PenWebNamespaceDefinition( parentNode, penWebNamespaceDefinition );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.NamespaceDefinitionName penWebNamespaceDefinitionName: 
-                    return new PenWebNamespaceDefinitionName( penWebNamespaceDefinitionName );
+                    return new PenWebNamespaceDefinitionName( parentNode, penWebNamespaceDefinitionName );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.NestedDeclarator penWebNestedDeclarator: 
-                    return new PenWebNestedDeclarator( penWebNestedDeclarator );
+                    return new PenWebNestedDeclarator( parentNode, penWebNestedDeclarator );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.NewExpression penWebNewExpression: 
-                    return new PenWebNewExpression( penWebNewExpression );
+                    return new PenWebNewExpression( parentNode, penWebNewExpression );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.OperatorFunctionId penWebOperatorFunctionId: 
-                    return new PenWebOperatorFunctionId( penWebOperatorFunctionId );
+                    return new PenWebOperatorFunctionId( parentNode, penWebOperatorFunctionId );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.ParametersAndQualifiers penWebParametersAndQualifiers: 
-                    return new PenWebParametersAndQualifiers( penWebParametersAndQualifiers );
+                    return new PenWebParametersAndQualifiers( parentNode, penWebParametersAndQualifiers );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.ParenExpression penWebParenExpression: 
-                    return new PenWebParenExpression( penWebParenExpression );
+                    return new PenWebParenExpression( parentNode, penWebParenExpression );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.PostfixExpression penWebPostfixExpression: 
-                    return new PenWebPostfixExpression( penWebPostfixExpression );
+                    return new PenWebPostfixExpression( parentNode, penWebPostfixExpression );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.PPPragmaDirective penWebPPPragmaDirective: 
-                    return new PenWebPPPragmaDirective( penWebPPPragmaDirective );
+                    return new PenWebPPPragmaDirective( parentNode, penWebPPPragmaDirective );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.PragmaDirective penWebPragmaDirective: 
-                    return new PenWebPragmaDirective( penWebPragmaDirective );
+                    return new PenWebPragmaDirective( parentNode, penWebPragmaDirective );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.QualifiedBaseTypeReference penWebQualifiedBaseTypeReference: 
-                    return new PenWebQualifiedBaseTypeReference( penWebQualifiedBaseTypeReference );
+                    return new PenWebQualifiedBaseTypeReference( parentNode, penWebQualifiedBaseTypeReference );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.QualifiedNamespaceReference penWebQualifiedNamespaceReference: 
-                    return new PenWebQualifiedNamespaceReference( penWebQualifiedNamespaceReference );
+                    return new PenWebQualifiedNamespaceReference( parentNode, penWebQualifiedNamespaceReference );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.QualifiedReference penWebQualifiedReference: 
-                    return new PenWebQualifiedReference( penWebQualifiedReference );
+                    return new PenWebQualifiedReference( parentNode, penWebQualifiedReference );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.QualifiedUsingDeclarationTargetReference penWebQualifiedUsingDeclarationTargetReference: 
-                    return new PenWebQualifiedUsingDeclarationTargetReference( penWebQualifiedUsingDeclarationTargetReference );
+                    return new PenWebQualifiedUsingDeclarationTargetReference( parentNode, penWebQualifiedUsingDeclarationTargetReference );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.ReturnStatement penWebReturnStatement: 
-                    return new PenWebReturnStatement( penWebReturnStatement );
+                    return new PenWebReturnStatement( parentNode, penWebReturnStatement );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.SimpleDeclaration penWebSimpleDeclaration: 
-                    return new PenWebSimpleDeclaration( penWebSimpleDeclaration );
+                    return new PenWebSimpleDeclaration( parentNode, penWebSimpleDeclaration );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.SizeOfExpression penWebSizeOfExpression: 
-                    return new PenWebSizeOfExpression( penWebSizeOfExpression );
+                    return new PenWebSizeOfExpression( parentNode, penWebSizeOfExpression );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.SubscriptExpression penWebSubscriptExpression: 
-                    return new PenWebSubscriptExpression( penWebSubscriptExpression );
+                    return new PenWebSubscriptExpression( parentNode, penWebSubscriptExpression );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.SwitchStatement penWebSwitchStatement: 
-                    return new PenWebSwitchStatement( penWebSwitchStatement );
+                    return new PenWebSwitchStatement( parentNode, penWebSwitchStatement );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.TemplateArgumentList penWebTemplateArgumentList: 
-                    return new PenWebTemplateArgumentList( penWebTemplateArgumentList );
+                    return new PenWebTemplateArgumentList( parentNode, penWebTemplateArgumentList );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.ThisExpression penWebThisExpression: 
-                    return new PenWebThisExpression( penWebThisExpression );
+                    return new PenWebThisExpression( parentNode, penWebThisExpression );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.ThrowExpression penWebThrowExpression: 
-                    return new PenWebThrowExpression( penWebThrowExpression );
+                    return new PenWebThrowExpression( parentNode, penWebThrowExpression );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.TryStatement penWebTryStatement: 
-                    return new PenWebTryStatement( penWebTryStatement );
+                    return new PenWebTryStatement( parentNode, penWebTryStatement );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.TypeId penWebTypeId: 
-                    return new PenWebTypeId( penWebTypeId );
+                    return new PenWebTypeId( parentNode, penWebTypeId );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.UnaryExpression penWebUnaryExpression: 
-                    return new PenWebUnaryExpression( penWebUnaryExpression );
+                    return new PenWebUnaryExpression( parentNode, penWebUnaryExpression );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.UsingDeclaration penWebUsingDeclaration: 
-                    return new PenWebUsingDeclaration( penWebUsingDeclaration );
+                    return new PenWebUsingDeclaration( parentNode, penWebUsingDeclaration );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.UsingDeclarator penWebUsingDeclarator: 
-                    return new PenWebUsingDeclarator( penWebUsingDeclarator );
+                    return new PenWebUsingDeclarator( parentNode, penWebUsingDeclarator );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.UsingDirective penWebUsingDirective: 
-                    return new PenWebUsingDirective( penWebUsingDirective );
+                    return new PenWebUsingDirective( parentNode, penWebUsingDirective );
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.WhileStatement penWebWhileStatement: 
-                    return new PenWebWhileStatement( penWebWhileStatement );
+                    return new PenWebWhileStatement( parentNode, penWebWhileStatement );
 
                 //case JetBrains.ReSharper.Psi.Cpp.Parsing.CppGenericKeywordTokenNode penWebCppGenericKeywordTokenNode:
                     //return new PenWebCppGenericKeywordTokenNode( penWebCppGenericKeywordTokenNode );
@@ -340,37 +340,11 @@ namespace Penweb.CodeAnalytics
                     //return new PenWebCppChameleonCompoundStatement( penWebCppChameleonCompoundStatement );
 
                 default:
-                    return this.CreateUnknown(treeNode);
+                    return this.CreateUnknown(parentNode, treeNode);
             }
         }
 
-        public CppParseTreeNodeBase CreateNode(ITreeNode treeNode)
-        {
-            string typeName = treeNode.GetType().ToString();
-
-            if ( !NodeTypeMap.ContainsKey(typeName))
-            {
-                NodeTypeMap.Add(typeName, typeName);
-            }
-
-
-            switch ( treeNode.NodeType.ToString() )
-            {
-                case "NEW_LINE":             return null;
-                case "EOL_COMMENT":          return null;
-                case "PRAGMA_DIRECTIVE":     return null;
-
-                //case "IMPORT_DIRECTIVE":     return new CppImportTreeNode(treeNode);
-                //case "USING_DIRECTIVE":      return new CppUsingTreeNode(treeNode);
-                //case "SIMPLE_DECLARATION":   return new CppSimpleDeclarationTreeNode(treeNode);
-                //case "MACRO_CALL":           return new CppMacroCallTreeNode(treeNode);
-
-                default:
-                    return this.CreateUnknown(treeNode);
-            }
-        }
-
-        private CppParseTreeNodeBase CreateUnknown(ITreeNode treeNode)
+        private CppParseTreeNodeBase CreateUnknown(CppParseTreeNodeBase parentNode, ITreeNode treeNode)
         {
             string nodeType = treeNode.NodeType.ToString();
 
@@ -379,7 +353,7 @@ namespace Penweb.CodeAnalytics
                 this.NodeSchemaMap.Add(nodeType, nodeType);
             }
 
-            return new CppGenericTreeNode(treeNode);
+            return new CppGenericTreeNode(parentNode, treeNode);
         }
 
         public void DumpTreeSchema()
