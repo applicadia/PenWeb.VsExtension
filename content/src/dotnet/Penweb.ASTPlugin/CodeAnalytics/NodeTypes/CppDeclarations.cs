@@ -11,6 +11,7 @@ using JetBrains.ReSharper.Psi.Cpp.Tree;
 using Newtonsoft.Json;
 using PenWeb.ASTPlugin;
 using JetBrains.ReSharper.Psi.Cpp.Expressions;
+using JetBrains.ReSharper.Psi;
 
 namespace Penweb.CodeAnalytics
 {
@@ -28,24 +29,9 @@ namespace Penweb.CodeAnalytics
         }
     }
 
-    public class PenWebInitDeclarator : CppParseTreeNodeBase
-    {
-        public PenWebInitDeclarator( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.InitDeclarator treeNode ) : base(parentNode, treeNode)
-        {
-        }
-    }
-
     public class PenWebDeclarationStatement : CppParseTreeNodeBase
     {
         public PenWebDeclarationStatement( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.DeclarationStatement treeNode ) : base(parentNode, treeNode)
-        {
-        }
-    }
-
-
-    public class PenWebDeclaratorQualifiedName : CppParseTreeNodeBase
-    {
-        public PenWebDeclaratorQualifiedName( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.DeclaratorQualifiedName treeNode ) : base(parentNode, treeNode)
         {
         }
     }
@@ -94,13 +80,98 @@ namespace Penweb.CodeAnalytics
 
     public class PenWebDeclarator : CppParseTreeNodeBase
     {
+        public JetBrains.ReSharper.Psi.Cpp.Tree.Declarator Declarator { get; set; }
+
+        [JsonProperty] public string ItemName  { get; set; }
+
         public PenWebDeclarator( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.Declarator treeNode ) : base(parentNode, treeNode)
         {
+            this.Declarator = treeNode;
+        }
+
+        public override void Init()
+        {
+            try
+            {
+                this.ItemName = this.Declarator.DeclaredName;
+
+                base.Init();
+
+                //this.CppFunctionCatagory = CppFunctionCatagory.VariableDef;
+                //this.SaveToJson = true;
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            this.Declarator = null;
         }
 
         public override string ToString()
         {
-            return base.ToString();
+            return $"[{this.Location.ToString()}]  {this.GetType().Name}  TypeName: {this.ItemName} |{SingleLineText}|";
+        }
+    }
+
+    public class PenWebInitDeclarator : CppParseTreeNodeBase
+    {
+        public JetBrains.ReSharper.Psi.Cpp.Tree.InitDeclarator InitDeclarator { get; set; }
+
+        [JsonProperty] public string ItemName  { get; set; }
+
+        public PenWebInitDeclarator( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.InitDeclarator treeNode ) : base(parentNode, treeNode)
+        {
+            this.InitDeclarator = treeNode;
+        }
+
+        public override void Init()
+        {
+            try
+            {
+                this.ItemName = this.InitDeclarator.DeclaredName;
+
+                IDeclaredElement declaredElement = this.InitDeclarator.DeclaredElement;
+
+                if (declaredElement != null)
+                {
+                    foreach (IDeclaration declaration in declaredElement.GetDeclarations())
+                    {
+                        IDeclaredElement childDeclaredElement = declaration.DeclaredElement;
+                        string childDeclarationName = declaration.DeclaredName;
+                    }
+                }
+
+                ICppExpressionsArgumentListNode arguementList = this.InitDeclarator.ArgumentList;
+
+                if (arguementList != null)
+                {
+                    foreach (ITreeNode attribute in arguementList.Children())
+                    {
+                        var typeId    = attribute.GetType().Name;
+                        var text  = attribute.GetText();
+                    }
+                }
+
+
+                base.Init();
+
+                this.CppFunctionCatagory = CppFunctionCatagory.None;
+                this.SaveToJson = true;
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            this.InitDeclarator = null;
+        }
+
+        public override string ToString()
+        {
+            return $"[{this.Location.ToString()}]  {this.GetType().Name}  TypeName: {this.ItemName} |{SingleLineText}|";
         }
     }
 
@@ -108,8 +179,10 @@ namespace Penweb.CodeAnalytics
     {
         public JetBrains.ReSharper.Psi.Cpp.Tree.Declaration Declaration { get; set; }
 
-        [JsonProperty] public string ClassName  { get; set; }
-        [JsonProperty] public string MethodName { get; set; }
+        [JsonProperty] public string OwningClass  { get; set; }
+        [JsonProperty] public string TypeName     { get; set; }
+
+        [JsonProperty] public string VariableName     { get; set; }
 
         public PenWebDeclaration( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.Declaration treeNode ) : base(parentNode, treeNode)
         {
@@ -120,15 +193,11 @@ namespace Penweb.CodeAnalytics
         {
             try
             {
-                base.Init();
-
-                this.SaveToJson = true;
-
                 CppDeclarationSymbol symbol = this.Declaration.GetSymbol();
 
                 if (symbol != null)
                 {
-                    this.MethodName = symbol.GetQualifiedName().GetNameStr();
+                    this.VariableName = symbol.GetQualifiedName().GetNameStr();
                 }
                 else
                 {
@@ -139,11 +208,65 @@ namespace Penweb.CodeAnalytics
 
                 if (attributeList != null)
                 {
-                    foreach (Attribute attribute in attributeList.Children())
+                    foreach (ITreeNode attribute in attributeList.Children())
                     {
-                        var typeId    = attribute.TypeId;
+                        var typeId    = attribute.NodeType.ToString();
                         var toString  = attribute.ToString();
                     }
+                }
+
+                base.Init();
+
+                HierarchySnapshot hierarchySnapshot = new HierarchySnapshot(this);
+
+                PenWebDeclarator penWebDeclarator = this.GetChildByType<PenWebDeclarator>();
+
+                if (penWebDeclarator != null)
+                {
+                    this.VariableName = penWebDeclarator.ItemName;
+                }
+                else
+                {
+                    Console.WriteLine($"penWebDeclarator is null");
+                }
+
+                if (String.IsNullOrWhiteSpace(this.VariableName))
+                {
+                    PenWebDeclaratorQualifiedName declaratorQualifiedName = this.GetChildByType<PenWebDeclaratorQualifiedName>();
+
+                    if (declaratorQualifiedName != null)
+                    {
+                        this.VariableName = declaratorQualifiedName.ItemName;
+                    }
+                    else
+                    {
+                        Console.WriteLine($"declarationSpecifiers is null");
+                    }
+                }
+
+                PenWebDeclarationSpecifiers declarationSpecifiers = this.GetChildByType<PenWebDeclarationSpecifiers>();
+
+                if (declarationSpecifiers != null)
+                {
+                    this.TypeName = declarationSpecifiers.ItemName;
+                }
+                else
+                {
+                    Console.WriteLine($"penWebDeclarator is null");
+                }
+
+                PenWebClassSpecifier penWebClassSpecifier = this.GetParentByType<PenWebClassSpecifier>();
+
+                if (penWebClassSpecifier != null)
+                {
+                    this.OwningClass = penWebClassSpecifier.ClassName;
+                }
+
+                this.CppFunctionCatagory = CppFunctionCatagory.VariableDef;
+
+                if (!String.IsNullOrWhiteSpace(this.TypeName) && !String.IsNullOrWhiteSpace(this.VariableName) && !String.IsNullOrWhiteSpace(this.OwningClass))
+                {
+                    this.SaveToJson = true;
                 }
             }
             catch (Exception e)
@@ -156,7 +279,7 @@ namespace Penweb.CodeAnalytics
 
         public override string ToString()
         {
-            return $"[{this.Location.ToString()}]  {this.GetType().Name} EnumName: {this.ClassName} MethodName: {this.MethodName} |{SingleLineText}|";
+            return $"[{this.Location.ToString()}]  {this.GetType().Name} OwningClass: {this.OwningClass} TypeName: {this.TypeName} |{SingleLineText}|";
         }
     }
 
@@ -166,7 +289,7 @@ namespace Penweb.CodeAnalytics
         private JetBrains.ReSharper.Psi.Cpp.Tree.SimpleDeclaration SimpleDeclaration { get; set; }
 
         [JsonProperty] public string ClassName  { get; set; }
-        [JsonProperty] public string MethodName { get; set; }
+        [JsonProperty] public string ItemName { get; set; }
 
         public PenWebSimpleDeclaration( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.SimpleDeclaration treeNode ) : base(parentNode, treeNode)
         {
@@ -177,10 +300,6 @@ namespace Penweb.CodeAnalytics
         {
             try
             {
-                base.Init();
-
-                //this.SaveToJson = true;
-
                 Declaration declarationNode = this.SimpleDeclaration.DeclarationNode;
 
                 if (declarationNode != null)
@@ -189,7 +308,7 @@ namespace Penweb.CodeAnalytics
 
                     if (symbol != null)
                     {
-                        this.MethodName = symbol.GetQualifiedName().GetNameStr();
+                        this.ItemName = symbol.GetQualifiedName().GetNameStr();
                     }
                     else
                     {
@@ -200,6 +319,11 @@ namespace Penweb.CodeAnalytics
                 {
                     Console.WriteLine($"PenWebSimpleDeclaration() declarationNode is null");
                 }
+
+                base.Init();
+
+                //this.SaveToJson = true;
+
             }
             catch (Exception e)
             {
@@ -211,9 +335,90 @@ namespace Penweb.CodeAnalytics
 
         public override string ToString()
         {
-            return $"[{this.Location.ToString()}]  {this.GetType().Name} EnumName: {this.ClassName} MethodName: {this.MethodName} |{SingleLineText}|";
+            return $"[{this.Location.ToString()}]  {this.GetType().Name} ClassName: {this.ClassName} TypeName: {this.ItemName} |{SingleLineText}|";
         }
     }
 
+    public class PenWebDeclaratorQualifiedName : CppParseTreeNodeBase
+    {
+        public JetBrains.ReSharper.Psi.Cpp.Tree.DeclaratorQualifiedName DeclaratorQualifiedName { get; set; }
 
+        [JsonProperty] public string ItemName { get; set; }
+
+        public PenWebDeclaratorQualifiedName( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.DeclaratorQualifiedName treeNode ) : base(parentNode, treeNode)
+        {
+            this.DeclaratorQualifiedName = treeNode;
+        }
+
+        public override void Init()
+        {
+            try
+            {
+                this.ItemName = this.DeclaratorQualifiedName.GetText();
+
+
+
+                base.Init();
+
+                //this.SaveToJson = true;
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            this.DeclaratorQualifiedName = null;
+        }
+
+        public override string ToString()
+        {
+            return $"[{this.DeclaratorQualifiedName.ToString()}]  {this.GetType().Name} ItemName: {this.ItemName} |{SingleLineText}|";
+        }
+    }
+
+    public class PenWebDeclarationSpecifiers : CppParseTreeNodeBase
+    {
+        public JetBrains.ReSharper.Psi.Cpp.Tree.DeclarationSpecifiers DeclarationSpecifiers { get; set; }
+        [JsonProperty] public string OwningClass { get; set; }
+
+        [JsonProperty] public string ItemName { get; set; }
+
+        public PenWebDeclarationSpecifiers( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.DeclarationSpecifiers treeNode ) : base(parentNode, treeNode)
+        {
+            this.DeclarationSpecifiers = treeNode;
+        }
+
+        public override void Init()
+        {
+            try
+            {
+                if (this.DeclarationSpecifiers.FirstChild != null)
+                {
+                    this.ItemName = this.DeclarationSpecifiers.FirstChild.GetText();
+                }
+
+                //IClassOrEnumSpecifier classOrEnumSpecifier = this.DeclarationSpecifiers.ClassSpecifierNode;
+                //ClassQualifiedName classQualifiedName = classOrEnumSpecifier.GetClassQualifiedName();
+                //ICppQualifiedNamePart cppQualifiedNamePart = classQualifiedName.GetNamePart();
+                //cppQualifiedNamePart.ToString();
+
+                base.Init();
+
+                //this.SaveToJson = true;
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            this.DeclarationSpecifiers = null;
+        }
+
+        public override string ToString()
+        {
+            return $"[{this.DeclarationSpecifiers.ToString()}]  {this.GetType().Name} ItemName: {this.ItemName} |{SingleLineText}|";
+        }
+    }
 }

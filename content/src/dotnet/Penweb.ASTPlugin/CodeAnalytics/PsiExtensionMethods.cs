@@ -135,7 +135,7 @@ namespace PenWeb.ASTPlugin
 
                 namePart.Accept<CppQualifiedNamePartVisitorResult, CppQualifiedNamePartVisitorData>(cppQualifiedNamePartVisitorData, cppQualifiedNamePartVisitor);
 
-                return cppQualifiedNamePartVisitor.StringBuilder.ToString();
+                return cppQualifiedNamePartVisitor.StringBuilder.ToString().Trim();
             }
             else
             {

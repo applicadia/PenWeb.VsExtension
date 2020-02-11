@@ -11,20 +11,87 @@ using JetBrains.ReSharper.Psi.Cpp.Tree;
 using Newtonsoft.Json;
 using PenWeb.ASTPlugin;
 using JetBrains.ReSharper.Psi.Cpp.Expressions;
+using JetBrains.ReSharper.Psi.Cpp.Types;
+using JetBrains.ReSharper.Psi;
 
 namespace Penweb.CodeAnalytics
 {
-    public class PenWebDeclarationSpecifiers : CppParseTreeNodeBase
-    {
-        public PenWebDeclarationSpecifiers( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.DeclarationSpecifiers treeNode ) : base(parentNode, treeNode)
-        {
-        }
-    }
-
     public class PenWebDeclarationSpecifierTypename : CppParseTreeNodeBase
     {
+        public JetBrains.ReSharper.Psi.Cpp.Tree.DeclarationSpecifierTypename DeclarationSpecifierTypename { get; set; }
+
+        [JsonProperty] public string TypeName { get; set; }
+
+        [JsonProperty] public string ClassTag { get; set; }
+
         public PenWebDeclarationSpecifierTypename( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.DeclarationSpecifierTypename treeNode ) : base(parentNode, treeNode)
         {
+            this.DeclarationSpecifierTypename = treeNode;
+        }
+
+        public override void Init()
+        {
+            try
+            {
+                CppQualifiedName cppQualifiedName = this.DeclarationSpecifierTypename.GetQualifiedName();
+
+                this.TypeName = cppQualifiedName.GetNameStr();
+
+                CppClassTag cppClassTag = this.DeclarationSpecifierTypename.GetClassTag();
+
+                this.ClassTag = cppClassTag.ToString("g");
+
+                DeclarationSpecifiersBase declarationSpecifiers = this.DeclarationSpecifierTypename.GetDeclarationSpecifiers();
+
+                switch (declarationSpecifiers)
+                {
+                    case BaseTypeGenericConstraintItem genericConstraintItem:
+                        break;
+
+                    case DeclarationSpecifiers specifiers:
+                        break;
+
+                    case EnumBase enumBase:
+                        break;
+
+                    default:
+                        break;
+                }
+
+                string identifier =  this.DeclarationSpecifierTypename.Identifier.GetText();
+
+                TypeId typeId = this.DeclarationSpecifierTypename.CliSimpleTypeId;
+
+                if (typeId != null)
+                {
+                    string typeIdStr = typeId.GetText();
+
+                    CppQualType cppQualType = typeId.GetQualType();
+
+                    CppTypeVisitor cppTypeVisitor = new CppTypeVisitor();
+
+                    cppQualType.Accept(cppTypeVisitor);
+
+                    string typeStr = cppTypeVisitor.TypeBuilder.ToString();
+                    string nameStr = cppTypeVisitor.NameBuilder.ToString();
+                    string dbgStr = cppTypeVisitor.DbgBuilder.ToString();
+                }
+
+                base.Init();
+
+                //this.SaveToJson = true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            this.DeclarationSpecifierTypename = null;
+        }
+
+        public override string ToString()
+        {
+            return $"[{this.Location.ToString()}]  {this.GetType().Name} TypeName: {this.TypeName} ClassTag: {this.ClassTag} |{SingleLineText}|";
         }
     }
 
@@ -43,12 +110,19 @@ namespace Penweb.CodeAnalytics
         {
             try
             {
-                base.Init();
-
-                this.SaveToJson = true;
-
                 this.EnumName = this.EnumSpecifier.DeclaredName;
 
+                if (String.IsNullOrEmpty(this.EnumName))
+                {
+                    if (this.EnumSpecifier.GetText().Contains("IDD"))
+                    {
+                        this.EnumName = "IDD";
+                    }
+                }
+
+                base.Init();
+
+                //this.SaveToJson = true;
             }
             catch (Exception e)
             {
@@ -80,10 +154,6 @@ namespace Penweb.CodeAnalytics
         {
             try
             {
-                base.Init();
-
-                this.SaveToJson = true;
-
                 this.ClassName = this.ClassSpecifier.DeclaredName;
 
                 BaseClause baseClause = this.ClassSpecifier.GetBaseClause();
@@ -111,6 +181,21 @@ namespace Penweb.CodeAnalytics
                     Console.WriteLine("PenWebClassSpecifier() baseClause is null");
                 }
 
+                base.Init();
+
+                this.CppFunctionCatagory = CppFunctionCatagory.ClassDef;
+
+                if (!String.IsNullOrWhiteSpace(this.ClassName) && !String.IsNullOrWhiteSpace(this.BaseClass))
+                {
+                    this.SaveToJson = true;
+                }
+
+                IDeclaredElement declarationElement = this.ClassSpecifier.DeclaredElement;
+
+                foreach (IDeclaration declaration in declarationElement.GetDeclarations())
+                {
+
+                }
             }
             catch (Exception e)
             {
@@ -122,7 +207,7 @@ namespace Penweb.CodeAnalytics
 
         public override string ToString()
         {
-            return $"[{this.Location.ToString()}]  {this.GetType().Name} EnumName: {this.ClassName}  BaseClass: {this.BaseClass} |{SingleLineText}|";
+            return $"[{this.Location.ToString()}]  {this.GetType().Name} ClassName: {this.ClassName}  BaseClass: {this.BaseClass} |{SingleLineText}|";
         }
     }
 }

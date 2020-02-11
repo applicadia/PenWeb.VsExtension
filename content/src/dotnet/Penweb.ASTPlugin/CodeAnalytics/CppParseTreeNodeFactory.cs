@@ -204,8 +204,15 @@ namespace Penweb.CodeAnalytics
                 case JetBrains.ReSharper.Psi.Cpp.Tree.MacroBody penWebMacroBody: 
                     return new PenWebMacroBody( parentNode, penWebMacroBody );
 
-                case JetBrains.ReSharper.Psi.Cpp.Tree.MacroCall penWebMacroCall: 
-                    return new PenWebMacroCall( parentNode, penWebMacroCall );
+                case JetBrains.ReSharper.Psi.Cpp.Tree.MacroCall penWebMacroCall:
+                    if (penWebMacroCall.IsTopLevel())
+                    {
+                        return new PenWebMacroCall(parentNode, penWebMacroCall);
+                    }
+                    else
+                    {
+                        return null;
+                    }
 
                 case JetBrains.ReSharper.Psi.Cpp.Tree.MacroDefinition penWebMacroDefinition: 
                     return new PenWebMacroDefinition( parentNode, penWebMacroDefinition );

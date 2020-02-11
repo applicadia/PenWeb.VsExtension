@@ -27,7 +27,7 @@ namespace Penweb.CodeAnalytics
 
         public CppQualifiedNamePartVisitorResult Visit(CppQualifiedNamePartVisitorData data, CppQualifiedId name)
         {
-            this.StringBuilder.Append($"CppQualifiedId: {name.Name} ");
+            this.StringBuilder.Append($"{name.Name} ");
             return null;
         }
 
@@ -57,7 +57,6 @@ namespace Penweb.CodeAnalytics
 
         public CppQualifiedNamePartVisitorResult Visit(CppQualifiedNamePartVisitorData data, CppAnonymousId name)
         {
-            this.StringBuilder.Append($"CppAnonymousId: ? ");
             return null;
         }
 

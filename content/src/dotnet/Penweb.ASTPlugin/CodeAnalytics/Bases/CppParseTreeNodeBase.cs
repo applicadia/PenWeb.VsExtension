@@ -14,6 +14,40 @@ using JetBrains.ReSharper.Psi.Cpp.Expressions;
 
 namespace Penweb.CodeAnalytics
 {
+    public class HierarchySnapshot
+    {
+        public List<string> AncestorChain { get; } = new List<string>();
+
+        public Dictionary<string, int> Descendants { get; } = new Dictionary<string, int>();
+
+        public HierarchySnapshot(CppParseTreeNodeBase focusNode)
+        {
+            CppParseTreeNodeBase node = focusNode.ParentNode;
+
+            while (node != null)
+            {
+                AncestorChain.Add(node.GetType().Name);
+                node = node.ParentNode;
+            }
+
+            foreach (CppParseTreeNodeBase descendant in focusNode.WalkAllDescendants())
+            {
+                string childType = descendant.GetType().Name;
+
+                if (this.Descendants.ContainsKey(childType))
+                {
+                    int currentCnt = this.Descendants[childType];
+
+                    this.Descendants[childType] = currentCnt + 1;
+                }
+                else
+                {
+                    this.Descendants.Add(childType, 1);
+                }
+            }
+        }
+    }
+
     public static class LocationUtils
     {
         public static CppLocation GetLocation( this ITreeNode treeNode)
@@ -24,6 +58,11 @@ namespace Penweb.CodeAnalytics
 
     public class CppLocation
     {
+        private static int NextId = 1;
+
+        public int Id          { get; private set; }
+
+        public string SourceFile { get; set; }
         public int StartLine   { get; set; }
         public int StartColumn { get; set; }
         public int EndLine     { get; set; }
@@ -35,6 +74,9 @@ namespace Penweb.CodeAnalytics
         {
             try
             {
+                this.SourceFile = treeNode.GetSourceFile().DisplayName;
+                this.Id         = NextId++;
+
                 DocumentRange documentRange = treeNode.GetNavigationRange();
 
                 DocumentCoords start = documentRange.StartOffset.ToDocumentCoords();
@@ -108,8 +150,22 @@ namespace Penweb.CodeAnalytics
 
         public override string ToString()
         {
-            return $"{StartLine}-{StartColumn}:{EndLine}-{EndColumn}";
+            return $"{SourceFile}:{Id}    {StartLine}-{StartColumn}:{EndLine}-{EndColumn}";
         }
+    }
+
+    public enum CppFunctionCatagory
+    {
+        None,
+        ClassDef,
+        ScreenDef,
+        EnumDef,
+        ListDef,
+        MessageMap,
+        VariableDef,
+        VariableRef,
+        MethodDef,
+        MethodCall,
     }
 
     [JsonObject(MemberSerialization=MemberSerialization.OptIn,IsReference=false)]
@@ -121,6 +177,8 @@ namespace Penweb.CodeAnalytics
             get => this.GetSaveToJson();
             set => this.SetSaveToJson(value);
         }
+
+        public CppFunctionCatagory CppFunctionCatagory { get; set; } = CppFunctionCatagory.None;
 
         public ITreeNode TreeNode { get; set; }
 
@@ -149,7 +207,12 @@ namespace Penweb.CodeAnalytics
 
             if ( this.Location.IsSingleLine )
             {
-                this.SingleLineText = treeNode.GetText();
+                string text = treeNode.GetText();
+
+                if (!text.Contains("\r") && !text.Contains("\n"))
+                {
+                    this.SingleLineText = treeNode.GetText();
+                }
             }
 
             foreach ( ITreeNode childTreeNode in treeNode.Children() )
@@ -186,6 +249,72 @@ namespace Penweb.CodeAnalytics
             this.saveToJson = value;
         }
 
+        public IEnumerable<CppParseTreeNodeBase> WalkAllDescendants()
+        {
+            foreach (CppParseTreeNodeBase child in this.ChildNodes)
+            {
+                foreach (CppParseTreeNodeBase grandChild in child.WalkAllDescendantsInternal())
+                {
+                    yield return grandChild;
+                }
+            }
+        }
+
+        protected IEnumerable<CppParseTreeNodeBase> WalkAllDescendantsInternal()
+        {
+            yield return this;
+
+            foreach (CppParseTreeNodeBase child in this.ChildNodes)
+            {
+                foreach (CppParseTreeNodeBase grandChild in child.WalkAllDescendantsInternal())
+                {
+                    yield return grandChild;
+                }
+            }
+        }
+
+        public void VisitAllDescendants(Action<CppParseTreeNodeBase> callback, bool isChild = false)
+        {
+            if (isChild)
+            {
+                callback(this);
+            }
+
+            foreach (CppParseTreeNodeBase child in this.ChildNodes)
+            {
+                child.VisitAllDescendants(callback, true);
+
+            }
+        }
+
+        public List<TNodeType> GetAllChildrenByTypeAsList<TNodeType>() where TNodeType : CppParseTreeNodeBase
+        {
+            List<TNodeType> nodeList = new List<TNodeType>();
+
+            foreach (TNodeType node in this.GetAllChildrenByType<TNodeType>())
+            {
+                nodeList.Add(node);
+            }
+
+            return nodeList;
+        }
+
+        public IEnumerable<TNodeType> GetAllChildrenByType<TNodeType>() where TNodeType : CppParseTreeNodeBase
+        {
+            if (this is TNodeType)
+            {
+                yield return this as TNodeType;
+            }
+
+            foreach (var child in this.ChildNodes)
+            {
+                foreach (var grandChild in child.GetAllChildrenByType<TNodeType>())
+                {
+                    yield return grandChild;
+                }
+            }
+        }
+
         public TNodeType GetChildByType<TNodeType>() where TNodeType : CppParseTreeNodeBase
         {
             if (this is TNodeType)
@@ -219,6 +348,22 @@ namespace Penweb.CodeAnalytics
             else
             {
                 return this.ParentNode.GetParentByType<TNodeType>();
+            }
+        }
+
+        public TNodeType GetTopParentByType<TNodeType>(TNodeType currentTopParent) where TNodeType : CppParseTreeNodeBase
+        {
+            if (this.ParentNode == null)
+            {
+                return currentTopParent;
+            }
+            else if (this.ParentNode is TNodeType)
+            {
+                return this.ParentNode.GetTopParentByType<TNodeType>(this.ParentNode as TNodeType); ;
+            }
+            else
+            {
+                return this.ParentNode.GetTopParentByType<TNodeType>(currentTopParent);
             }
         }
 

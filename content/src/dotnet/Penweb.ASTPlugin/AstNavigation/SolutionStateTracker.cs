@@ -6,6 +6,7 @@ using JetBrains.ProjectModel;
 using JetBrains.ProjectModel.Tasks;
 using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.Lifetimes;
+using Penweb.CodeAnalytics;
 
 namespace PenWeb.ASTPlugin
 {
@@ -32,6 +33,16 @@ namespace PenWeb.ASTPlugin
             Solution = solution;
             SolutionName.Value = solution.SolutionFile?.Name;
             AfterSolutionOpened.Fire(solution);
+
+            CppParseTreeNodeFactory.Start();
+            CppParseTreeNodeFactory.Start();
+            PenradCppManager.Start();
+            CppResourceManager.Start();
+            CppResultsManager.Start();
+            LogManager.Start(SolutionName.Value);
+
+            LogManager.Self.Log("Extension started");
+
         }
 
         private void HandleSolutionClosed()
@@ -39,9 +50,11 @@ namespace PenWeb.ASTPlugin
             if (Solution == null)
                 return;
 
-            SolutionName.Value = "None";
+            //SolutionName.Value = "None";
             BeforeSolutionClosed.Fire(Solution);
             Solution = null;
+
+            LogManager.Self.Close();
         }
 
 

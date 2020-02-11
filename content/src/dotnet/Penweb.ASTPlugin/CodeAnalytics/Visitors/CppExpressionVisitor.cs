@@ -14,9 +14,7 @@ namespace Penweb.CodeAnalytics
 
     public class CppExpressionVisitor : ICppExpressionVisitor<CppExpressonVisitorResult>
     {
-
-
-        CppExpressionVisitor()
+        public CppExpressionVisitor()
         {
 
         }
@@ -42,16 +40,6 @@ namespace Penweb.CodeAnalytics
         }
 
         public CppExpressonVisitorResult Visit(ICppThisExpression expr)
-        {
-            return null;
-        }
-
-        public CppExpressonVisitorResult Visit(ICppResolvedThisExpression expr)
-        {
-            return null;
-        }
-
-        public CppExpressonVisitorResult Visit(ICppParenExpression expr)
         {
             return null;
         }
@@ -101,22 +89,12 @@ namespace Penweb.CodeAnalytics
             return null;
         }
 
-        public CppExpressonVisitorResult Visit(ICppResolvedQualifiedReferenceExpression expr)
-        {
-            return null;
-        }
-
         public CppExpressonVisitorResult Visit(ICppLinkageQualifiedReferenceExpression expr)
         {
             return null;
         }
 
         public CppExpressonVisitorResult Visit(ICppMemberAccessExpression expr)
-        {
-            return null;
-        }
-
-        public CppExpressonVisitorResult Visit(ICppResolvedMemberAccessExpression expr)
         {
             return null;
         }
@@ -147,11 +125,6 @@ namespace Penweb.CodeAnalytics
         }
 
         public CppExpressonVisitorResult Visit(ICppCallExpression expr)
-        {
-            return null;
-        }
-
-        public CppExpressonVisitorResult Visit(ICppResolvedCallExpression expr)
         {
             return null;
         }
@@ -192,11 +165,6 @@ namespace Penweb.CodeAnalytics
         }
 
         public CppExpressonVisitorResult Visit(ICppResolvedAlignOfExpression expr)
-        {
-            return null;
-        }
-
-        public CppExpressonVisitorResult Visit(ICppTypeIdExpression expr)
         {
             return null;
         }
@@ -375,5 +343,35 @@ namespace Penweb.CodeAnalytics
         {
             return null;
         }
+
+        public CppExpressonVisitorResult Visit(ICppResolvedThisExpression expr)
+        {
+            return null;
+        }
+
+        public CppExpressonVisitorResult Visit(ICppParenExpression expr)
+        {
+            return null;
+        }
+        public CppExpressonVisitorResult Visit(ICppTypeIdExpression expr)
+        {
+            return null;
+        }
+
+        public CppExpressonVisitorResult Visit(ICppResolvedQualifiedReferenceExpression expr)
+        {
+            return null;
+        }
+
+        public CppExpressonVisitorResult Visit(ICppResolvedCallExpression expr)
+        {
+            return null;
+        }
+
+        public CppExpressonVisitorResult Visit(ICppResolvedMemberAccessExpression expr)
+        {
+            return null;
+        }
+
     }
 }

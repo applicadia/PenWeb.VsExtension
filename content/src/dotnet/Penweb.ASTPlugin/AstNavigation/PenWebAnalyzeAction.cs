@@ -20,8 +20,8 @@ namespace PenWeb.ASTPlugin
             var lifetime = context.GetComponent<Lifetime>();
             var settingsStore = context.GetComponent<SettingsStore>();
 
+            LogManager.Self.Log("ActionPenWebAnalyze Execute");
 
-            CppParseTreeNodeFactory.Start();
             CppCodeAnalysis.DoAnalytics(lifetime);
         }
     }

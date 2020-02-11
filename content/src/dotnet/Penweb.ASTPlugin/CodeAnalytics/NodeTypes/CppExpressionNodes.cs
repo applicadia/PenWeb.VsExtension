@@ -11,6 +11,7 @@ using JetBrains.ReSharper.Psi.Cpp.Tree;
 using Newtonsoft.Json;
 using PenWeb.ASTPlugin;
 using JetBrains.ReSharper.Psi.Cpp.Expressions;
+using JetBrains.ReSharper.Psi.Cpp.Types;
 
 namespace Penweb.CodeAnalytics
 {
@@ -115,50 +116,6 @@ namespace Penweb.CodeAnalytics
         }
     }
 
-    public class PenWebCallExpression : PenWebExpressionBase
-    {
-        private JetBrains.ReSharper.Psi.Cpp.Tree.CallExpression CallExpression { get; set;  }
-
-        [JsonProperty] public string CalledExpressionId { get; set; }
-        public PenWebCallExpression(CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.CallExpression treeNode ) : base(parentNode, treeNode)
-        {
-            this.CallExpression = treeNode;
-        }
-
-        public override void Init()
-        {
-            try
-            {
-                base.Init();
-
-                this.SaveToJson = true;
-
-                if (this.CallExpression.InvokedExpression != null)
-                {
-                    this.CalledExpressionId = this.CallExpression.InvokedExpression.GetText();
-                }
-                else
-                {
-                    Console.WriteLine("PenWebCallExpression() InvokedExpression is null");
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-
-            this.CallExpression = null;
-            this.CppExpressionNode = null;
-        }
-
-
-
-        public override string ToString()
-        {
-            return $"[{this.Location.ToString()}]  {this.GetType().Name} Called: {this.CalledExpressionId} Code: |{SingleLineText}|";
-        }
-    }
-
     public class PenWebBinaryExpression : PenWebExpressionBase
     {
         public JetBrains.ReSharper.Psi.Cpp.Tree.BinaryExpression BinaryExpression { get; set; }
@@ -175,10 +132,6 @@ namespace Penweb.CodeAnalytics
         {
             try
             {
-                base.Init();
-
-                this.SaveToJson = true;
-
                 ICppExpression leftArguement = this.BinaryExpression.GetLeftArgument();
 
                 if (leftArguement != null)
@@ -201,6 +154,10 @@ namespace Penweb.CodeAnalytics
                     Console.WriteLine("PenWebBinaryExpression() InvokedExpression is null");
                 }
 
+                base.Init();
+
+                this.CppFunctionCatagory = CppFunctionCatagory.VariableRef;
+                //this.SaveToJson = true;
             }
             catch (Exception e)
             {
@@ -217,12 +174,112 @@ namespace Penweb.CodeAnalytics
         }
     }
 
+    public class PenWebCallExpression : PenWebExpressionBase
+    {
+        private JetBrains.ReSharper.Psi.Cpp.Tree.CallExpression CallExpression { get; set;  }
+
+        [JsonProperty] public string Class     { get; set; }
+
+        [JsonProperty] public List<string> VariableChain { get; set; } = new List<string>();
+
+        [JsonProperty] public string Method    { get; set; }
+
+        [JsonProperty] public List<string> MacroReferences { get; set; } = new List<string>();
+
+        public PenWebCallExpression(CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.CallExpression treeNode ) : base(parentNode, treeNode)
+        {
+            this.CallExpression = treeNode;
+        }
+
+        public override void Init()
+        {
+            try
+            {
+                if (this.CallExpression.InvokedExpression != null)
+                {
+                     string invokeText = this.CallExpression.InvokedExpression.GetText();
+
+                     invokeText = invokeText.Replace("->", ".");
+
+                     string[] invokeAr = invokeText.Split('.');
+
+                     if (invokeAr.Length == 1 )
+                     {
+                        this.Method = invokeAr[0];
+                     }
+                     else
+                     {
+                         List<string> invokeList = new List<string>(invokeAr);
+
+                         int cnt = 1;
+                         foreach (string invokeName in invokeList)
+                         {
+                             if (cnt++ == invokeList.Count)
+                             {
+                                 this.Method = invokeName;
+                             }
+                             else
+                             {
+                                 this.VariableChain.Add(invokeName);
+                             }
+                         }
+                     }
+                }
+                else
+                {
+                    Console.WriteLine("PenWebCallExpression() InvokedExpression is null");
+                }
+
+                base.Init();
+
+                PenWebMemberAccessExpression penWebMemberAccessExpression = this.GetChildByType<PenWebMemberAccessExpression>();
+
+                if (penWebMemberAccessExpression != null)
+                {
+                    this.Class = penWebMemberAccessExpression.Class;
+                }
+                else
+                {
+                    Console.WriteLine("PenWebCallExpression() penWebMemberAccessExpression is null");
+
+                    HierarchySnapshot hierarchySnapshot = new HierarchySnapshot(this);
+                }
+
+                List<PenWebMacroReference> macroReferences = this.GetAllChildrenByTypeAsList<PenWebMacroReference>();
+
+                foreach (PenWebMacroReference penWebMacroReference in macroReferences)
+                {
+                    this.MacroReferences.Add(penWebMacroReference.MacroName);
+                }
+               
+                this.CppFunctionCatagory = CppFunctionCatagory.MethodCall;
+                this.SaveToJson = true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            this.CallExpression = null;
+            this.CppExpressionNode = null;
+        }
+
+        public override string ToString()
+        {
+            string varList = String.Join(" ", this.VariableChain);
+            return $"[{this.Location.ToString()}]  {this.GetType().Name} ClassName: {this.Class} VarChain: {varList}  Method: {this.Method} Code: |{SingleLineText}|";
+        }
+    }
+
     public class PenWebMemberAccessExpression : PenWebExpressionBase
     {
         public JetBrains.ReSharper.Psi.Cpp.Tree.MemberAccessExpression MemberAccessExpression { get; set; }
 
-        [JsonProperty] public string LeftArguement { get; set; }
-        [JsonProperty] public string ClassName     { get; set; }
+        //[JsonProperty] public string LeftArguement { get; set; }
+        //[JsonProperty] public string ClassName     { get; set; }
+
+        [JsonProperty] public string Class     { get; set; }
+
         [JsonProperty] public string MethodName    { get; set; }
 
         public PenWebMemberAccessExpression( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.MemberAccessExpression treeNode ) : base(parentNode, treeNode)
@@ -234,38 +291,53 @@ namespace Penweb.CodeAnalytics
         {
             try
             {
-                base.Init();
-
-                this.SaveToJson = true;
-
                 QualifiedReference qualifiedReference = this.MemberAccessExpression.Member;
 
                 if (qualifiedReference != null)
                 {
                     CppQualifiedName cppQualifiedName = qualifiedReference.GetQualifiedName();
 
-                    if (cppQualifiedName.Name != null)
-                    {
-                        this.MethodName = cppQualifiedName.Name.ToString();
-                    }
-
-                    if (cppQualifiedName.Qualifier.Name != null)
-                    {
-                        this.ClassName = cppQualifiedName.Qualifier.Name.ToString();
-                    }
+                    this.MethodName = cppQualifiedName.GetNameStr();
                 }
 
+                ICppExpressionNode cppExpressionNode = this.MemberAccessExpression.Qualifier;
+                CppTypeAndCategory cppTypeAndCatagory = cppExpressionNode.GetTypeAndCategory();
+                CppQualType cppQualType = cppTypeAndCatagory.Type;
+
+                CppTypeVisitor cppTypeVisitor = new CppTypeVisitor();
+
+                cppQualType.Accept(cppTypeVisitor);
+
+                string typeStr = cppTypeVisitor.TypeBuilder.ToString();
+                string dbgStr = cppTypeVisitor.DbgBuilder.ToString().Trim();
+
+                this.Class = cppTypeVisitor.NameBuilder.ToString().Trim();
+
+                if (String.IsNullOrWhiteSpace(this.Class))
+                {
+                    this.Class = dbgStr;
+
+                    Console.WriteLine($"PenWebMemberAccessExpression() class name empty");
+
+                    cppQualType.Accept(cppTypeVisitor);
+
+                    typeStr = cppTypeVisitor.TypeBuilder.ToString();
+                    dbgStr = cppTypeVisitor.DbgBuilder.ToString();
+
+                    this.Class = cppTypeVisitor.NameBuilder.ToString();
+                }
+
+                /*
                 ICppExpression leftArguement = this.MemberAccessExpression.GetLeftArgument();
+                CppExpressionVisitor cppExpressionVisitor = new CppExpressionVisitor();
+                leftArguement.Accept<CppExpressonVisitorResult>(cppExpressionVisitor);
+                */
 
-                if (leftArguement != null)
-                {
-                    this.LeftArguement = leftArguement.ToString();
-                }
-                else
-                {
-                    Console.WriteLine("PenWebMemberAccessExpression() InvokedExpression is null");
-                }
+                base.Init();
 
+                this.CppFunctionCatagory = CppFunctionCatagory.MethodCall;
+
+                //this.SaveToJson = true;
             }
             catch (Exception e)
             {
@@ -278,7 +350,7 @@ namespace Penweb.CodeAnalytics
 
         public override string ToString()
         {
-            return $"[{this.Location.ToString()}]  {this.GetType().Name} LeftArguement: {this.LeftArguement}  EnumName: {this.ClassName}  MethodName: {this.MethodName}  Code: |{SingleLineText}|";
+            return $"[{this.Location.ToString()}]  {this.GetType().Name} ClassName: {this.Class} ItemName: {this.MethodName}  Code: |{SingleLineText}|";
         }
     }
 

@@ -69,7 +69,6 @@ namespace Penweb.CodeAnalytics
                 this.DialogMap = JsonConvert.DeserializeObject<SortedDictionary<string, CppDialogEntry>>(jsonData);
 
             }
-
         }
 
         public static void Start()

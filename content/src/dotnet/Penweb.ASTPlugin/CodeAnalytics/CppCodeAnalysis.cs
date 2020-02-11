@@ -41,40 +41,56 @@ namespace Penweb.CodeAnalytics
         {
             var solutionStateTracker = SolutionStateTracker.Instance;
 
+            /*
             solutionStateTracker?.SolutionName.Change.Advise_HasNew(lifetime, () =>
             {
-                try
-                {
-                    CppParseTreeNodeFactory.Start();
-                    CodeGenerator.Start();
-                    PenradCppManager.Start();
-
-                    PenradCppFiles.Clear();
-                    PenradHeaderFiles.Clear();
-                    CppFileMap.Clear();
-                    HeaderFileMap.Clear();
-
-                    var solution = solutionStateTracker?.Solution;
-                    if (solution == null) return;
-
-                    List<IProject> projects = solution.GetProjectsByName("penrad").ToList();
-
-                    if ( projects.Count == 1 )
-                    {
-                        PenradProject = projects.First();
-
-                        MapProjectFiles();
-                        ParsePenradDialogs();
-
-                        //CppParseTreeNodeFactory.Self.DumpTreeSchema();
-                        //CodeGenerator.Self.GenerateCode();
-                    }
-                }
-                catch ( Exception ex )
-                {
-                    Console.WriteLine($"Excpetion {ex.Message}");
-                }
             });
+            */
+
+            try
+            {
+                PenradCppFiles.Clear();
+                PenradHeaderFiles.Clear();
+                CppFileMap.Clear();
+                HeaderFileMap.Clear();
+                CppResultsManager.Self.Clear();
+
+                var solution = solutionStateTracker?.Solution;
+                if (solution == null) return;
+
+                List<IProject> projects = solution.GetProjectsByName("penrad").ToList();
+
+                if ( projects.Count == 1 )
+                {
+                    PenradProject = projects.First();
+
+                    MapProjectFiles();
+                    ParsePenradDialogs();
+
+                    CppResultsManager.Self.WriteResults();
+
+                    //CppParseTreeNodeFactory.Self.DumpTreeSchema();
+                    //CodeGenerator.Self.GenerateCode();
+                }
+            }
+            catch ( Exception ex )
+            {
+                Console.WriteLine($"Excpetion {ex.Message}");
+            }
+        }
+
+        private static void LoopClasse()
+        {
+            //IDeclaration declaration = PenradProject.GetComponent<IDeclaration>();
+
+            IProjectItem projectElement = null;
+            IModule module1 = null;
+
+            foreach (var module in PenradProject.GetThisAndReferencedProjects())
+            {
+
+            }
+
         }
 
         private static void MapProjectFiles()
@@ -102,34 +118,8 @@ namespace Penweb.CodeAnalytics
         {
             foreach ( CppDialogEntry cppDialogEntry in PenradCppManager.Self.DialogMap.Values )
             {
-                ProcessCppFile(cppDialogEntry.CodeFile);
                 ProcessHeaderFile(cppDialogEntry.HeaderFile);
-            }
-        }
-
-        private static void ProcessCppFile(string fileName)
-        {
-            if (CppFileMap.ContainsKey(fileName.ToLower()))
-            {
-                IProjectFile projectFile = CppFileMap[fileName.ToLower()];
-
-                CppCodeContext cppCodeContext = new CppCodeContext(fileName);
-
-                CurrentFileContext = cppCodeContext;
-
-                cppCodeContext.ProjectFile = projectFile;
-
-                cppCodeContext.Init();
-
-                CurrentFileContext = cppCodeContext;
-
-                AnalyzeCodeContext(cppCodeContext);
-
-                cppCodeContext.WriteSavedNodes();
-            }
-            else
-            {
-                Console.WriteLine($"Missing Cpp File in map: {fileName}");
+                ProcessCppFile(cppDialogEntry.CodeFile);
             }
         }
 
@@ -152,10 +142,45 @@ namespace Penweb.CodeAnalytics
                 AnalyzeHeaderContext(cppHeaderContext);
 
                 cppHeaderContext.WriteSavedNodes();
+
+                cppHeaderContext.ProcessResults();
+
+                cppHeaderContext.Finalize();
             }
             else
             {
                 Console.WriteLine($"Missing Header File in map: {fileName}");
+            }
+        }
+
+
+        private static void ProcessCppFile(string fileName)
+        {
+            if (CppFileMap.ContainsKey(fileName.ToLower()))
+            {
+                IProjectFile projectFile = CppFileMap[fileName.ToLower()];
+
+                CppCodeContext cppCodeContext = new CppCodeContext(fileName);
+
+                CurrentFileContext = cppCodeContext;
+
+                cppCodeContext.ProjectFile = projectFile;
+
+                cppCodeContext.Init();
+
+                CurrentFileContext = cppCodeContext;
+
+                AnalyzeCodeContext(cppCodeContext);
+
+                cppCodeContext.WriteSavedNodes();
+
+                cppCodeContext.ProcessResults();
+
+                cppCodeContext.Finalize();
+            }
+            else
+            {
+                Console.WriteLine($"Missing Cpp File in map: {fileName}");
             }
         }
 
@@ -198,7 +223,50 @@ namespace Penweb.CodeAnalytics
         {
             if (CurrentFileContext != null)
             {
-                CurrentFileContext.SaveTreeNodes.Add(cppParseTreeNode);
+                switch (cppParseTreeNode.CppFunctionCatagory)
+                {
+                    case CppFunctionCatagory.ClassDef:
+                        CurrentFileContext.SaveTreeNodes.ClassDefs.Add(cppParseTreeNode as PenWebClassSpecifier);
+                        break;
+
+                    case CppFunctionCatagory.MessageMap:
+                        CurrentFileContext.SaveTreeNodes.MessageMap.Add(cppParseTreeNode);
+                        break;
+
+                    case CppFunctionCatagory.MethodDef:
+                        CurrentFileContext.SaveTreeNodes.MethodDefs.Add(cppParseTreeNode);
+                        break;
+
+                    case CppFunctionCatagory.MethodCall:
+                        CurrentFileContext.SaveTreeNodes.MethodCalls.Add(cppParseTreeNode);
+                        break;
+
+                    case CppFunctionCatagory.VariableDef:
+                        CurrentFileContext.SaveTreeNodes.VariableDefs.Add(cppParseTreeNode as PenWebDeclaration);
+                        break;
+
+                    case CppFunctionCatagory.VariableRef:
+                        CurrentFileContext.SaveTreeNodes.VariableRefs.Add(cppParseTreeNode as PenWebQualifiedReference);
+                        break;
+
+                    case CppFunctionCatagory.ScreenDef:
+                        CurrentFileContext.SaveTreeNodes.ScreenDefs.Add(cppParseTreeNode);
+                        break;
+
+                    case CppFunctionCatagory.EnumDef:
+                        CurrentFileContext.SaveTreeNodes.EnumDefs.Add(cppParseTreeNode);
+                        break;
+
+                    case CppFunctionCatagory.ListDef:
+                        CurrentFileContext.SaveTreeNodes.ListDefs.Add(cppParseTreeNode);
+                        break;
+
+                    default:
+                        CurrentFileContext.SaveTreeNodes.Uncatagorized.Add(cppParseTreeNode);
+                        break;
+                }
+
+                CurrentFileContext.SaveTreeNodes.All.Add(cppParseTreeNode);
             }
         }
 
@@ -236,5 +304,19 @@ namespace Penweb.CodeAnalytics
 
             File.WriteAllText(dumpPath, jsonData);
         }
+
+        public static void DumpFileJson(string codeFileName, string jsonFileName, object jsonObject)
+        {
+            string dumpPath = Path.Combine(CppCodeAnalysis.RsAnalyticsDir, codeFileName);
+
+            Directory.CreateDirectory(dumpPath);
+
+            dumpPath = Path.Combine(dumpPath, jsonFileName);
+
+            string jsonData = JsonConvert.SerializeObject(jsonObject, Formatting.Indented);
+
+            File.WriteAllText(dumpPath, jsonData);
+        }
+
     }
 }
