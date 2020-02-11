@@ -94,7 +94,7 @@ namespace Penweb.CodeAnalytics
                 }
                 else
                 {
-                    Console.WriteLine($"CoordParse Failed: {startLineStr}");
+                    LogManager.Self.Log($"CoordParse Failed: {startLineStr}");
                 }
 
                 string startColStr = start.Column.ToString();
@@ -109,7 +109,7 @@ namespace Penweb.CodeAnalytics
                 }
                 else
                 {
-                    Console.WriteLine($"CoordParse Failed: {startColStr}");
+                    LogManager.Self.Log($"CoordParse Failed: {startColStr}");
                 }
 
                 string endLineStr = end.Line.ToString();
@@ -124,7 +124,7 @@ namespace Penweb.CodeAnalytics
                 }
                 else
                 {
-                    Console.WriteLine($"CoordParse Failed: {endLineStr}");
+                    LogManager.Self.Log($"CoordParse Failed: {endLineStr}");
                 }
 
                 string endColStr = end.Column.ToString();
@@ -139,12 +139,12 @@ namespace Penweb.CodeAnalytics
                 }
                 else
                 {
-                    Console.WriteLine($"CoordParse Failed: {endColStr}");
+                    LogManager.Self.Log($"CoordParse Failed: {endColStr}");
                 }
             }
             catch ( Exception ex )
             {
-                Console.WriteLine($"Location parse error");
+                LogManager.Self.Log($"Location parse error");
             }
         }
 
@@ -166,6 +166,15 @@ namespace Penweb.CodeAnalytics
         VariableRef,
         MethodDef,
         MethodCall,
+    }
+
+    public enum AstState
+    {
+        None,
+        InClass,
+        InEnum,
+        InMethod,
+        InMessageMap,
     }
 
     [JsonObject(MemberSerialization=MemberSerialization.OptIn,IsReference=false)]
@@ -195,9 +204,17 @@ namespace Penweb.CodeAnalytics
 
         public CppParseTreeNodeBase ParentNode { get; set; }
 
+        public AstState AstState      { get; set; } = AstState.None;
+        public string CurrentType     { get; set; } = "";
+        public string CurrentMethod   { get; set; } = "";
+
         public CppParseTreeNodeBase(CppParseTreeNodeBase parentNode, ITreeNode treeNode)
         {
             this.ParentNode = parentNode;
+
+            this.AstState      = parentNode.AstState;
+            this.CurrentType   = parentNode.CurrentType;
+            this.CurrentMethod = parentNode.CurrentMethod;
 
             //this.TreeNode = treeNode;
 

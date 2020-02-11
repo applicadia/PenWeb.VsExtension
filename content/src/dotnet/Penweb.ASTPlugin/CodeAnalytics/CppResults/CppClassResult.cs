@@ -33,7 +33,7 @@ namespace Penweb.CodeAnalytics
             }
             else
             {
-                Console.WriteLine($"CppClassResult Duplicate Variable: {cppVariableDefinition.TypeName} {cppVariableDefinition.VariableName} {cppVariableDefinition.LineNumber}");
+                LogManager.Self.Log($"CppClassResult Duplicate Variable: {cppVariableDefinition.TypeName} {cppVariableDefinition.VariableName} {cppVariableDefinition.LineNumber}");
                 return false;
             }
         }
@@ -47,7 +47,7 @@ namespace Penweb.CodeAnalytics
             }
             else
             {
-                Console.WriteLine($"Unknown Variable: {variableName}");
+                LogManager.Self.Log($"Unknown Variable: {variableName}");
 
                 if (this.MissingVarNames.ContainsKey(variableName))
                 {

@@ -120,7 +120,7 @@ namespace Penweb.CodeAnalytics
                 {
                     this.ClassName = dbgStr;
 
-                    Console.WriteLine($"PenWebMemberAccessExpression() class name empty");
+                    LogManager.Self.Log($"PenWebMemberAccessExpression() class name empty");
 
                     cppQualType.Accept(cppTypeVisitor);
 
@@ -154,7 +154,7 @@ namespace Penweb.CodeAnalytics
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                LogManager.Self.Log("PenWebQualifiedReference Exception", e);
             }
 
             this.QualifiedReference = null;

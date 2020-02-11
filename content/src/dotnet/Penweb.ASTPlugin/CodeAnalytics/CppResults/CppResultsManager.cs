@@ -106,7 +106,7 @@ namespace Penweb.CodeAnalytics
                     this.MissingDefClassNames.Add(penWebDeclaration.OwningClass, 1);
                 }
 
-                Console.WriteLine($"Unknown class: {penWebDeclaration.OwningClass}");
+                LogManager.Self.Log($"Unknown class: {penWebDeclaration.OwningClass}");
             }
         }
 
@@ -129,7 +129,7 @@ namespace Penweb.CodeAnalytics
                     this.MissingRefClassNames.Add(penWebQualifiedReference.ClassName, 1);
                 }
 
-                Console.WriteLine($"Unknown ClassName: {penWebQualifiedReference.ClassName}");
+                LogManager.Self.Log($"Unknown ClassName: {penWebQualifiedReference.ClassName}");
             }
         }
 

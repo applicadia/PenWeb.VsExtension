@@ -38,9 +38,32 @@ namespace PenWeb.ASTPlugin
 
         [CanBeNull]
         public static CppFile GetCppFile(this IProject project, string filename)
-        {            
-            var file = project.GetPsiSourceFileInProject(FileSystemPath.Parse(filename));
-            return file?.GetPsiFiles<CppLanguage>().SafeOfType<CppFile>().SingleOrDefault();
+        {
+            FileSystemPath fileSystemPath = FileSystemPath.Parse(filename);
+
+            if (fileSystemPath != null)
+            {
+                IPsiSourceFile file = project.GetPsiSourceFileInProject(fileSystemPath);
+
+                if (file != null)
+                {
+                    IEnumerable<IFile> files = file?.GetPsiFiles<CppLanguage>();
+
+                    CppFile cppFile = files.SafeOfType<CppFile>().SingleOrDefault();
+
+                    return cppFile;
+                }
+                else
+                {
+                    return null;
+                }
+
+                //return file?.GetPsiFiles<CppLanguage>().SafeOfType<CppFile>().SingleOrDefault();
+            }
+            else
+            {
+                return null;
+            }
         }
 
 
@@ -139,7 +162,7 @@ namespace PenWeb.ASTPlugin
             }
             else
             {
-                Console.WriteLine("QualifiedName.Name is null");
+                LogManager.Self.Log("QualifiedName.Name is null");
                 return "QualifiedName Error";
             }
         }

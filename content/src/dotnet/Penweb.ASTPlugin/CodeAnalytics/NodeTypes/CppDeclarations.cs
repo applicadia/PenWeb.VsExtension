@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 using PenWeb.ASTPlugin;
 using JetBrains.ReSharper.Psi.Cpp.Expressions;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.Cpp.Types;
 
 namespace Penweb.CodeAnalytics
 {
@@ -103,7 +104,7 @@ namespace Penweb.CodeAnalytics
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                LogManager.Self.Log("PenWebDeclarator Exception", e);
             }
 
             this.Declarator = null;
@@ -163,7 +164,7 @@ namespace Penweb.CodeAnalytics
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                LogManager.Self.Log("PenWebInitDeclarator Exception",e);
             }
 
             this.InitDeclarator = null;
@@ -201,7 +202,7 @@ namespace Penweb.CodeAnalytics
                 }
                 else
                 {
-                    Console.WriteLine($"PenWebDeclaration() symbol is null");
+                    LogManager.Self.Log($"PenWebDeclaration() symbol is null");
                 }
 
                 AttributeList attributeList = this.Declaration.AttributeListNode;
@@ -227,7 +228,7 @@ namespace Penweb.CodeAnalytics
                 }
                 else
                 {
-                    Console.WriteLine($"penWebDeclarator is null");
+                    LogManager.Self.Log($"penWebDeclarator is null");
                 }
 
                 if (String.IsNullOrWhiteSpace(this.VariableName))
@@ -240,7 +241,7 @@ namespace Penweb.CodeAnalytics
                     }
                     else
                     {
-                        Console.WriteLine($"declarationSpecifiers is null");
+                        LogManager.Self.Log($"declarationSpecifiers is null");
                     }
                 }
 
@@ -252,7 +253,7 @@ namespace Penweb.CodeAnalytics
                 }
                 else
                 {
-                    Console.WriteLine($"penWebDeclarator is null");
+                    LogManager.Self.Log($"penWebDeclarator is null");
                 }
 
                 PenWebClassSpecifier penWebClassSpecifier = this.GetParentByType<PenWebClassSpecifier>();
@@ -271,7 +272,7 @@ namespace Penweb.CodeAnalytics
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                LogManager.Self.Log("PenWebDeclaration Exception", e);
             }
 
             this.Declaration = null;
@@ -308,17 +309,61 @@ namespace Penweb.CodeAnalytics
 
                     if (symbol != null)
                     {
-                        this.ItemName = symbol.GetQualifiedName().GetNameStr();
+                        CppQualifiedName cppQualifiedName = symbol.GetQualifiedName();
+
+
+                        this.ItemName = cppQualifiedName.GetNameStr();
+
+                        ICppQualifiedNamePart cppQualifiedNamePart = cppQualifiedName.Name;
+                        CppQualifiedName qualifier = cppQualifiedName.Qualifier;
+
+                        string qualifierStr = qualifier.GetNameStr();
                     }
                     else
                     {
-                        Console.WriteLine($"PenWebSimpleDeclaration() declarationNode.symbol is null");
+                        LogManager.Self.Log($"PenWebSimpleDeclaration() declarationNode.symbol is null");
                     }
+
+                    ICppResolvedTypeFactory cppResolvedTypeFactory = declarationNode.GetTypeFactory();
+
+                    if (cppResolvedTypeFactory != null)
+                    {
+                        cppResolvedTypeFactory.GetIdentityTypeVisitor();
+                    }
+
                 }
                 else
                 {
-                    Console.WriteLine($"PenWebSimpleDeclaration() declarationNode is null");
+                    LogManager.Self.Log($"PenWebSimpleDeclaration() declarationNode is null");
                 }
+
+
+                CompoundStatement compoundStatement = this.SimpleDeclaration.CompoundStatementNode;
+
+                if (compoundStatement != null)
+                {
+
+                }
+
+                CtorInitializer ctorInitializer = this.SimpleDeclaration.ConstructorInitializerNode;
+
+                if (ctorInitializer != null)
+                {
+
+                }
+
+                DefaultSpecifier defaultSpecifier  = this.SimpleDeclaration.DefaultSpecifierNode;
+
+                if (defaultSpecifier != null)
+                {
+
+                }
+
+                CtorBlock constructorBlock = this.SimpleDeclaration.ConstructorBlock;
+
+                ITreeNode simicolonNode = this.SimpleDeclaration.SemicolonNode;
+
+                ITreeNode trailingNode = this.SimpleDeclaration.TrailingNode;
 
                 base.Init();
 
@@ -327,7 +372,7 @@ namespace Penweb.CodeAnalytics
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                LogManager.Self.Log("PenWebSimpleDeclaration Exception", e);
             }
 
             this.SimpleDeclaration = null;
@@ -365,7 +410,7 @@ namespace Penweb.CodeAnalytics
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                LogManager.Self.Log("PenWebDeclaratorQualifiedName Exception", e);
             }
 
             this.DeclaratorQualifiedName = null;
@@ -410,7 +455,7 @@ namespace Penweb.CodeAnalytics
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                LogManager.Self.Log("PenWebDeclarationSpecifiers Exception", e);
             }
 
             this.DeclarationSpecifiers = null;

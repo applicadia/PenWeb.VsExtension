@@ -75,7 +75,7 @@ namespace Penweb.CodeAnalytics
             }
             catch ( Exception ex )
             {
-                Console.WriteLine($"Excpetion {ex.Message}");
+                LogManager.Self.Log($"Excpetion {ex.Message}");
             }
         }
 
@@ -149,7 +149,7 @@ namespace Penweb.CodeAnalytics
             }
             else
             {
-                Console.WriteLine($"Missing Header File in map: {fileName}");
+                LogManager.Self.Log($"Missing Header File in map: {fileName}");
             }
         }
 
@@ -180,7 +180,7 @@ namespace Penweb.CodeAnalytics
             }
             else
             {
-                Console.WriteLine($"Missing Cpp File in map: {fileName}");
+                LogManager.Self.Log($"Missing Cpp File in map: {fileName}");
             }
         }
 

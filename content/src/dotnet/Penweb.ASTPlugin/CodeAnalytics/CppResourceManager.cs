@@ -164,7 +164,7 @@ namespace Penweb.CodeAnalytics
                         }
                         else
                         {
-                            Console.WriteLine($"resource.h - bad format at [{lineNumbner}] '{line}'");
+                            LogManager.Self.Log($"resource.h - bad format at [{lineNumbner}] '{line}'");
                         }
                     }
                 }

@@ -140,7 +140,7 @@ namespace Penweb.CodeAnalytics
                 }
                 else
                 {
-                    Console.WriteLine("PenWebBinaryExpression() InvokedExpression is null");
+                    LogManager.Self.Log("PenWebBinaryExpression() InvokedExpression is null");
                 }
 
                 ICppExpressionNode cppExpressionNode = this.BinaryExpression.LeftOperand;
@@ -151,7 +151,7 @@ namespace Penweb.CodeAnalytics
                 }
                 else
                 {
-                    Console.WriteLine("PenWebBinaryExpression() InvokedExpression is null");
+                    LogManager.Self.Log("PenWebBinaryExpression() InvokedExpression is null");
                 }
 
                 base.Init();
@@ -161,7 +161,7 @@ namespace Penweb.CodeAnalytics
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                LogManager.Self.Log("PenWebBinaryExpression Exception", e);
             }
 
             this.BinaryExpression = null;
@@ -227,7 +227,7 @@ namespace Penweb.CodeAnalytics
                 }
                 else
                 {
-                    Console.WriteLine("PenWebCallExpression() InvokedExpression is null");
+                    LogManager.Self.Log("PenWebCallExpression() InvokedExpression is null");
                 }
 
                 base.Init();
@@ -240,7 +240,7 @@ namespace Penweb.CodeAnalytics
                 }
                 else
                 {
-                    Console.WriteLine("PenWebCallExpression() penWebMemberAccessExpression is null");
+                    LogManager.Self.Log("PenWebCallExpression() penWebMemberAccessExpression is null");
 
                     HierarchySnapshot hierarchySnapshot = new HierarchySnapshot(this);
                 }
@@ -257,7 +257,7 @@ namespace Penweb.CodeAnalytics
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                LogManager.Self.Log("PenWebCallExpression Exception", e);
             }
 
             this.CallExpression = null;
@@ -317,7 +317,7 @@ namespace Penweb.CodeAnalytics
                 {
                     this.Class = dbgStr;
 
-                    Console.WriteLine($"PenWebMemberAccessExpression() class name empty");
+                    LogManager.Self.Log($"PenWebMemberAccessExpression() class name empty");
 
                     cppQualType.Accept(cppTypeVisitor);
 
@@ -341,7 +341,7 @@ namespace Penweb.CodeAnalytics
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                LogManager.Self.Log("PenWebMemberAccessExpression Exception", e);
             }
 
             this.MemberAccessExpression = null;
@@ -378,13 +378,13 @@ namespace Penweb.CodeAnalytics
                 }
                 else
                 {
-                    Console.WriteLine("PenWebMacroCall() MacroReferenceNode is null");
+                    LogManager.Self.Log("PenWebMacroCall() MacroReferenceNode is null");
                 }
                 */
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                LogManager.Self.Log("PenWebExpressionStatement Exception", e);
             }
 
             this.ExpressionStatement = null;

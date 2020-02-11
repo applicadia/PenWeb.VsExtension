@@ -83,7 +83,7 @@ namespace Penweb.CodeAnalytics
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                LogManager.Self.Log("PenWebDeclarationSpecifierTypename Exception", e);
             }
 
             this.DeclarationSpecifierTypename = null;
@@ -112,6 +112,9 @@ namespace Penweb.CodeAnalytics
             {
                 this.EnumName = this.EnumSpecifier.DeclaredName;
 
+                this.AstState    = AstState.InEnum;
+                this.CurrentType = this.EnumName;
+
                 if (String.IsNullOrEmpty(this.EnumName))
                 {
                     if (this.EnumSpecifier.GetText().Contains("IDD"))
@@ -126,7 +129,7 @@ namespace Penweb.CodeAnalytics
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                LogManager.Self.Log("PenWebEnumSpecifier Exception", e);
             }
 
             this.EnumSpecifier = null;
@@ -156,6 +159,9 @@ namespace Penweb.CodeAnalytics
             {
                 this.ClassName = this.ClassSpecifier.DeclaredName;
 
+                this.AstState    = AstState.InClass;
+                this.CurrentType = this.ClassName;
+
                 BaseClause baseClause = this.ClassSpecifier.GetBaseClause();
 
                 if (baseClause != null)
@@ -172,13 +178,13 @@ namespace Penweb.CodeAnalytics
                         }
                         else
                         {
-                            Console.WriteLine("PenWebClassSpecifier() baseReference is null");
+                            LogManager.Self.Log("PenWebClassSpecifier() baseReference is null");
                         }
                     }
                 }
                 else
                 {
-                    Console.WriteLine("PenWebClassSpecifier() baseClause is null");
+                    LogManager.Self.Log("PenWebClassSpecifier() baseClause is null");
                 }
 
                 base.Init();
@@ -199,7 +205,7 @@ namespace Penweb.CodeAnalytics
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                LogManager.Self.Log("PenWebClassSpecifier Exception", e);
             }
 
             this.ClassSpecifier = null;

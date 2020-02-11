@@ -162,12 +162,12 @@ namespace Penweb.CodeAnalytics
                     else
                     {
                         this.MacroName = this.MacroCall.MacroReferenceNode.GetText();
-                        //Console.WriteLine("PenWebMacroCall() Name is null");
+                        //LogManager.Self.Log("PenWebMacroCall() Name is null");
                     }
                 }
                 else
                 {
-                    Console.WriteLine("PenWebMacroCall() MacroReferenceNode is null");
+                    LogManager.Self.Log("PenWebMacroCall() MacroReferenceNode is null");
                 }
 
                 base.Init();
@@ -288,7 +288,7 @@ namespace Penweb.CodeAnalytics
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                LogManager.Self.Log("PenWebMacroCall Exception", e);
             }
 
             this.MacroCall = null;
@@ -323,7 +323,7 @@ namespace Penweb.CodeAnalytics
             else
             {
                 this.MacroParameters.Add("null");
-                //Console.WriteLine("PenWebMacroCall() ArgumentListNode is null");
+                //LogManager.Self.Log("PenWebMacroCall() ArgumentListNode is null");
             }
         }
 
