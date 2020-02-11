@@ -40,15 +40,21 @@ namespace Penweb.CodeAnalytics
         public string FullName { get; set; }
         public string Ext      { get; set; }
 
-        protected TextWriter LogWriter { get; set; }
+        public string DialogClassName { get; set; }
+
+        //protected TextWriter LogWriter { get; set; }
 
         public List<CppParseTreeNodeBase> ChildNodes { get; } = new List<CppParseTreeNodeBase>();
 
         public FunctionNodes SaveTreeNodes { get; } = new FunctionNodes();
 
-        public CppFileContextBase(string fileName)
+
+
+        public CppFileContextBase(string fileName, string dialogClassName)
         {
-            this.FullName = fileName;  
+            this.FullName = fileName;
+
+            this.DialogClassName = dialogClassName;
 
             this.FileName = Path.GetFileNameWithoutExtension(this.FullName);
 
@@ -65,7 +71,7 @@ namespace Penweb.CodeAnalytics
 
             logPath = Path.Combine(logPath, $"{this.FileName}-{this.Ext}.log");
 
-            this.LogWriter = File.CreateText(logPath);
+            //this.LogWriter = File.CreateText(logPath);
 
             this.CppFile = CppCodeAnalysis.PenradProject.GetCppFile(this.FullName);
 
@@ -107,11 +113,13 @@ namespace Penweb.CodeAnalytics
 
         public virtual void Finalize()
         {
+            /*
             if (this.LogWriter != null)
             {
                 this.LogWriter.Flush();
                 this.LogWriter.Close();
             }
+            */
         }
     }
 }

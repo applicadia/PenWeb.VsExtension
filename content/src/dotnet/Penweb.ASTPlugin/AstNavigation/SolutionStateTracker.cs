@@ -30,19 +30,25 @@ namespace PenWeb.ASTPlugin
 
         private void HandleSolutionOpened(ISolution solution)
         {
-            Solution = solution;
-            SolutionName.Value = solution.SolutionFile?.Name;
-            AfterSolutionOpened.Fire(solution);
+            try
+            {
+                Solution = solution;
+                SolutionName.Value = solution.SolutionFile?.Name;
+                AfterSolutionOpened.Fire(solution);
 
-            CppParseTreeNodeFactory.Start();
-            CppParseTreeNodeFactory.Start();
-            PenradCppManager.Start();
-            CppResourceManager.Start();
-            CppResultsManager.Start();
-            LogManager.Start(SolutionName.Value);
+                CppParseTreeNodeFactory.Start();
+                CppParseTreeNodeFactory.Start();
+                PenradCppManager.Start();
+                CppResourceManager.Start();
+                CppResultsManager.Start();
+                LogManager.Start(SolutionName.Value);
 
-            LogManager.Self.Log("Extension started");
-
+                LogManager.Self.Log("Extension started");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"HandleSolutionOpened - Parser Startup Exception: {ex.Message}");
+            }
         }
 
         private void HandleSolutionClosed()

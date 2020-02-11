@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PenWeb.ASTPlugin;
+using Newtonsoft.Json;
 
 namespace Penweb.CodeAnalytics
 {
@@ -13,7 +14,7 @@ namespace Penweb.CodeAnalytics
     {
         public CppHeaderContext CppHeaderContext { get; set; }
 
-        public CppCodeContext( string fileName ) : base( fileName )
+        public CppCodeContext( string fileName, string dialogClassName ) : base( fileName, dialogClassName )
         {
         }
 
@@ -42,6 +43,22 @@ namespace Penweb.CodeAnalytics
             foreach (PenWebQualifiedReference penWebQualifiedReference in SaveTreeNodes.VariableRefs)
             {
                 CppResultsManager.Self.AddVariableReference(this, penWebQualifiedReference, $"{this.FileName}.cpp");
+            }
+        }
+
+        public void SaveClassInfo()
+        {
+            string classInfoPath = CppCodeAnalysis.CreateAnalyticsFilePath(this.FileName, $"ClassMap.json");
+
+            if (CppResultsManager.Self.ClassMap.ContainsKey(this.DialogClassName))
+            {
+                CppClassResult cppClassResult = CppResultsManager.Self.ClassMap[this.DialogClassName];
+
+                string jsonData = JsonConvert.SerializeObject(cppClassResult);
+
+                File.WriteAllText(classInfoPath, jsonData);
+
+                CppResultsManager.Self.ClassMap.Remove(this.DialogClassName);
             }
         }
     }

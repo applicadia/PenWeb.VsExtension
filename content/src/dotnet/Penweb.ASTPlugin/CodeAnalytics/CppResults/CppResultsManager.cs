@@ -46,6 +46,7 @@ namespace Penweb.CodeAnalytics
 
             File.WriteAllText(classMapPath, jsonData);
 
+            /*
             string missingRefMapPath = CppCodeAnalysis.CreateAnalyticsFilePath("MissingRefClassNames.json");
 
             jsonData = JsonConvert.SerializeObject(this.MissingRefClassNames, Formatting.Indented);
@@ -57,6 +58,7 @@ namespace Penweb.CodeAnalytics
             jsonData = JsonConvert.SerializeObject(this.MissingDefClassNames, Formatting.Indented);
 
             File.WriteAllText(missingDefMapPath, jsonData);
+            */
         }
 
         public CppClassResult AddClassResult(CppFileContextBase cppFileContext, PenWebClassSpecifier penWebClassSpecifier)
@@ -94,6 +96,8 @@ namespace Penweb.CodeAnalytics
             if (this.ClassMap.ContainsKey(penWebDeclaration.OwningClass))
             {
                 CppClassResult cppClassResult = this.ClassMap[penWebDeclaration.OwningClass];
+
+                cppClassResult.AddVariableDefinition(cppVariableDefinition);
             }
             else
             {
@@ -112,24 +116,24 @@ namespace Penweb.CodeAnalytics
 
         public void AddVariableReference(CppFileContextBase cppFileContext, PenWebQualifiedReference penWebQualifiedReference, string fileName)
         {
-            if (this.ClassMap.ContainsKey(penWebQualifiedReference.ClassName))
+            if (this.ClassMap.ContainsKey(penWebQualifiedReference.OwningClass))
             {
-                CppClassResult cppClassResult = this.ClassMap[penWebQualifiedReference.ClassName];
+                CppClassResult cppClassResult = this.ClassMap[penWebQualifiedReference.OwningClass];
 
                 CppVariableReference cppVariableReference = cppClassResult.AddVariableReference(penWebQualifiedReference.ItemName, fileName, penWebQualifiedReference.Location.StartLine);
             }
             else
             {
-                if (this.MissingRefClassNames.ContainsKey(penWebQualifiedReference.ClassName))
+                if (this.MissingRefClassNames.ContainsKey(penWebQualifiedReference.OwningClass))
                 {
-                    this.MissingRefClassNames[penWebQualifiedReference.ClassName]++;
+                    this.MissingRefClassNames[penWebQualifiedReference.OwningClass]++;
                 }
                 else
                 {
-                    this.MissingRefClassNames.Add(penWebQualifiedReference.ClassName, 1);
+                    this.MissingRefClassNames.Add(penWebQualifiedReference.OwningClass, 1);
                 }
 
-                LogManager.Self.Log($"Unknown ClassName: {penWebQualifiedReference.ClassName}");
+                LogManager.Self.Log($"Unknown TypeName: {penWebQualifiedReference.OwningClass}");
             }
         }
 

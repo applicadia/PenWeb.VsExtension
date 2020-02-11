@@ -12,7 +12,7 @@ namespace Penweb.CodeAnalytics
     public class CppHeaderContext : CppFileContextBase
     {
         public CppCodeContext CppCodeContext { get; set; }
-        public CppHeaderContext( string fileName ) : base( fileName )
+        public CppHeaderContext( string fileName, string dialogClassName ) : base( fileName, dialogClassName )
         {
         }
 

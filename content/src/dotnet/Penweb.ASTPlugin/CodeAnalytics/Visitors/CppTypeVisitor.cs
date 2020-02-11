@@ -12,21 +12,50 @@ namespace Penweb.CodeAnalytics
 
     }
 
+    public enum CppTypeVisitorType
+    {
+        Enum,
+        Class,
+        Unknown,
+    }
+
     public class CppTypeVisitor : ICppTypeVisitor<CppTypeVisitorResult>
     {
-        public StringBuilder NameBuilder { get; set; }
+        private StringBuilder NameBuilder { get; set; }
 
-        public StringBuilder DbgBuilder { get; set; }
+        private StringBuilder DbgBuilder { get; set; }
 
-        public StringBuilder TypeBuilder { get; set; }
+        private StringBuilder TypeBuilder { get; set; }
 
-        public StringBuilder QualifierBuilder { get; set; }
+        private StringBuilder QualifierBuilder { get; set; }
+
+        public string Name => this.NameBuilder.ToString().Trim();
+        public string TypeStr => this.TypeBuilder.ToString().Trim();
+
+        public string DbgStr => this.DbgBuilder.ToString().Trim();
+
+        public string Quaifier => this.QualifierBuilder.ToString().Trim();
+
+        public CppTypeVisitorType CppType => this.getCppTypeVisitorType();
+
         public CppTypeVisitor()
         {
             this.NameBuilder      = new StringBuilder();
             this.DbgBuilder       = new StringBuilder();
             this.TypeBuilder      = new StringBuilder();
             this.QualifierBuilder = new StringBuilder();
+        }
+
+        private CppTypeVisitorType getCppTypeVisitorType()
+        {
+            switch (this.TypeStr)
+            {
+                case "Enum":      return CppTypeVisitorType.Enum;
+                case "TypeName": return CppTypeVisitorType.Class;
+
+                default:
+                    return CppTypeVisitorType.Unknown;
+            }
         }
 
         public CppTypeVisitorResult Visit(CppAutoType t, Qualifiers q)
@@ -138,7 +167,7 @@ namespace Penweb.CodeAnalytics
 
         public CppTypeVisitorResult Visit(CppClassType t, Qualifiers q)
         {
-            this.TypeBuilder.Append($"ClassName");
+            this.TypeBuilder.Append($"TypeName");
             this.DbgBuilder.Append(t.DbgDescription + " ");
             this.QualifierBuilder.Append(q.ToString("g") + " ");
 

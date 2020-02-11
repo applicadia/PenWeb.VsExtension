@@ -14,13 +14,15 @@ namespace Penweb.CodeAnalytics
         [JsonProperty] public string CodeFile   { get; set; }
 
         [JsonProperty] public string HeaderFile { get; set; }
+
+        public string DialogClassName { get; set; }
     }
 
     public class PenradCppManager
     {
         public static PenradCppManager Self;
 
-        public static bool NewMammoOnly = true;
+        public static bool NewMammoOnly = false;
 
         public string PenWebData = @"c:\PenGit2\Mit\PenWebData";
         public string CppResourceDirectory;
@@ -55,7 +57,7 @@ namespace Penweb.CodeAnalytics
 
         protected void AddNewMammoOnly()
         {
-            this.DialogMap.Add("CNewMammogramDlg", new CppDialogEntry {CodeFile = "NewMammogramDlg.cpp", HeaderFile = "NewMammogramDlg.H"});
+            this.DialogMap.Add("CNewMammogramDlg", new CppDialogEntry {CodeFile = "NewMammogramDlg.cpp", HeaderFile = "NewMammogramDlg.H", DialogClassName = "CNewMammogramDlg"});
         }
 
         protected void LoadDialogMap()
@@ -68,7 +70,16 @@ namespace Penweb.CodeAnalytics
 
                 this.DialogMap = JsonConvert.DeserializeObject<SortedDictionary<string, CppDialogEntry>>(jsonData);
 
+                foreach (var keyValuePair in this.DialogMap)
+                {
+                    keyValuePair.Value.DialogClassName = keyValuePair.Key;
+                }
             }
+        }
+
+        public void WriteClassResults()
+        {
+            //CppResultsManager.Self.ClassMap[this]
         }
 
         public static void Start()

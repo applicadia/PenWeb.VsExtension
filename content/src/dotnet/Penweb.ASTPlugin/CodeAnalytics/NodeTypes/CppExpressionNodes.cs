@@ -267,7 +267,7 @@ namespace Penweb.CodeAnalytics
         public override string ToString()
         {
             string varList = String.Join(" ", this.VariableChain);
-            return $"[{this.Location.ToString()}]  {this.GetType().Name} ClassName: {this.Class} VarChain: {varList}  Method: {this.Method} Code: |{SingleLineText}|";
+            return $"[{this.Location.ToString()}]  {this.GetType().Name} TypeName: {this.Class} VarChain: {varList}  Method: {this.Method} Code: |{SingleLineText}|";
         }
     }
 
@@ -276,7 +276,7 @@ namespace Penweb.CodeAnalytics
         public JetBrains.ReSharper.Psi.Cpp.Tree.MemberAccessExpression MemberAccessExpression { get; set; }
 
         //[JsonProperty] public string LeftArguement { get; set; }
-        //[JsonProperty] public string ClassName     { get; set; }
+        //[JsonProperty] public string TypeName     { get; set; }
 
         [JsonProperty] public string Class     { get; set; }
 
@@ -308,10 +308,10 @@ namespace Penweb.CodeAnalytics
 
                 cppQualType.Accept(cppTypeVisitor);
 
-                string typeStr = cppTypeVisitor.TypeBuilder.ToString();
-                string dbgStr = cppTypeVisitor.DbgBuilder.ToString().Trim();
+                string typeStr = cppTypeVisitor.TypeStr;
+                string dbgStr = cppTypeVisitor.DbgStr;
 
-                this.Class = cppTypeVisitor.NameBuilder.ToString().Trim();
+                this.Class = cppTypeVisitor.Name;
 
                 if (String.IsNullOrWhiteSpace(this.Class))
                 {
@@ -321,10 +321,10 @@ namespace Penweb.CodeAnalytics
 
                     cppQualType.Accept(cppTypeVisitor);
 
-                    typeStr = cppTypeVisitor.TypeBuilder.ToString();
-                    dbgStr = cppTypeVisitor.DbgBuilder.ToString();
+                    typeStr = cppTypeVisitor.TypeStr;
+                    dbgStr = cppTypeVisitor.DbgStr;
 
-                    this.Class = cppTypeVisitor.NameBuilder.ToString();
+                    this.Class = cppTypeVisitor.Name;
                 }
 
                 /*
@@ -350,7 +350,7 @@ namespace Penweb.CodeAnalytics
 
         public override string ToString()
         {
-            return $"[{this.Location.ToString()}]  {this.GetType().Name} ClassName: {this.Class} ItemName: {this.MethodName}  Code: |{SingleLineText}|";
+            return $"[{this.Location.ToString()}]  {this.GetType().Name} TypeName: {this.Class} ItemName: {this.MethodName}  Code: |{SingleLineText}|";
         }
     }
 

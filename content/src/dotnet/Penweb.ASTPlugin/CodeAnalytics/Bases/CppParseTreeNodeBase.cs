@@ -170,7 +170,7 @@ namespace Penweb.CodeAnalytics
 
     public enum AstState
     {
-        None,
+        Root,
         InClass,
         InEnum,
         InMethod,
@@ -204,50 +204,74 @@ namespace Penweb.CodeAnalytics
 
         public CppParseTreeNodeBase ParentNode { get; set; }
 
-        public AstState AstState      { get; set; } = AstState.None;
+        public AstState AstState      { get; set; } = AstState.Root;
         public string CurrentType     { get; set; } = "";
         public string CurrentMethod   { get; set; } = "";
 
         public CppParseTreeNodeBase(CppParseTreeNodeBase parentNode, ITreeNode treeNode)
         {
-            this.ParentNode = parentNode;
-
-            this.AstState      = parentNode.AstState;
-            this.CurrentType   = parentNode.CurrentType;
-            this.CurrentMethod = parentNode.CurrentMethod;
-
-            //this.TreeNode = treeNode;
-
-            this.NodeType = treeNode.NodeType.ToString();
-
-            this.Location = treeNode.GetLocation();
-
-            if ( this.Location.IsSingleLine )
+            try
             {
-                string text = treeNode.GetText();
+                this.ParentNode = parentNode;
 
-                if (!text.Contains("\r") && !text.Contains("\n"))
+                if (this.ParentNode == null)
                 {
-                    this.SingleLineText = treeNode.GetText();
+                    this.AstState = AstState.Root;
+                    this.CurrentType = "";
+                    this.CurrentMethod = "";
+                }
+                else
+                {
+                    this.AstState      = parentNode.AstState;
+                    this.CurrentType   = parentNode.CurrentType;
+                    this.CurrentMethod = parentNode.CurrentMethod;
+                }
+
+                //this.TreeNode = treeNode;
+
+                this.NodeType = treeNode.NodeType.ToString();
+
+                this.Location = treeNode.GetLocation();
+
+                if (this.Location.IsSingleLine)
+                {
+                    string text = treeNode.GetText();
+
+                    if (!text.Contains("\r") && !text.Contains("\n"))
+                    {
+                        this.SingleLineText = treeNode.GetText();
+                    }
+                }
+
+                foreach (ITreeNode childTreeNode in treeNode.Children())
+                {
+                    CppParseTreeNodeBase childParseTreeNode =
+                        CppParseTreeNodeFactory.Self.CreateTypedNode(this, childTreeNode);
+
+                    if (childParseTreeNode != null)
+                    {
+                        this.ChildNodes.Add(childParseTreeNode);
+                    }
                 }
             }
-
-            foreach ( ITreeNode childTreeNode in treeNode.Children() )
+            catch (Exception ex)
             {
-                CppParseTreeNodeBase childParseTreeNode = CppParseTreeNodeFactory.Self.CreateTypedNode(this, childTreeNode);
-
-                if ( childParseTreeNode != null )
-                {
-                    this.ChildNodes.Add(childParseTreeNode);
-                }
+                LogManager.Self.Log($"{this.GetType().Name}() - Excpetion ", ex);
             }
         }
 
         public virtual void Init()
         {
-            foreach (CppParseTreeNodeBase childNode in this.ChildNodes)
+            try
             {
-                childNode.Init();
+                foreach (CppParseTreeNodeBase childNode in this.ChildNodes)
+                {
+                    childNode.Init();
+                }
+            }
+            catch (Exception ex)
+            {
+                LogManager.Self.Log($"{this.GetType().Name}.Init() - Excpetion ", ex);
             }
         }
 
@@ -306,14 +330,22 @@ namespace Penweb.CodeAnalytics
 
         public List<TNodeType> GetAllChildrenByTypeAsList<TNodeType>() where TNodeType : CppParseTreeNodeBase
         {
-            List<TNodeType> nodeList = new List<TNodeType>();
-
-            foreach (TNodeType node in this.GetAllChildrenByType<TNodeType>())
+            try
             {
-                nodeList.Add(node);
-            }
+                List<TNodeType> nodeList = new List<TNodeType>();
 
-            return nodeList;
+                foreach (TNodeType node in this.GetAllChildrenByType<TNodeType>())
+                {
+                    nodeList.Add(node);
+                }
+
+                return nodeList;
+            }
+            catch (Exception ex)
+            {
+                LogManager.Self.Log($"{this.GetType().Name}.GetAllChildrenByTypeAsList<{typeof(TNodeType).Name}>() - Excpetion ", ex);
+                return null;
+            }
         }
 
         public IEnumerable<TNodeType> GetAllChildrenByType<TNodeType>() where TNodeType : CppParseTreeNodeBase
@@ -334,53 +366,77 @@ namespace Penweb.CodeAnalytics
 
         public TNodeType GetChildByType<TNodeType>() where TNodeType : CppParseTreeNodeBase
         {
-            if (this is TNodeType)
+            try
             {
-                return this as TNodeType;
-            }
-
-            foreach (var child in this.ChildNodes)
-            {
-                TNodeType nodeType = child.GetChildByType<TNodeType>();
-
-                if (nodeType != null)
+                if (this is TNodeType)
                 {
-                    return nodeType;
+                    return this as TNodeType;
                 }
-            }
 
-            return null;
+                foreach (var child in this.ChildNodes)
+                {
+                    TNodeType nodeType = child.GetChildByType<TNodeType>();
+
+                    if (nodeType != null)
+                    {
+                        return nodeType;
+                    }
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                LogManager.Self.Log($"{this.GetType().Name}.GetChildByType<{typeof(TNodeType).Name}>() - Excpetion ", ex);
+                return null;
+            }
         }
 
         public TNodeType GetParentByType<TNodeType>() where TNodeType : CppParseTreeNodeBase
         {
-            if (this.ParentNode == null)
+            try
             {
+                if (this.ParentNode == null)
+                {
+                    return null;
+                }
+                else if (this.ParentNode is TNodeType)
+                {
+                    return this.ParentNode as TNodeType;
+                }
+                else
+                {
+                    return this.ParentNode.GetParentByType<TNodeType>();
+                }
+            }
+            catch (Exception ex)
+            {
+                LogManager.Self.Log($"{this.GetType().Name}.GetParentByType<{typeof(TNodeType).Name}>() - Excpetion ", ex);
                 return null;
-            }
-            else if (this.ParentNode is TNodeType)
-            {
-                return this.ParentNode as TNodeType;
-            }
-            else
-            {
-                return this.ParentNode.GetParentByType<TNodeType>();
             }
         }
 
         public TNodeType GetTopParentByType<TNodeType>(TNodeType currentTopParent) where TNodeType : CppParseTreeNodeBase
         {
-            if (this.ParentNode == null)
+            try
             {
-                return currentTopParent;
+                if (this.ParentNode == null)
+                {
+                    return currentTopParent;
+                }
+                else if (this.ParentNode is TNodeType)
+                {
+                    return this.ParentNode.GetTopParentByType<TNodeType>(this.ParentNode as TNodeType); ;
+                }
+                else
+                {
+                    return this.ParentNode.GetTopParentByType<TNodeType>(currentTopParent);
+                }
             }
-            else if (this.ParentNode is TNodeType)
+            catch (Exception ex)
             {
-                return this.ParentNode.GetTopParentByType<TNodeType>(this.ParentNode as TNodeType); ;
-            }
-            else
-            {
-                return this.ParentNode.GetTopParentByType<TNodeType>(currentTopParent);
+                LogManager.Self.Log($"{this.GetType().Name}.GetTopParentByType<{typeof(TNodeType).Name}>() - Excpetion ", ex);
+                return null;
             }
         }
 

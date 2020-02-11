@@ -72,9 +72,9 @@ namespace Penweb.CodeAnalytics
 
                     cppQualType.Accept(cppTypeVisitor);
 
-                    string typeStr = cppTypeVisitor.TypeBuilder.ToString();
-                    string nameStr = cppTypeVisitor.NameBuilder.ToString();
-                    string dbgStr = cppTypeVisitor.DbgBuilder.ToString();
+                    string typeStr = cppTypeVisitor.TypeStr;
+                    string nameStr = cppTypeVisitor.Name;
+                    string dbgStr = cppTypeVisitor.DbgStr;
                 }
 
                 base.Init();
@@ -213,7 +213,7 @@ namespace Penweb.CodeAnalytics
 
         public override string ToString()
         {
-            return $"[{this.Location.ToString()}]  {this.GetType().Name} ClassName: {this.ClassName}  BaseClass: {this.BaseClass} |{SingleLineText}|";
+            return $"[{this.Location.ToString()}]  {this.GetType().Name} TypeName: {this.ClassName}  BaseClass: {this.BaseClass} |{SingleLineText}|";
         }
     }
 }

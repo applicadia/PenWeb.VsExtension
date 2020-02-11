@@ -285,12 +285,23 @@ namespace Penweb.CodeAnalytics
     }
 
 
+    public enum PenWebDeclarationType
+    {
+        Unset,
+        ClassDef,
+        EnumDef,
+        VarDef,
+        MethodDef,
+    }
+
     public class PenWebSimpleDeclaration : CppParseTreeNodeBase
     {
         private JetBrains.ReSharper.Psi.Cpp.Tree.SimpleDeclaration SimpleDeclaration { get; set; }
 
         [JsonProperty] public string ClassName  { get; set; }
         [JsonProperty] public string ItemName { get; set; }
+
+        [JsonProperty] public PenWebDeclarationType PenWebDeclarationType { get; set; } = PenWebDeclarationType.Unset;
 
         public PenWebSimpleDeclaration( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.SimpleDeclaration treeNode ) : base(parentNode, treeNode)
         {
@@ -309,15 +320,67 @@ namespace Penweb.CodeAnalytics
 
                     if (symbol != null)
                     {
+                        ICppParserSymbol parentSymbol = symbol.Parent;
+
+                        CppQualifiedName parentQualfiedName =  parentSymbol.GetQualifiedName();
+                        string parentQualName = parentQualfiedName.GetNameStr();
+
+                        string parentShortName = parentSymbol.GetShortName();
+
+                        ICppParserSymbol classByMemberSymbol = parentSymbol.GetClassByMember();
+
+                        string classByMemberShortName = classByMemberSymbol.GetShortName();
+
+                        ICppParserSymbol enclosingClassSymbol = parentSymbol.GetEnclosingClass(true);
+                        CppQualifiedName qualifiedInnerName = parentSymbol.GetQualifiedInnerName();
+
+                        CppQualType cppQualType = symbol.GetDeclSpecType();
+
+
+                        string debugStr = cppQualType.DbgDescription;
+
+                        CppTypeVisitor cppTypeVisitor = new CppTypeVisitor();
+
+
+                        if (cppQualType.RefFlag != ReferenceFlag.Empty)
+                        {
+                            cppQualType.Accept(cppTypeVisitor);
+
+                            string typeStr = cppTypeVisitor.TypeStr;
+                            string dbgStr = cppTypeVisitor.DbgStr;
+
+                            this.ItemName = cppTypeVisitor.Name;
+
+                            switch (cppTypeVisitor.CppType)
+                            {
+                                case CppTypeVisitorType.Class:
+                                    this.PenWebDeclarationType = PenWebDeclarationType.ClassDef;
+                                    break;
+
+                                case CppTypeVisitorType.Enum:
+                                    this.PenWebDeclarationType = PenWebDeclarationType.EnumDef;
+                                    break;
+
+                                default:
+                                    break;
+                            }
+                        }
+
                         CppQualifiedName cppQualifiedName = symbol.GetQualifiedName();
 
+                        ICppQualifiedNamePart namePart = cppQualifiedName.Name;
 
-                        this.ItemName = cppQualifiedName.GetNameStr();
+                        string partStr = namePart.ToString();
 
-                        ICppQualifiedNamePart cppQualifiedNamePart = cppQualifiedName.Name;
-                        CppQualifiedName qualifier = cppQualifiedName.Qualifier;
+                        var subQualifier = cppQualifiedName.Qualifier;
 
-                        string qualifierStr = qualifier.GetNameStr();
+                        string qualiferStr = subQualifier.GetNameStr();
+
+
+                        if (!String.IsNullOrWhiteSpace(this.ItemName))
+                        {
+                            Console.WriteLine("");
+                        }
                     }
                     else
                     {
@@ -380,7 +443,7 @@ namespace Penweb.CodeAnalytics
 
         public override string ToString()
         {
-            return $"[{this.Location.ToString()}]  {this.GetType().Name} ClassName: {this.ClassName} TypeName: {this.ItemName} |{SingleLineText}|";
+            return $"[{this.Location.ToString()}]  {this.GetType().Name} TypeName: {this.ClassName} TypeName: {this.ItemName} |{SingleLineText}|";
         }
     }
 

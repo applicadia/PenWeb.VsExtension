@@ -32,8 +32,8 @@ namespace Penweb.CodeAnalytics
         public static IProperty<IEnumerable<string>> ReferencedElementsNamesList { get; set; }
         public static IProperty<int> SelectedReferencedElement { get; set; }
 
-        private static int HeaderCnt = 100;
-        private static int CodeCnt   = 100;
+        private static int HeaderCnt = 10;
+        private static int CodeCnt   = 10;
 
         public static CppFileContextBase CurrentFileContext { get; set; }
 
@@ -88,9 +88,7 @@ namespace Penweb.CodeAnalytics
 
             foreach (var module in PenradProject.GetThisAndReferencedProjects())
             {
-
             }
-
         }
 
         private static void MapProjectFiles()
@@ -118,18 +116,18 @@ namespace Penweb.CodeAnalytics
         {
             foreach ( CppDialogEntry cppDialogEntry in PenradCppManager.Self.DialogMap.Values )
             {
-                ProcessHeaderFile(cppDialogEntry.HeaderFile);
-                ProcessCppFile(cppDialogEntry.CodeFile);
+                ProcessHeaderFile(cppDialogEntry.HeaderFile, cppDialogEntry.DialogClassName);
+                ProcessCppFile(cppDialogEntry.CodeFile, cppDialogEntry.DialogClassName);
             }
         }
 
-        private static void ProcessHeaderFile(string fileName)
+        private static void ProcessHeaderFile(string fileName, string dialogClassName)
         {
             if (HeaderFileMap.ContainsKey(fileName.ToLower()))
             {
                 IProjectFile projectFile = HeaderFileMap[fileName.ToLower()];
 
-                CppHeaderContext cppHeaderContext = new CppHeaderContext(projectFile.Name);
+                CppHeaderContext cppHeaderContext = new CppHeaderContext(projectFile.Name, dialogClassName);
 
                 CurrentFileContext = cppHeaderContext;
 
@@ -154,13 +152,13 @@ namespace Penweb.CodeAnalytics
         }
 
 
-        private static void ProcessCppFile(string fileName)
+        private static void ProcessCppFile(string fileName, string dialogClassName)
         {
             if (CppFileMap.ContainsKey(fileName.ToLower()))
             {
                 IProjectFile projectFile = CppFileMap[fileName.ToLower()];
 
-                CppCodeContext cppCodeContext = new CppCodeContext(fileName);
+                CppCodeContext cppCodeContext = new CppCodeContext(fileName, dialogClassName);
 
                 CurrentFileContext = cppCodeContext;
 
@@ -177,6 +175,8 @@ namespace Penweb.CodeAnalytics
                 cppCodeContext.ProcessResults();
 
                 cppCodeContext.Finalize();
+
+                cppCodeContext.SaveClassInfo();
             }
             else
             {
@@ -197,7 +197,7 @@ namespace Penweb.CodeAnalytics
                     case ".cpp":
                         if ( CodeCnt-- > 0 )
                         {
-                            ProcessCppFile(projectFile.Name);
+                            //ProcessCppFile(projectFile.Name);
                             break;
                         }
                         else
@@ -208,7 +208,7 @@ namespace Penweb.CodeAnalytics
                     case ".h":
                         if ( HeaderCnt -- > 0 )
                         {
-                            ProcessHeaderFile(projectFile.Name);
+                            //ProcessHeaderFile(projectFile.Name);
                             break;
                         }
                         else
@@ -274,7 +274,7 @@ namespace Penweb.CodeAnalytics
         {
             IProjectFile projectFile = cppHeaderContext.ProjectFile;
 
-            using ( TextWriter writer = File.CreateText(CreateAnalyticsFilePath($"{cppHeaderContext.FileName}-h.txt")))
+            using ( TextWriter writer = File.CreateText(CreateAnalyticsFilePath(cppHeaderContext.FileName, $"{cppHeaderContext.FileName}-h.txt")))
             {
                 cppHeaderContext.DumpFile(writer);
             }
@@ -285,15 +285,23 @@ namespace Penweb.CodeAnalytics
         {
             IProjectFile projectFile = cppCodeContext.ProjectFile;
 
-            using ( TextWriter writer = File.CreateText(CreateAnalyticsFilePath($"{cppCodeContext.FileName}-cpp.txt")))
+            using ( TextWriter writer = File.CreateText(CreateAnalyticsFilePath(cppCodeContext.FileName, $"{cppCodeContext.FileName}-cpp.txt")))
             {
                 cppCodeContext.DumpFile(writer);
             }
         }
 
-        public static string CreateAnalyticsFilePath(string fileName)
+        public static string CreateAnalyticsFilePath(string fullFileName)
         {
-            return Path.Combine(RsAnalyticsDir, fileName);
+            string path = Path.Combine(RsAnalyticsDir, fullFileName);
+            return path;
+        }
+
+        public static string CreateAnalyticsFilePath(string fileName, string fullFileName)
+        {
+            string path = Path.Combine(RsAnalyticsDir, fileName, fullFileName);
+            Directory.CreateDirectory(path);
+            return path;
         }
 
         public static void DumpJson(string fileName, object jsonObject)

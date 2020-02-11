@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 using PenWeb.ASTPlugin;
 using JetBrains.ReSharper.Psi.Cpp.Expressions;
 using JetBrains.ReSharper.Psi.Cpp.Types;
+using JetBrains.ReSharper.Psi.Cpp.Resolve;
 
 namespace Penweb.CodeAnalytics
 {
@@ -82,9 +83,12 @@ namespace Penweb.CodeAnalytics
     {
         public JetBrains.ReSharper.Psi.Cpp.Tree.QualifiedReference QualifiedReference { get; set; }
 
-        [JsonProperty] public string ClassName     { get; set; }
 
-        [JsonProperty] public string ItemName    { get; set; }
+        [JsonProperty] public string OwningClass { get; set; } = "";
+
+        [JsonProperty] public string TypeName    { get; set; } = "";
+
+        [JsonProperty] public string ItemName    { get; set; } = "";
 
         public PenWebQualifiedReference( CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.QualifiedReference treeNode ) : base(parentNode, treeNode)
         {
@@ -101,7 +105,46 @@ namespace Penweb.CodeAnalytics
 
                 this.ItemName = cppQualifiedName.GetNameStr();
 
-                
+
+                CppResolveResult cppResolveResult = this.QualifiedReference.GetResolvedReference();
+
+                switch ( cppResolveResult.GetStatus() )
+                {
+                    case CppResolveResult.Status.OK:
+                        ICppResolveEntity cppResolveEntity = cppResolveResult.GetPrimaryEntity();
+                        if (cppResolveEntity != null)
+                        {
+                            IGenericSymbolNode genericSymbolNode = cppResolveEntity.TryGetDeclarator();
+
+                            if (genericSymbolNode != null)
+                            {
+                                ICppSymbol cppSymbol = genericSymbolNode.GetGenericSymbol();
+
+                                string symbolType = cppSymbol.GetType().Name;
+
+                                switch (cppSymbol)
+                                {
+                                    case CppDeclaratorSymbol cppDeclaratorSymbol:
+                                        break;
+
+                                    default:
+                                        break;
+                                }
+                            }
+
+                            ICppQualifiedNamePart cppQualifiedNamePart = cppResolveEntity.Name;
+
+                            ICppResolveEntity  parentResolveEntity = cppResolveEntity.StructuralParent;
+                            this.OwningClass = parentResolveEntity.Name.GetNameStr();
+
+                            //string namePartStr = cppQualifiedNamePart.GetNameStr();
+                        }
+                        break;
+
+                    default:
+                        break;
+                }
+
                 //ICppQualifiedNamePart cppQualifiedNamePart = this.QualifiedReference.NamePart;
                 //ICppExpressionNode cppExpressionNode = this.MemberAccessExpression.Qualifier;
                 CppTypeAndCategory cppTypeAndCatagory = this.QualifiedReference.GetTypeAndCategory();
@@ -111,24 +154,12 @@ namespace Penweb.CodeAnalytics
 
                 cppQualType.Accept(cppTypeVisitor);
 
-                string typeStr = cppTypeVisitor.TypeBuilder.ToString();
-                string dbgStr = cppTypeVisitor.DbgBuilder.ToString().Trim();
+                string typeStr = cppTypeVisitor.TypeStr;
+                string dbgStr = cppTypeVisitor.DbgStr;
 
-                this.ClassName = cppTypeVisitor.NameBuilder.ToString().Trim();
+                this.TypeName = cppTypeVisitor.DbgStr;
 
-                if (String.IsNullOrWhiteSpace(this.ClassName))
-                {
-                    this.ClassName = dbgStr;
 
-                    LogManager.Self.Log($"PenWebMemberAccessExpression() class name empty");
-
-                    cppQualType.Accept(cppTypeVisitor);
-
-                    typeStr = cppTypeVisitor.TypeBuilder.ToString();
-                    dbgStr = cppTypeVisitor.DbgBuilder.ToString();
-
-                    this.ClassName = cppTypeVisitor.NameBuilder.ToString();
-                }
 
 
                 /*
@@ -143,11 +174,15 @@ namespace Penweb.CodeAnalytics
 
                 PenWebDeclaration penWebDeclaration = this.GetParentByType<PenWebDeclaration>();
 
-                if (penWebDeclaration == null)
+                if (penWebDeclaration != null)
                 {
+                    string owningClass = penWebDeclaration.OwningClass;
+                    string typeName = penWebDeclaration.TypeName;
+                    string itemName = penWebDeclaration.VariableName;
+
                 }
 
-                if (!String.IsNullOrWhiteSpace(this.ItemName) && !String.IsNullOrWhiteSpace(this.ClassName))
+                if (!String.IsNullOrWhiteSpace(this.ItemName) && !String.IsNullOrWhiteSpace(this.TypeName) && !String.IsNullOrWhiteSpace(this.OwningClass))
                 {
                     this.SaveToJson = true;
                 }
@@ -162,7 +197,7 @@ namespace Penweb.CodeAnalytics
 
         public override string ToString()
         {
-            return $"[{this.Location.ToString()}]  {this.GetType().Name} ClassName: {this.ClassName} ItemName: {this.ItemName}  Code: |{SingleLineText}|";
+            return $"[{this.Location.ToString()}]  {this.GetType().Name} TypeName: {this.TypeName} ItemName: {this.ItemName}  Code: |{SingleLineText}|";
         }
 
     }

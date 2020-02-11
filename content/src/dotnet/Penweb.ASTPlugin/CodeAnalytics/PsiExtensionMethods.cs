@@ -166,5 +166,18 @@ namespace PenWeb.ASTPlugin
                 return "QualifiedName Error";
             }
         }
+
+        [CanBeNull]
+        public static string GetNameStr(this ICppQualifiedNamePart namePart)
+        {
+            CppQualifiedNamePartVisitor cppQualifiedNamePartVisitor = new CppQualifiedNamePartVisitor();
+
+            CppQualifiedNamePartVisitorData cppQualifiedNamePartVisitorData = new CppQualifiedNamePartVisitorData();
+
+            namePart.Accept<CppQualifiedNamePartVisitorResult, CppQualifiedNamePartVisitorData>(cppQualifiedNamePartVisitorData, cppQualifiedNamePartVisitor);
+
+            return cppQualifiedNamePartVisitor.StringBuilder.ToString().Trim();
+        }
+
     }
 }
