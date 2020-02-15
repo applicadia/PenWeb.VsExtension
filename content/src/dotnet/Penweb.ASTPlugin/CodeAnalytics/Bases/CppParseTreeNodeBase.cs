@@ -166,6 +166,7 @@ namespace Penweb.CodeAnalytics
         VariableRef,
         MethodDef,
         MethodCall,
+        DDXCall,
     }
 
     public enum AstState
@@ -239,7 +240,7 @@ namespace Penweb.CodeAnalytics
 
                     if (!text.Contains("\r") && !text.Contains("\n"))
                     {
-                        this.SingleLineText = treeNode.GetText();
+                        this.SingleLineText = treeNode.GetText().Trim();
                     }
                 }
 
@@ -284,7 +285,7 @@ namespace Penweb.CodeAnalytics
         {
             if (value && !this.saveToJson )
             {
-                CppCodeAnalysis.SaveTreeNode(this);
+                CppParseManager.SaveTreeNode(this);
             }
 
             this.saveToJson = value;

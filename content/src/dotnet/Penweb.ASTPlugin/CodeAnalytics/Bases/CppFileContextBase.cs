@@ -13,14 +13,15 @@ using Newtonsoft.Json;
 namespace Penweb.CodeAnalytics
 {
     [JsonObject(MemberSerialization=MemberSerialization.OptIn,IsReference=false)]
-    public class FunctionNodes
+    public class ParseResults
     {
         [JsonProperty] public List<PenWebClassSpecifier> ClassDefs    { get; } = new List<PenWebClassSpecifier>();
         [JsonProperty] public List<CppParseTreeNodeBase> MessageMap   { get; } = new List<CppParseTreeNodeBase>();
         [JsonProperty] public List<PenWebDeclaration>    VariableDefs { get; } = new List<PenWebDeclaration>();
         [JsonProperty] public List<PenWebQualifiedReference> VariableRefs { get; } = new List<PenWebQualifiedReference>();
         [JsonProperty] public List<CppParseTreeNodeBase> MethodDefs   { get; } = new List<CppParseTreeNodeBase>();
-        [JsonProperty] public List<CppParseTreeNodeBase> MethodCalls  { get; } = new List<CppParseTreeNodeBase>();
+        [JsonProperty] public List<PenWebCallExpression> MethodCalls  { get; } = new List<PenWebCallExpression>();
+        [JsonProperty] public List<PenWebCallExpression> DDxCalls     { get; } = new List<PenWebCallExpression>();
         [JsonProperty] public List<CppParseTreeNodeBase> ScreenDefs   { get; } = new List<CppParseTreeNodeBase>();
         [JsonProperty] public List<CppParseTreeNodeBase> EnumDefs     { get; } = new List<CppParseTreeNodeBase>();
         [JsonProperty] public List<CppParseTreeNodeBase> ListDefs     { get; } = new List<CppParseTreeNodeBase>();
@@ -46,8 +47,7 @@ namespace Penweb.CodeAnalytics
 
         public List<CppParseTreeNodeBase> ChildNodes { get; } = new List<CppParseTreeNodeBase>();
 
-        public FunctionNodes SaveTreeNodes { get; } = new FunctionNodes();
-
+        public ParseResults ParseResults { get; } = new ParseResults();
 
 
         public CppFileContextBase(string fileName, string dialogClassName)
@@ -65,7 +65,7 @@ namespace Penweb.CodeAnalytics
 
         public virtual void Init()
         {
-            string logPath = Path.Combine(CppCodeAnalysis.RsAnalyticsDir, this.FileName);
+            string logPath = Path.Combine(CppParseManager.RsAnalyticsDir, this.FileName);
 
             Directory.CreateDirectory(logPath);
 
@@ -73,7 +73,7 @@ namespace Penweb.CodeAnalytics
 
             //this.LogWriter = File.CreateText(logPath);
 
-            this.CppFile = CppCodeAnalysis.PenradProject.GetCppFile(this.FullName);
+            this.CppFile = CppParseManager.PenradProject.GetCppFile(this.FullName);
 
             foreach ( ITreeNode childTreeNode in this.CppFile.Children() )
             {

@@ -17,7 +17,7 @@ using Penweb.CodeAnalytics.CodeGen;
 namespace Penweb.CodeAnalytics
 {
 
-    public static class CppCodeAnalysis
+    public static class CppParseManager
     {
         public static string RsAnalyticsDir { get; } = @"c:\PenGit2\RsAnalytics";
 
@@ -32,8 +32,8 @@ namespace Penweb.CodeAnalytics
         public static IProperty<IEnumerable<string>> ReferencedElementsNamesList { get; set; }
         public static IProperty<int> SelectedReferencedElement { get; set; }
 
-        private static int HeaderCnt = 10;
-        private static int CodeCnt   = 10;
+        private static int HeaderCnt = 1000;
+        private static int CodeCnt   = 1000;
 
         public static CppFileContextBase CurrentFileContext { get; set; }
 
@@ -68,6 +68,7 @@ namespace Penweb.CodeAnalytics
                     ParsePenradDialogs();
 
                     CppResultsManager.Self.WriteResults();
+                    WidgetTypeFinder.WriteSchemaAnalytics();
 
                     //CppParseTreeNodeFactory.Self.DumpTreeSchema();
                     //CodeGenerator.Self.GenerateCode();
@@ -116,12 +117,16 @@ namespace Penweb.CodeAnalytics
         {
             foreach ( CppDialogEntry cppDialogEntry in PenradCppManager.Self.DialogMap.Values )
             {
-                ProcessHeaderFile(cppDialogEntry.HeaderFile, cppDialogEntry.DialogClassName);
-                ProcessCppFile(cppDialogEntry.CodeFile, cppDialogEntry.DialogClassName);
+                CppHeaderContext cppHeaderContext = ProcessHeaderFile(cppDialogEntry.HeaderFile, cppDialogEntry.DialogClassName);
+
+                if (cppHeaderContext != null)
+                {
+                    ProcessCppFile(cppHeaderContext, cppDialogEntry.CodeFile, cppDialogEntry.DialogClassName);
+                }
             }
         }
 
-        private static void ProcessHeaderFile(string fileName, string dialogClassName)
+        private static CppHeaderContext ProcessHeaderFile(string fileName, string dialogClassName)
         {
             if (HeaderFileMap.ContainsKey(fileName.ToLower()))
             {
@@ -144,21 +149,27 @@ namespace Penweb.CodeAnalytics
                 cppHeaderContext.ProcessResults();
 
                 cppHeaderContext.Finalize();
+
+                return cppHeaderContext;
             }
             else
             {
                 LogManager.Self.Log($"Missing Header File in map: {fileName}");
+                return null;
             }
         }
 
-
-        private static void ProcessCppFile(string fileName, string dialogClassName)
+        private static void ProcessCppFile(CppHeaderContext cppHeaderContext, string fileName, string dialogClassName)
         {
             if (CppFileMap.ContainsKey(fileName.ToLower()))
             {
                 IProjectFile projectFile = CppFileMap[fileName.ToLower()];
 
                 CppCodeContext cppCodeContext = new CppCodeContext(fileName, dialogClassName);
+
+                cppCodeContext.CppHeaderContext = cppHeaderContext;
+                cppHeaderContext.CppCodeContext = cppCodeContext;
+                cppCodeContext.WidgetTypeFinder = new WidgetTypeFinder(cppCodeContext, cppHeaderContext);
 
                 CurrentFileContext = cppCodeContext;
 
@@ -177,6 +188,8 @@ namespace Penweb.CodeAnalytics
                 cppCodeContext.Finalize();
 
                 cppCodeContext.SaveClassInfo();
+
+                cppCodeContext.WidgetTypeFinder.DoAnalytics();
             }
             else
             {
@@ -226,47 +239,51 @@ namespace Penweb.CodeAnalytics
                 switch (cppParseTreeNode.CppFunctionCatagory)
                 {
                     case CppFunctionCatagory.ClassDef:
-                        CurrentFileContext.SaveTreeNodes.ClassDefs.Add(cppParseTreeNode as PenWebClassSpecifier);
+                        CurrentFileContext.ParseResults.ClassDefs.Add(cppParseTreeNode as PenWebClassSpecifier);
                         break;
 
                     case CppFunctionCatagory.MessageMap:
-                        CurrentFileContext.SaveTreeNodes.MessageMap.Add(cppParseTreeNode);
+                        CurrentFileContext.ParseResults.MessageMap.Add(cppParseTreeNode);
                         break;
 
                     case CppFunctionCatagory.MethodDef:
-                        CurrentFileContext.SaveTreeNodes.MethodDefs.Add(cppParseTreeNode);
+                        CurrentFileContext.ParseResults.MethodDefs.Add(cppParseTreeNode);
                         break;
 
                     case CppFunctionCatagory.MethodCall:
-                        CurrentFileContext.SaveTreeNodes.MethodCalls.Add(cppParseTreeNode);
+                        CurrentFileContext.ParseResults.MethodCalls.Add(cppParseTreeNode as PenWebCallExpression);
+                        break;
+
+                    case CppFunctionCatagory.DDXCall:
+                        CurrentFileContext.ParseResults.DDxCalls.Add(cppParseTreeNode as PenWebCallExpression);
                         break;
 
                     case CppFunctionCatagory.VariableDef:
-                        CurrentFileContext.SaveTreeNodes.VariableDefs.Add(cppParseTreeNode as PenWebDeclaration);
+                        CurrentFileContext.ParseResults.VariableDefs.Add(cppParseTreeNode as PenWebDeclaration);
                         break;
 
                     case CppFunctionCatagory.VariableRef:
-                        CurrentFileContext.SaveTreeNodes.VariableRefs.Add(cppParseTreeNode as PenWebQualifiedReference);
+                        CurrentFileContext.ParseResults.VariableRefs.Add(cppParseTreeNode as PenWebQualifiedReference);
                         break;
 
                     case CppFunctionCatagory.ScreenDef:
-                        CurrentFileContext.SaveTreeNodes.ScreenDefs.Add(cppParseTreeNode);
+                        CurrentFileContext.ParseResults.ScreenDefs.Add(cppParseTreeNode);
                         break;
 
                     case CppFunctionCatagory.EnumDef:
-                        CurrentFileContext.SaveTreeNodes.EnumDefs.Add(cppParseTreeNode);
+                        CurrentFileContext.ParseResults.EnumDefs.Add(cppParseTreeNode);
                         break;
 
                     case CppFunctionCatagory.ListDef:
-                        CurrentFileContext.SaveTreeNodes.ListDefs.Add(cppParseTreeNode);
+                        CurrentFileContext.ParseResults.ListDefs.Add(cppParseTreeNode);
                         break;
 
                     default:
-                        CurrentFileContext.SaveTreeNodes.Uncatagorized.Add(cppParseTreeNode);
+                        CurrentFileContext.ParseResults.Uncatagorized.Add(cppParseTreeNode);
                         break;
                 }
 
-                CurrentFileContext.SaveTreeNodes.All.Add(cppParseTreeNode);
+                CurrentFileContext.ParseResults.All.Add(cppParseTreeNode);
             }
         }
 
@@ -274,18 +291,17 @@ namespace Penweb.CodeAnalytics
         {
             IProjectFile projectFile = cppHeaderContext.ProjectFile;
 
-            using ( TextWriter writer = File.CreateText(CreateAnalyticsFilePath(cppHeaderContext.FileName, $"{cppHeaderContext.FileName}-h.txt")))
+            using ( TextWriter writer = File.CreateText(CreateAnalyticsFilePath(cppHeaderContext.DialogClassName, $"{cppHeaderContext.FileName}-h.txt")))
             {
                 cppHeaderContext.DumpFile(writer);
             }
         }
 
-
         public static void AnalyzeCodeContext(CppCodeContext cppCodeContext)
         {
             IProjectFile projectFile = cppCodeContext.ProjectFile;
 
-            using ( TextWriter writer = File.CreateText(CreateAnalyticsFilePath(cppCodeContext.FileName, $"{cppCodeContext.FileName}-cpp.txt")))
+            using ( TextWriter writer = File.CreateText(CreateAnalyticsFilePath(cppCodeContext.DialogClassName, $"{cppCodeContext.FileName}-cpp.txt")))
             {
                 cppCodeContext.DumpFile(writer);
             }
@@ -297,16 +313,18 @@ namespace Penweb.CodeAnalytics
             return path;
         }
 
-        public static string CreateAnalyticsFilePath(string fileName, string fullFileName)
+        public static string CreateAnalyticsFilePath(string dialogClassName, string fullFileName)
         {
-            string path = Path.Combine(RsAnalyticsDir, fileName, fullFileName);
+            string path = Path.Combine(RsAnalyticsDir, dialogClassName);
             Directory.CreateDirectory(path);
+            path = Path.Combine(RsAnalyticsDir, dialogClassName, fullFileName);
+
             return path;
         }
 
         public static void DumpJson(string fileName, object jsonObject)
         {
-            string dumpPath = Path.Combine(CppCodeAnalysis.RsAnalyticsDir, fileName);
+            string dumpPath = Path.Combine(CppParseManager.RsAnalyticsDir, fileName);
 
             string jsonData = JsonConvert.SerializeObject(jsonObject, Formatting.Indented);
 
@@ -315,7 +333,7 @@ namespace Penweb.CodeAnalytics
 
         public static void DumpFileJson(string codeFileName, string jsonFileName, object jsonObject)
         {
-            string dumpPath = Path.Combine(CppCodeAnalysis.RsAnalyticsDir, codeFileName);
+            string dumpPath = Path.Combine(CppParseManager.RsAnalyticsDir, codeFileName);
 
             Directory.CreateDirectory(dumpPath);
 
@@ -325,6 +343,5 @@ namespace Penweb.CodeAnalytics
 
             File.WriteAllText(dumpPath, jsonData);
         }
-
     }
 }

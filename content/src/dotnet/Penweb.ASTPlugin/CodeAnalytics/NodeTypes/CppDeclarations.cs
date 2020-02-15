@@ -335,8 +335,6 @@ namespace Penweb.CodeAnalytics
                         CppQualifiedName qualifiedInnerName = parentSymbol.GetQualifiedInnerName();
 
                         CppQualType cppQualType = symbol.GetDeclSpecType();
-
-
                         string debugStr = cppQualType.DbgDescription;
 
                         CppTypeVisitor cppTypeVisitor = new CppTypeVisitor();
@@ -366,6 +364,7 @@ namespace Penweb.CodeAnalytics
                             }
                         }
 
+                        /*
                         CppQualifiedName cppQualifiedName = symbol.GetQualifiedName();
 
                         ICppQualifiedNamePart namePart = cppQualifiedName.Name;
@@ -375,6 +374,7 @@ namespace Penweb.CodeAnalytics
                         var subQualifier = cppQualifiedName.Qualifier;
 
                         string qualiferStr = subQualifier.GetNameStr();
+                        */
 
 
                         if (!String.IsNullOrWhiteSpace(this.ItemName))
@@ -401,6 +401,7 @@ namespace Penweb.CodeAnalytics
                 }
 
 
+                /*
                 CompoundStatement compoundStatement = this.SimpleDeclaration.CompoundStatementNode;
 
                 if (compoundStatement != null)
@@ -427,6 +428,8 @@ namespace Penweb.CodeAnalytics
                 ITreeNode simicolonNode = this.SimpleDeclaration.SemicolonNode;
 
                 ITreeNode trailingNode = this.SimpleDeclaration.TrailingNode;
+                */
+
 
                 base.Init();
 

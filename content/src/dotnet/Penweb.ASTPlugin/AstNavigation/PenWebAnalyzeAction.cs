@@ -22,7 +22,7 @@ namespace PenWeb.ASTPlugin
 
             LogManager.Self.Log("ActionPenWebAnalyze Execute");
 
-            CppCodeAnalysis.DoAnalytics(lifetime);
+            CppParseManager.DoAnalytics(lifetime);
         }
     }
 }

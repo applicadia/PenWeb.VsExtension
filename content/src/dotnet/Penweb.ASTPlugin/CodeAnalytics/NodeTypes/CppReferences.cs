@@ -114,6 +114,7 @@ namespace Penweb.CodeAnalytics
                         ICppResolveEntity cppResolveEntity = cppResolveResult.GetPrimaryEntity();
                         if (cppResolveEntity != null)
                         {
+                            /*
                             IGenericSymbolNode genericSymbolNode = cppResolveEntity.TryGetDeclarator();
 
                             if (genericSymbolNode != null)
@@ -131,11 +132,16 @@ namespace Penweb.CodeAnalytics
                                         break;
                                 }
                             }
+                            */
 
                             ICppQualifiedNamePart cppQualifiedNamePart = cppResolveEntity.Name;
 
                             ICppResolveEntity  parentResolveEntity = cppResolveEntity.StructuralParent;
-                            this.OwningClass = parentResolveEntity.Name.GetNameStr();
+
+                            if (parentResolveEntity != null && parentResolveEntity.Name != null)
+                            {
+                                this.OwningClass = parentResolveEntity.Name.GetNameStr();
+                            }
 
                             //string namePartStr = cppQualifiedNamePart.GetNameStr();
                         }
@@ -148,6 +154,7 @@ namespace Penweb.CodeAnalytics
                 //ICppQualifiedNamePart cppQualifiedNamePart = this.QualifiedReference.NamePart;
                 //ICppExpressionNode cppExpressionNode = this.MemberAccessExpression.Qualifier;
                 CppTypeAndCategory cppTypeAndCatagory = this.QualifiedReference.GetTypeAndCategory();
+
                 CppQualType cppQualType = cppTypeAndCatagory.Type;
 
                 CppTypeVisitor cppTypeVisitor = new CppTypeVisitor();
@@ -159,9 +166,6 @@ namespace Penweb.CodeAnalytics
 
                 this.TypeName = cppTypeVisitor.DbgStr;
 
-
-
-
                 /*
                 ICppExpression leftArguement = this.MemberAccessExpression.GetLeftArgument();
                 CppExpressionVisitor cppExpressionVisitor = new CppExpressionVisitor();
@@ -172,6 +176,7 @@ namespace Penweb.CodeAnalytics
 
                 this.CppFunctionCatagory = CppFunctionCatagory.VariableRef;
 
+                /*
                 PenWebDeclaration penWebDeclaration = this.GetParentByType<PenWebDeclaration>();
 
                 if (penWebDeclaration != null)
@@ -181,6 +186,7 @@ namespace Penweb.CodeAnalytics
                     string itemName = penWebDeclaration.VariableName;
 
                 }
+                */
 
                 if (!String.IsNullOrWhiteSpace(this.ItemName) && !String.IsNullOrWhiteSpace(this.TypeName) && !String.IsNullOrWhiteSpace(this.OwningClass))
                 {

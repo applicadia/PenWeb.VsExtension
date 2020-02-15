@@ -19,32 +19,33 @@ namespace Penweb.CodeAnalytics
         public override void WriteSavedNodes()
         {
             this.InitNodes();
-            CppCodeAnalysis.DumpFileJson(this.FileName, $"ClassDefs-h.json", SaveTreeNodes.ClassDefs);
-            CppCodeAnalysis.DumpFileJson(this.FileName, $"MessageMap-h.json", SaveTreeNodes.MessageMap);
-            CppCodeAnalysis.DumpFileJson(this.FileName, $"VariableDefs-h.json", SaveTreeNodes.VariableDefs);
-            CppCodeAnalysis.DumpFileJson(this.FileName, $"VariableRefs-h.json", SaveTreeNodes.VariableRefs);
-            CppCodeAnalysis.DumpFileJson(this.FileName, $"MethodDefs-h.json", SaveTreeNodes.MethodDefs);
-            CppCodeAnalysis.DumpFileJson(this.FileName, $"MethodCalls-h.json", SaveTreeNodes.MethodCalls);
-            CppCodeAnalysis.DumpFileJson(this.FileName, $"ScreenDefs-h.json", SaveTreeNodes.ScreenDefs);
-            CppCodeAnalysis.DumpFileJson(this.FileName, $"EnumDefs-h.json", SaveTreeNodes.EnumDefs);
-            CppCodeAnalysis.DumpFileJson(this.FileName, $"ListDefs-h.json", SaveTreeNodes.ListDefs);
-            CppCodeAnalysis.DumpFileJson(this.FileName, $"Uncatagorized-h.json", SaveTreeNodes.Uncatagorized);
-            CppCodeAnalysis.DumpFileJson(this.FileName, $"All-h.json", SaveTreeNodes.All);
+            CppParseManager.DumpFileJson(this.FileName, $"ClassDefs-h.json", ParseResults.ClassDefs);
+            CppParseManager.DumpFileJson(this.FileName, $"MessageMap-h.json", ParseResults.MessageMap);
+            CppParseManager.DumpFileJson(this.FileName, $"VariableDefs-h.json", ParseResults.VariableDefs);
+            CppParseManager.DumpFileJson(this.FileName, $"VariableRefs-h.json", ParseResults.VariableRefs);
+            CppParseManager.DumpFileJson(this.FileName, $"MethodDefs-h.json", ParseResults.MethodDefs);
+            CppParseManager.DumpFileJson(this.FileName, $"MethodCalls-h.json", ParseResults.MethodCalls);
+            CppParseManager.DumpFileJson(this.FileName, $"DDXCalls-h.json", ParseResults.DDxCalls);
+            CppParseManager.DumpFileJson(this.FileName, $"ScreenDefs-h.json", ParseResults.ScreenDefs);
+            CppParseManager.DumpFileJson(this.FileName, $"EnumDefs-h.json", ParseResults.EnumDefs);
+            CppParseManager.DumpFileJson(this.FileName, $"ListDefs-h.json", ParseResults.ListDefs);
+            CppParseManager.DumpFileJson(this.FileName, $"Uncatagorized-h.json", ParseResults.Uncatagorized);
+            CppParseManager.DumpFileJson(this.FileName, $"All-h.json", ParseResults.All);
         }
 
         public override void ProcessResults()
         {
-            foreach (PenWebClassSpecifier penWebClassSpecifier in SaveTreeNodes.ClassDefs)
+            foreach (PenWebClassSpecifier penWebClassSpecifier in ParseResults.ClassDefs)
             {
                 CppResultsManager.Self.AddClassResult(this, penWebClassSpecifier);
             }
 
-            foreach (PenWebDeclaration penWebDeclaration in SaveTreeNodes.VariableDefs)
+            foreach (PenWebDeclaration penWebDeclaration in ParseResults.VariableDefs)
             {
                 CppResultsManager.Self.AddVariableDefinition(this, penWebDeclaration, $"{this.FileName}.h" );
             }
 
-            foreach (PenWebQualifiedReference penWebQualifiedReference in SaveTreeNodes.VariableRefs)
+            foreach (PenWebQualifiedReference penWebQualifiedReference in ParseResults.VariableRefs)
             {
                 CppResultsManager.Self.AddVariableReference(this, penWebQualifiedReference, $"{this.FileName}.h");
             }

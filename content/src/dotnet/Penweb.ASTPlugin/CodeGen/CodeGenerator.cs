@@ -26,7 +26,7 @@ namespace Penweb.CodeAnalytics.CodeGen
 
         private void LoadList()
         {
-            string typeFilePath = Path.Combine(CppCodeAnalysis.RsAnalyticsDir, "TreeTypes.json");
+            string typeFilePath = Path.Combine(CppParseManager.RsAnalyticsDir, "TreeTypes.json");
 
             if ( File.Exists( typeFilePath))
             {
@@ -40,10 +40,10 @@ namespace Penweb.CodeAnalytics.CodeGen
         {
             this.TypeList = CppParseTreeNodeFactory.Self.NodeTypeMap.Values.ToList();
 
-            string switchFilePath = Path.Combine(CppCodeAnalysis.RsAnalyticsDir, "SwitchCode.cs");
+            string switchFilePath = Path.Combine(CppParseManager.RsAnalyticsDir, "SwitchCode.cs");
             this.SwitchWriter = File.CreateText(switchFilePath);
 
-            string classFilePath = Path.Combine(CppCodeAnalysis.RsAnalyticsDir, "ClassCode.cs");
+            string classFilePath = Path.Combine(CppParseManager.RsAnalyticsDir, "ClassCode.cs");
             this.ClassWriter = File.CreateText(classFilePath);
 
             foreach ( string type in this.TypeList )

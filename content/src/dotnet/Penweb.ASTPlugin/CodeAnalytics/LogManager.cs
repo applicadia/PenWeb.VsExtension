@@ -20,11 +20,11 @@ namespace Penweb.CodeAnalytics
 
             this.SolutionName = solutionName;
 
-            string logPath = Path.Combine(CppCodeAnalysis.RsAnalyticsDir, this.SolutionName);
+            string logPath = Path.Combine(CppParseManager.RsAnalyticsDir, this.SolutionName);
 
             Directory.CreateDirectory(logPath);
 
-            logPath = Path.Combine(CppCodeAnalysis.RsAnalyticsDir, this.SolutionName, "Analytics.log");
+            logPath = Path.Combine(CppParseManager.RsAnalyticsDir, this.SolutionName, "Analytics.log");
 
             this.LogWriter = File.CreateText(logPath);
         }

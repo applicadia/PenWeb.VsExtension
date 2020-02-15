@@ -186,6 +186,13 @@ namespace Penweb.CodeAnalytics
 
         [JsonProperty] public List<string> MacroReferences { get; set; } = new List<string>();
 
+        [JsonProperty] public bool IsDDXExpression { get; set; } = false;
+
+
+        public List<ResourceIdContext> ResourceIdContexts { get; set; } = new List<ResourceIdContext>();
+
+        public List<PenWebQualifiedReference> ParameterList { get; set; } = new List<PenWebQualifiedReference>();
+
         public PenWebCallExpression(CppParseTreeNodeBase parentNode, JetBrains.ReSharper.Psi.Cpp.Tree.CallExpression treeNode ) : base(parentNode, treeNode)
         {
             this.CallExpression = treeNode;
@@ -195,6 +202,13 @@ namespace Penweb.CodeAnalytics
         {
             try
             {
+                string prefix = this.SingleLineText.Length > 4 ? this.SingleLineText.Substring(0, 4) : "";
+
+                if (prefix == "DDX_")
+                {
+                    this.IsDDXExpression = true;
+                }
+
                 if (this.CallExpression.InvokedExpression != null)
                 {
                      string invokeText = this.CallExpression.InvokedExpression.GetText();
@@ -249,11 +263,77 @@ namespace Penweb.CodeAnalytics
 
                 foreach (PenWebMacroReference penWebMacroReference in macroReferences)
                 {
-                    this.MacroReferences.Add(penWebMacroReference.MacroName);
+                    switch (penWebMacroReference.MacroName)
+                    {
+                        case "TRUE":
+                        case "FALSE":
+                            break;
+
+                        default:
+                            this.MacroReferences.Add(penWebMacroReference.MacroName);
+                            break;
+                    }
                 }
-               
-                this.CppFunctionCatagory = CppFunctionCatagory.MethodCall;
+
+                PenWebFunctionArgumentList penWebFunctionArgumentList = this.GetChildByType<PenWebFunctionArgumentList>();
+
+                if (penWebFunctionArgumentList != null)
+                {
+                    List<PenWebQualifiedReference> parameterList = penWebFunctionArgumentList.GetAllChildrenByTypeAsList<PenWebQualifiedReference>();
+
+                    foreach (PenWebQualifiedReference penWebQualifiedReference in parameterList)
+                    {
+                        string typeName = penWebQualifiedReference.TypeName;
+                        string itemName = penWebQualifiedReference.ItemName;
+
+                        if (!String.IsNullOrWhiteSpace(typeName) && !String.IsNullOrWhiteSpace(typeName))
+                        {
+                            this.ParameterList.Add(penWebQualifiedReference);
+                        }
+                        else
+                        {
+                            this.ParameterList.Add(penWebQualifiedReference);
+                        }
+                    }
+                }
+
+                if (this.IsDDXExpression)
+                {
+                    if (MacroReferences.Count == 0)
+                    {
+
+                    }
+
+                    if (ParameterList.Count == 0)
+                    {
+
+                    }
+
+                    if (String.IsNullOrWhiteSpace(this.Method))
+                    {
+
+                    }
+
+                    this.CppFunctionCatagory = CppFunctionCatagory.DDXCall;
+
+                }
+                else
+                {
+                    this.CppFunctionCatagory = CppFunctionCatagory.MethodCall;
+                }
+
+                
                 this.SaveToJson = true;
+
+                foreach (string resourceLabel in this.MacroReferences)
+                {
+                    ResourceIdContext resourceIdContext = CppResourceManager.Self.GetResourceIdContextByLabel(resourceLabel);
+
+                    if (resourceIdContext != null)
+                    {
+                        this.ResourceIdContexts.Add(resourceIdContext);
+                    }
+                }
             }
             catch (Exception e)
             {
@@ -367,6 +447,7 @@ namespace Penweb.CodeAnalytics
         {
             try
             {
+
                 base.Init();
 
                 /*

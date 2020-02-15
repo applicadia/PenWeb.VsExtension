@@ -86,6 +86,18 @@ namespace Penweb.CodeAnalytics
             "ON_WM_SHOWWINDOW"
         };
 
+        private List<string> DDX_MacroList = new List<string>
+        {
+            "DDX_ManagedControl",
+            "DDX_Control",
+            "DDX_Text",
+            "DDX_CBString",
+            "DDX_PenradDate",
+            "DDX_PhoneText",
+            "DDX_Radio",
+            "DDX_Check",
+        };
+
         [JsonProperty] public SortedDictionary<int, ResourceIdContext>    ResourceIds { get; }   = new SortedDictionary<int, ResourceIdContext>();
 
         public HashSet<string> MessageMapMacroHash { get; } = new HashSet<string>();

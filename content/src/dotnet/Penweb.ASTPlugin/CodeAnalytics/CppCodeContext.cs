@@ -14,6 +14,8 @@ namespace Penweb.CodeAnalytics
     {
         public CppHeaderContext CppHeaderContext { get; set; }
 
+        public WidgetTypeFinder WidgetTypeFinder { get; set; }
+
         public CppCodeContext( string fileName, string dialogClassName ) : base( fileName, dialogClassName )
         {
         }
@@ -21,26 +23,27 @@ namespace Penweb.CodeAnalytics
         public override void WriteSavedNodes()
         {
             this.InitNodes();
-            CppCodeAnalysis.DumpFileJson(this.FileName, $"ClassDefs-cpp.json", SaveTreeNodes.ClassDefs);
-            CppCodeAnalysis.DumpFileJson(this.FileName, $"MessageMap-cpp.json", SaveTreeNodes.MessageMap);
-            CppCodeAnalysis.DumpFileJson(this.FileName, $"VariableDefs-cpp.json", SaveTreeNodes.VariableDefs);
-            CppCodeAnalysis.DumpFileJson(this.FileName, $"VariableRefs-cpp.json", SaveTreeNodes.VariableRefs);
-            CppCodeAnalysis.DumpFileJson(this.FileName, $"MethodDefs-cpp.json", SaveTreeNodes.MethodDefs);
-            CppCodeAnalysis.DumpFileJson(this.FileName, $"MethodCalls-cpp.json", SaveTreeNodes.MethodCalls);
-            CppCodeAnalysis.DumpFileJson(this.FileName, $"ScreenDefs-cpp.json", SaveTreeNodes.ScreenDefs);
-            CppCodeAnalysis.DumpFileJson(this.FileName, $"EnumDefs-cpp.json", SaveTreeNodes.EnumDefs);
-            CppCodeAnalysis.DumpFileJson(this.FileName, $"ListDefs-cpp.json", SaveTreeNodes.ListDefs);
-            CppCodeAnalysis.DumpFileJson(this.FileName, $"Uncatagorized-cpp.json", SaveTreeNodes.Uncatagorized);
-            CppCodeAnalysis.DumpFileJson(this.FileName, $"All-cpp.json", SaveTreeNodes.All);
+            CppParseManager.DumpFileJson(this.FileName, $"ClassDefs-cpp.json", ParseResults.ClassDefs);
+            CppParseManager.DumpFileJson(this.FileName, $"MessageMap-cpp.json", ParseResults.MessageMap);
+            CppParseManager.DumpFileJson(this.FileName, $"VariableDefs-cpp.json", ParseResults.VariableDefs);
+            CppParseManager.DumpFileJson(this.FileName, $"VariableRefs-cpp.json", ParseResults.VariableRefs);
+            CppParseManager.DumpFileJson(this.FileName, $"MethodDefs-cpp.json", ParseResults.MethodDefs);
+            CppParseManager.DumpFileJson(this.FileName, $"MethodCalls-cpp.json", ParseResults.MethodCalls);
+            CppParseManager.DumpFileJson(this.FileName, $"DDXCalls-cpp.json", ParseResults.DDxCalls);
+            CppParseManager.DumpFileJson(this.FileName, $"ScreenDefs-cpp.json", ParseResults.ScreenDefs);
+            CppParseManager.DumpFileJson(this.FileName, $"EnumDefs-cpp.json", ParseResults.EnumDefs);
+            CppParseManager.DumpFileJson(this.FileName, $"ListDefs-cpp.json", ParseResults.ListDefs);
+            CppParseManager.DumpFileJson(this.FileName, $"Uncatagorized-cpp.json", ParseResults.Uncatagorized);
+            CppParseManager.DumpFileJson(this.FileName, $"All-cpp.json", ParseResults.All);
         }
 
         public override void ProcessResults()
         {
-            foreach (PenWebClassSpecifier penWebClassSpecifier in SaveTreeNodes.ClassDefs) {}
+            foreach (PenWebClassSpecifier penWebClassSpecifier in ParseResults.ClassDefs) {}
 
-            foreach (PenWebDeclaration penWebDeclaration in SaveTreeNodes.MethodDefs) {}
+            foreach (PenWebDeclaration penWebDeclaration in ParseResults.MethodDefs) {}
 
-            foreach (PenWebQualifiedReference penWebQualifiedReference in SaveTreeNodes.VariableRefs)
+            foreach (PenWebQualifiedReference penWebQualifiedReference in ParseResults.VariableRefs)
             {
                 CppResultsManager.Self.AddVariableReference(this, penWebQualifiedReference, $"{this.FileName}.cpp");
             }
@@ -48,13 +51,13 @@ namespace Penweb.CodeAnalytics
 
         public void SaveClassInfo()
         {
-            string classInfoPath = CppCodeAnalysis.CreateAnalyticsFilePath(this.FileName, $"ClassMap.json");
+            string classInfoPath = CppParseManager.CreateAnalyticsFilePath(this.DialogClassName, $"ClassMap.json");
 
             if (CppResultsManager.Self.ClassMap.ContainsKey(this.DialogClassName))
             {
                 CppClassResult cppClassResult = CppResultsManager.Self.ClassMap[this.DialogClassName];
 
-                string jsonData = JsonConvert.SerializeObject(cppClassResult);
+                string jsonData = JsonConvert.SerializeObject(cppClassResult,Formatting.Indented);
 
                 File.WriteAllText(classInfoPath, jsonData);
 

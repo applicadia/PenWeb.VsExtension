@@ -365,8 +365,8 @@ namespace Penweb.CodeAnalytics
 
         public void DumpTreeSchema()
         {
-            CppCodeAnalysis.DumpJson("TreeSchema.json", this.NodeSchemaMap.Values);
-            CppCodeAnalysis.DumpJson("TreeTypes.json", this.NodeTypeMap.Values);
+            CppParseManager.DumpJson("TreeSchema.json", this.NodeSchemaMap.Values);
+            CppParseManager.DumpJson("TreeTypes.json", this.NodeTypeMap.Values);
         }
 
         public static void Start()

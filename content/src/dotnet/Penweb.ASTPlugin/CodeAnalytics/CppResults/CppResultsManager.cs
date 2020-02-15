@@ -34,26 +34,26 @@ namespace Penweb.CodeAnalytics
 
         public void WriteResults()
         {
-            string typeMapPath = CppCodeAnalysis.CreateAnalyticsFilePath("CppTypeMap.json");
+            string typeMapPath = CppParseManager.CreateAnalyticsFilePath("CppTypeMap.json");
 
             string jsonData = JsonConvert.SerializeObject(this.TypeMap, Formatting.Indented);
 
             File.WriteAllText(typeMapPath, jsonData);
 
-            string classMapPath = CppCodeAnalysis.CreateAnalyticsFilePath("CppClassMap.json");
+            string classMapPath = CppParseManager.CreateAnalyticsFilePath("CppClassMap.json");
 
             jsonData = JsonConvert.SerializeObject(this.ClassMap, Formatting.Indented);
 
             File.WriteAllText(classMapPath, jsonData);
 
             /*
-            string missingRefMapPath = CppCodeAnalysis.CreateAnalyticsFilePath("MissingRefClassNames.json");
+            string missingRefMapPath = CppParseManager.CreateAnalyticsFilePath("MissingRefClassNames.json");
 
             jsonData = JsonConvert.SerializeObject(this.MissingRefClassNames, Formatting.Indented);
 
             File.WriteAllText(missingRefMapPath, jsonData);
 
-            string missingDefMapPath = CppCodeAnalysis.CreateAnalyticsFilePath("MissingDefClassNames.json");
+            string missingDefMapPath = CppParseManager.CreateAnalyticsFilePath("MissingDefClassNames.json");
 
             jsonData = JsonConvert.SerializeObject(this.MissingDefClassNames, Formatting.Indented);
 
