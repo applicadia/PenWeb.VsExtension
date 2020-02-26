@@ -36,14 +36,14 @@ namespace PenWeb.ASTPlugin
                 SolutionName.Value = solution.SolutionFile?.Name;
                 AfterSolutionOpened.Fire(solution);
 
+                LogManager.Start(SolutionName.Value);
+                LogManager.Self.Log("Extension started");
+
                 CppParseTreeNodeFactory.Start();
                 CppParseTreeNodeFactory.Start();
                 PenradCppManager.Start();
                 CppResourceManager.Start();
                 CppResultsManager.Start();
-                LogManager.Start(SolutionName.Value);
-
-                LogManager.Self.Log("Extension started");
             }
             catch (Exception ex)
             {

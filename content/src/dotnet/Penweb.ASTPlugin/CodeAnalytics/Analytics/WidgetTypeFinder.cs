@@ -379,7 +379,7 @@ namespace Penweb.CodeAnalytics
             {
                 IncompleteWidgetTypeBindings.Add(widgetTypeBinding);
 
-                if (!HasIncompleteBinding)
+                if (!HasIncompleteBindings.ContainsKey(this.CppCodeContext.DialogClassName))
                 {
                     HasIncompleteBindings.Add(this.CppCodeContext.DialogClassName, 1);
                     HasIncompleteBinding = true;

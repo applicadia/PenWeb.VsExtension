@@ -13,6 +13,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "misc", "misc", "{4A9ABB95-3
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Penweb.ASTPlugin", "src\dotnet\Penweb.ASTPlugin\Penweb.ASTPlugin.csproj", "{755E5B02-6FF4-4B14-A6DC-A202F32D6589}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PenForms.Shared", "..\..\..\PenGit2\Mit\PenForms.Shared\PenForms.Shared.csproj", "{D332A0E0-5BFE-47E4-A534-D8B2D6A106EB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +25,10 @@ Global
 		{755E5B02-6FF4-4B14-A6DC-A202F32D6589}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{755E5B02-6FF4-4B14-A6DC-A202F32D6589}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{755E5B02-6FF4-4B14-A6DC-A202F32D6589}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D332A0E0-5BFE-47E4-A534-D8B2D6A106EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D332A0E0-5BFE-47E4-A534-D8B2D6A106EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D332A0E0-5BFE-47E4-A534-D8B2D6A106EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D332A0E0-5BFE-47E4-A534-D8B2D6A106EB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

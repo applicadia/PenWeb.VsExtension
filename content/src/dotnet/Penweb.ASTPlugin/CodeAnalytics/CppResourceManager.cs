@@ -135,6 +135,13 @@ namespace Penweb.CodeAnalytics
 
                     line = line.Trim().Replace("\t", " ");
 
+                    int commentIndex = line.IndexOf(@"\\");
+
+                    if (commentIndex > -1)
+                    {
+                        line = line.Substring(0, commentIndex);
+                    }
+
                     if ( !String.IsNullOrWhiteSpace(line) )
                     {
                         string[] elementsRaw = line.Split(' ');
