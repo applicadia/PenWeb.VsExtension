@@ -68,7 +68,7 @@ namespace Penweb.CodeAnalytics
                     ParsePenradDialogs();
 
                     CppResultsManager.Self.WriteResults();
-                    WidgetTypeFinder.WriteSchemaAnalytics();
+                    WidgetTypeFinder.WriteAnalytics();
 
                     //CppParseTreeNodeFactory.Self.DumpTreeSchema();
                     //CodeGenerator.Self.GenerateCode();

@@ -44,33 +44,6 @@ namespace Penweb.CodeAnalytics
         UnknownWidget = 99
     }
                   
-
-    [JsonObject(MemberSerialization=MemberSerialization.OptIn,IsReference =false)]
-    public class DDXMethodsSchemaSummary
-    {
-        [JsonProperty] public string MethodName { get; set;  }
-        [JsonProperty] public SortedDictionary<string, int> TypeList { get; } = new SortedDictionary<string, int>();
-    }
-
-    [JsonObject(MemberSerialization=MemberSerialization.OptIn,IsReference =false)]
-    public class DDXMethodSchema
-    {
-        [JsonProperty] public string MethodName { get; set; }
-        [JsonProperty] public SortedDictionary<string, int> TypeList { get; set; } = new SortedDictionary<string, int>();
-
-        [JsonProperty] public SortedDictionary<string, List<int>> DialogList { get; set; } = new SortedDictionary<string, List<int>>();
-    }
-
-
-    [JsonObject(MemberSerialization=MemberSerialization.OptIn,IsReference =false)]
-    public class ClassMethodSchema
-    {
-        [JsonProperty] public string ClassName { get; set; }
-        [JsonProperty] public SortedDictionary<string, int> MethodList { get; set; } = new SortedDictionary<string, int>();
-
-        [JsonProperty] public SortedDictionary<string, int> DialogList { get; set; } = new SortedDictionary<string, int>();
-    }
-
     public class WidgetTypeFinder
     {
         public static SortedDictionary<string, ClassMethodSchema> ClassMethodSchemaMap = new SortedDictionary<string, ClassMethodSchema>();
@@ -434,7 +407,7 @@ namespace Penweb.CodeAnalytics
             File.WriteAllText(filePath, jsonData);
         }
 
-        public static void WriteSchemaAnalytics()
+        public static void WriteAnalytics()
         {
             string filePath = CppParseManager.CreateAnalyticsFilePath("ClassMethodSchemaMap.json");
 
@@ -466,11 +439,11 @@ namespace Penweb.CodeAnalytics
 
             File.WriteAllText(filePath, jsonData);
 
-            SortedDictionary<string, DDXMethodsSchemaSummary> dDXMethodsSchemaSummary = new SortedDictionary<string, DDXMethodsSchemaSummary>();
+            SortedDictionary<string, DDXMethods> dDXMethodsSchemaSummary = new SortedDictionary<string, DDXMethods>();
 
             foreach (var dDXMethodSchemaItem in DDXMethods)
             {
-                var newSummary = new DDXMethodsSchemaSummary() {MethodName = dDXMethodSchemaItem.Value.MethodName};
+                var newSummary = new DDXMethods() {MethodName = dDXMethodSchemaItem.Value.MethodName};
 
                 foreach (var typeItem in dDXMethodSchemaItem.Value.TypeList)
                 {
