@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using PenWeb.ClientAPI;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace Penweb.CodeAnalytics
 {
+    /*
     public enum PenWebWidgetType
     {
         Skip = 0,
@@ -43,6 +45,7 @@ namespace Penweb.CodeAnalytics
 
         UnknownWidget = 99
     }
+    */
                   
     public class WidgetTypeFinder
     {
