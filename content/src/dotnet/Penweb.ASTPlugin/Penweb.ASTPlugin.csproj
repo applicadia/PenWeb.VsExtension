@@ -17,6 +17,7 @@
     <PackageReference Include="JetBrains.ReSharper.SDK" Version="2019.3.2">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <!-- TODO: https://github.com/NuGet/Home/issues/7154 -->
     <PackageReference Include="Wave" Version="$(WaveVersion)" />
   </ItemGroup>
@@ -54,10 +55,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\..\PenGit2\Mit\PenForms.Shared\PenForms.Shared.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Reference Include="Microsoft.Build, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   </ItemGroup>
 
@@ -67,6 +64,10 @@
 
   <ItemGroup>
     <Folder Include="CodeAnalytics\CppResults\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\..\PenGit2\Mit\PenForms.Shared\PenForms.Shared.csproj" />
   </ItemGroup>
 
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />

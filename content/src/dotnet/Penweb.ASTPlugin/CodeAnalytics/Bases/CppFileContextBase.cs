@@ -65,9 +65,12 @@ namespace Penweb.CodeAnalytics
 
         public virtual void Init()
         {
-            string logPath = Path.Combine(CppParseManager.RsAnalyticsDir, this.FileName);
+            string logPath = Path.Combine(CppParseManager.RsAnalyticsDir, this.DialogClassName);
 
-            Directory.CreateDirectory(logPath);
+            if (!Directory.Exists(logPath))
+            {
+                Directory.CreateDirectory(logPath);
+            }
 
             logPath = Path.Combine(logPath, $"{this.FileName}-{this.Ext}.log");
 

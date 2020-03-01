@@ -19,18 +19,18 @@ namespace Penweb.CodeAnalytics
         public override void WriteSavedNodes()
         {
             this.InitNodes();
-            CppParseManager.DumpFileJson(this.FileName, $"ClassDefs-h.json", ParseResults.ClassDefs);
-            CppParseManager.DumpFileJson(this.FileName, $"MessageMap-h.json", ParseResults.MessageMap);
-            CppParseManager.DumpFileJson(this.FileName, $"VariableDefs-h.json", ParseResults.VariableDefs);
-            CppParseManager.DumpFileJson(this.FileName, $"VariableRefs-h.json", ParseResults.VariableRefs);
-            CppParseManager.DumpFileJson(this.FileName, $"MethodDefs-h.json", ParseResults.MethodDefs);
-            CppParseManager.DumpFileJson(this.FileName, $"MethodCalls-h.json", ParseResults.MethodCalls);
-            CppParseManager.DumpFileJson(this.FileName, $"DDXCalls-h.json", ParseResults.DDxCalls);
-            CppParseManager.DumpFileJson(this.FileName, $"ScreenDefs-h.json", ParseResults.ScreenDefs);
-            CppParseManager.DumpFileJson(this.FileName, $"EnumDefs-h.json", ParseResults.EnumDefs);
-            CppParseManager.DumpFileJson(this.FileName, $"ListDefs-h.json", ParseResults.ListDefs);
-            CppParseManager.DumpFileJson(this.FileName, $"Uncatagorized-h.json", ParseResults.Uncatagorized);
-            CppParseManager.DumpFileJson(this.FileName, $"All-h.json", ParseResults.All);
+            CppParseManager.DumpFileJson(this.DialogClassName, $"ClassDefs-h.json", ParseResults.ClassDefs);
+            CppParseManager.DumpFileJson(this.DialogClassName, $"MessageMap-h.json", ParseResults.MessageMap);
+            CppParseManager.DumpFileJson(this.DialogClassName, $"VariableDefs-h.json", ParseResults.VariableDefs);
+            CppParseManager.DumpFileJson(this.DialogClassName, $"VariableRefs-h.json", ParseResults.VariableRefs);
+            CppParseManager.DumpFileJson(this.DialogClassName, $"MethodDefs-h.json", ParseResults.MethodDefs);
+            CppParseManager.DumpFileJson(this.DialogClassName, $"MethodCalls-h.json", ParseResults.MethodCalls);
+            CppParseManager.DumpFileJson(this.DialogClassName, $"DDXCalls-h.json", ParseResults.DDxCalls);
+            CppParseManager.DumpFileJson(this.DialogClassName, $"ScreenDefs-h.json", ParseResults.ScreenDefs);
+            CppParseManager.DumpFileJson(this.DialogClassName, $"EnumDefs-h.json", ParseResults.EnumDefs);
+            CppParseManager.DumpFileJson(this.DialogClassName, $"ListDefs-h.json", ParseResults.ListDefs);
+            CppParseManager.DumpFileJson(this.DialogClassName, $"Uncatagorized-h.json", ParseResults.Uncatagorized);
+            CppParseManager.DumpFileJson(this.DialogClassName, $"All-h.json", ParseResults.All);
         }
 
         public override void ProcessResults()

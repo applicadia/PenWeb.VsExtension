@@ -16,6 +16,8 @@ namespace Penweb.CodeAnalytics
 
         public Dictionary<string, CppClassResult> ClassMap { get; } = new Dictionary<string, CppClassResult>();
 
+        public Dictionary<string, DialogTypeBindings> DialogTypeBindings { get; } = new Dictionary<string, DialogTypeBindings>();
+
         public Dictionary<string, int> MissingDefClassNames = new Dictionary<string, int>();
         public Dictionary<string, int> MissingRefClassNames = new Dictionary<string, int>();
 
@@ -30,6 +32,7 @@ namespace Penweb.CodeAnalytics
             this.ClassMap.Clear();
             this.MissingDefClassNames.Clear();
             this.MissingRefClassNames.Clear();
+            this.DialogTypeBindings.Clear();
         }
 
         public void WriteResults()
@@ -45,6 +48,12 @@ namespace Penweb.CodeAnalytics
             jsonData = JsonConvert.SerializeObject(this.ClassMap, Formatting.Indented);
 
             File.WriteAllText(classMapPath, jsonData);
+
+            string typeBindingPath = CppParseManager.CreateAnalyticsFilePath("WidgetTypeBindings.json");
+
+            jsonData = JsonConvert.SerializeObject(this.DialogTypeBindings, Formatting.Indented);
+
+            File.WriteAllText(typeBindingPath, jsonData);
 
             /*
             string missingRefMapPath = CppParseManager.CreateAnalyticsFilePath("MissingRefClassNames.json");
@@ -111,6 +120,37 @@ namespace Penweb.CodeAnalytics
                 }
 
                 LogManager.Self.Log($"Unknown class: {penWebDeclaration.OwningClass}");
+            }
+        }
+
+        public void AddWidgetTypeBinding(string dialogClassName, string cppFileName, WidgetTypeBinding widgetTypeBinding)
+        {
+            DialogTypeBindings dialogTypeBindings = null;
+
+            if (this.DialogTypeBindings.ContainsKey(dialogClassName))
+            {
+                dialogTypeBindings = this.DialogTypeBindings[dialogClassName];
+            }
+            else
+            {
+                dialogTypeBindings = new DialogTypeBindings(dialogClassName, cppFileName);
+                this.DialogTypeBindings.Add(dialogClassName, dialogTypeBindings);
+            }
+
+            if (dialogTypeBindings.WidgetTypeBindingMap.ContainsKey(widgetTypeBinding.ResourceLabel))
+            {
+                if (dialogTypeBindings.WidgetTypeBindingMap[widgetTypeBinding.ResourceLabel].PenWebWidgetType == widgetTypeBinding.PenWebWidgetType)
+                {
+
+                }
+                else
+                {
+                    Console.WriteLine($"Missmatched Binding");
+                }
+            }
+            else
+            {
+                dialogTypeBindings.WidgetTypeBindingMap.Add(widgetTypeBinding.ResourceLabel, widgetTypeBinding);
             }
         }
 

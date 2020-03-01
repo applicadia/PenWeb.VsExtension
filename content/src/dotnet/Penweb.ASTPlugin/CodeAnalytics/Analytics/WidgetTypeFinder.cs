@@ -1,12 +1,8 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using PenWeb.ClientAPI;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Penweb.CodeAnalytics
 {
@@ -46,7 +42,7 @@ namespace Penweb.CodeAnalytics
         UnknownWidget = 99
     }
     */
-                  
+
     public class WidgetTypeFinder
     {
         public static SortedDictionary<string, ClassMethodSchema> ClassMethodSchemaMap = new SortedDictionary<string, ClassMethodSchema>();
@@ -64,7 +60,9 @@ namespace Penweb.CodeAnalytics
         private bool HasBinding = false;
         private bool HasIncompleteBinding = false;
 
-        public List<WidgetTypeBinding> WidgetTypeBindings { get; } = new List<WidgetTypeBinding>();
+        //public List<WidgetTypeBinding> WidgetTypeBindings { get; } = new List<WidgetTypeBinding>();
+
+        public Dictionary<string, WidgetTypeBinding> WidgetTypeBindingsMap { get; } = new Dictionary<string, WidgetTypeBinding>();
 
         public WidgetTypeFinder(CppCodeContext cppCodeContext, CppHeaderContext cppHeaderContext)
         {
@@ -93,6 +91,7 @@ namespace Penweb.CodeAnalytics
                     else
                     {
                         this.CatalogWidgetTypeFromDDX(methodCall);
+                        this.CreateWidgetTypeFromDDX(methodCall);
                     }
                 }
             }
@@ -101,6 +100,40 @@ namespace Penweb.CodeAnalytics
         private void CreateWidgetTypeFromDDX(PenWebCallExpression methodCall)
         {
             string typeName = methodCall.ParameterList[1].TypeName;
+
+            string resourceLabel = null;
+
+            int resourceId = -1;
+            if (methodCall.MacroReferences.Count == 1)
+            {
+                resourceLabel = methodCall.MacroReferences[0];
+                /*
+                ResourceIdContext resourceIdContext = CppResourceManager.Self.GetResourceIdContextByLabel(resourceLabel);
+
+                if (resourceIdContext != null)
+                {
+
+                }
+                else
+                {
+                    Console.WriteLine($"Missing Resource Id Reference {resourceLabel}");
+                    return;
+                }
+                */
+            }
+            else
+            {
+                Console.WriteLine($"Missing Macro Reference");
+                return;
+            }
+
+            WidgetTypeBinding widgetTypeBinding = new WidgetTypeBinding();
+
+            widgetTypeBinding.FileName = this.CppCodeContext.FileName;
+            widgetTypeBinding.LineNumber = methodCall.Location.StartLine;
+            widgetTypeBinding.ResourceLabel = resourceLabel;
+            //widgetTypeBinding.ResourceId = resourceId;
+            widgetTypeBinding.PenWebWidgetType = PenWebWidgetType.UnknownWidget;
 
             switch (methodCall.Method)
             {
@@ -113,26 +146,32 @@ namespace Penweb.CodeAnalytics
                 case "DDX_Radio": 
                 case "DDX_Text":
                 case "DDX_Check": 
-                    break;
+                    return;
 
                 case "DDX_PenradDate":
+                    widgetTypeBinding.PenWebWidgetType = PenWebWidgetType.DateTimeWidget;
                     break;
 
                 case "DDX_Control":
                     switch (typeName)
                     {
                         case "CDateEdit":
+                            widgetTypeBinding.PenWebWidgetType = PenWebWidgetType.DateTimeWidget;
                             break;
 
                         case "CPhoneEdit":
                         case "CPhoneExtEdit":
                         case "CSsnEdit":
-
+                            widgetTypeBinding.PenWebWidgetType = PenWebWidgetType.FormattedWidget;
                             break;
 
                         case "CExListBox":
                         case "CListBox":
+                            widgetTypeBinding.PenWebWidgetType = PenWebWidgetType.ListboxWidget;
+                            break;
+
                         case "CSliderCtrl":
+                            widgetTypeBinding.PenWebWidgetType = PenWebWidgetType.SliderWidget;
                             break;
 
                         case "CAnimateCtrl":
@@ -155,18 +194,23 @@ namespace Penweb.CodeAnalytics
                     switch (typeName)
                     {
                         case "Microsoft::VisualC::MFC::CWinFormsControl<CDataGridView>":
+                            widgetTypeBinding.PenWebWidgetType = PenWebWidgetType.GridWidget;
                             break;
 
                         case "Microsoft::VisualC::MFC::CWinFormsControl<CrystalDecisions::Windows::Forms::CrystalReportViewer>": 
+                            widgetTypeBinding.PenWebWidgetType = PenWebWidgetType.CrystalViewer;
                             break;
                             
                         case "Microsoft::VisualC::MFC::CWinFormsControl<Penrad::PenCsLib::Browser>":
+                            widgetTypeBinding.PenWebWidgetType = PenWebWidgetType.HtmlViewer;
                             break;
 
                         case "Microsoft::VisualC::MFC::CWinFormsControl<System::Windows::Forms::ListView>":
+                            widgetTypeBinding.PenWebWidgetType = PenWebWidgetType.ListboxWidget;
                             break;
 
                         case "Microsoft::VisualC::MFC::CWinFormsControl<TXTextControl::TextControl>":
+                            widgetTypeBinding.PenWebWidgetType = PenWebWidgetType.TxTextControl;
                             break;
 
                         case "Microsoft::VisualC::MFC::CWinFormsControl<Penrad::PenCsLib::ZoomPicBox>":
@@ -182,6 +226,11 @@ namespace Penweb.CodeAnalytics
 
                 default:
                     break;
+            }
+
+            if (widgetTypeBinding.PenWebWidgetType != PenWebWidgetType.UnknownWidget)
+            {
+                this.RegisterTypeBinding(widgetTypeBinding);
             }
         }
 
@@ -321,6 +370,9 @@ namespace Penweb.CodeAnalytics
                 
                 case "CPenradLogoWnd":
                     break;
+
+                default:
+                    break;
             }
         }
 
@@ -344,12 +396,28 @@ namespace Penweb.CodeAnalytics
                     break;
             }
 
+            if (resourceIdContext == null)
+            {
+                if (methodCall.MacroReferences.Count > 0)
+                {
+                    resourceLabel = methodCall.MacroReferences[0];
+                }
+                else
+                {
+                }
+            }
+
             WidgetTypeBinding widgetTypeBinding = new WidgetTypeBinding();
 
             widgetTypeBinding.FileName = this.CppCodeContext.FileName;
             widgetTypeBinding.LineNumber = methodCall.Location.StartLine;
             widgetTypeBinding.PenWebWidgetType = penWebWidgetType;
             widgetTypeBinding.ResourceLabel = resourceLabel;
+
+            if (!String.IsNullOrWhiteSpace(resourceLabel))
+            {
+                this.RegisterTypeBinding(widgetTypeBinding);
+            }
 
             if (resourceIdContext == null)
             {
@@ -380,8 +448,11 @@ namespace Penweb.CodeAnalytics
                     HasBindings[this.CppCodeContext.DialogClassName]++;
                 }
 
-                widgetTypeBinding.ResourceId = resourceIdContext.ResourceId;
-                this.WidgetTypeBindings.Add(widgetTypeBinding);
+                //widgetTypeBinding.ResourceId = resourceIdContext.ResourceId;
+
+                this.RegisterTypeBinding(widgetTypeBinding);
+
+                //this.WidgetTypeBindings.Add(widgetTypeBinding);
             }
             else
             {
@@ -401,11 +472,39 @@ namespace Penweb.CodeAnalytics
             }
         }
 
+        private void RegisterTypeBinding(WidgetTypeBinding widgetTypeBinding)
+        {
+            if (String.IsNullOrWhiteSpace(widgetTypeBinding.ResourceLabel))
+            {
+                return;
+            }
+
+            if (this.WidgetTypeBindingsMap.ContainsKey(widgetTypeBinding.ResourceLabel))
+            {
+                WidgetTypeBinding existingBinding = this.WidgetTypeBindingsMap[widgetTypeBinding.ResourceLabel];
+
+                if (widgetTypeBinding.PenWebWidgetType == existingBinding.PenWebWidgetType)
+                {
+                    return;
+                }
+                else
+                {
+                    Console.WriteLine($"Mismatched Binding");
+                }
+            }
+            else
+            {
+                this.WidgetTypeBindingsMap.Add(widgetTypeBinding.ResourceLabel, widgetTypeBinding);
+
+                CppResultsManager.Self.AddWidgetTypeBinding(this.CppCodeContext.DialogClassName, this.CppCodeContext.FileName, widgetTypeBinding);
+            }
+        }
+
         public void WriteFileAnalytics()
         {
             string filePath = CppParseManager.CreateAnalyticsFilePath(this.CppCodeContext.DialogClassName, "WidgetTypeBindings.json");
 
-            string jsonData = JsonConvert.SerializeObject(this.WidgetTypeBindings, Formatting.Indented);
+            string jsonData = JsonConvert.SerializeObject(this.WidgetTypeBindingsMap, Formatting.Indented);
 
             File.WriteAllText(filePath, jsonData);
         }
